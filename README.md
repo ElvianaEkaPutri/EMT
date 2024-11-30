@@ -1,1450 +1,1223 @@
-# EMT4Plot3D_Elviana Eka Putri_23030630094
-Nama: Elviana Eka Putri
+# MATERI KALKULUS
+Nama : Elviana Eka Putri
 
 
-Nim: 23030630094
+NIM  : 23030630094
 
 
 Kelas: Matematika E 2023
 
 
-# Menggambar Plot 3D dengan EMT
+# Kalkulus dengan EMT
 
-Ini adalah pengantar plot 3D di Euler. Kita memerlukan plot 3D untuk
-memvisualisasikan fungsi dua variabel.
-
-
-Euler menggambar fungsi tersebut menggunakan algoritma penyortiran
-untuk menyembunyikan bagian di latar belakang. Secara umum, Euler
-menggunakan proyeksi pusat. Defaultnya adalah dari kuadran x-y positif
-ke arah titik asal x=y=z=0, tetapi sudut=0° terlihat dari arah sumbu
-y. Sudut pandang dan tinggi dapat diubah.
-
-
-Euler dapat memplot
+Materi Kalkulus mencakup di antaranya:
 
 
 * 
-permukaan dengan bayangan dan garis datar atau rentang datar,
+Fungsi (fungsi aljabar, trigonometri, eksponensial, logaritma,
+* komposisi fungsi)
 
 * 
-awan titik,
+Limit Fungsi,
 
 * 
-kurva parametrik,
+Turunan Fungsi,
 
 * 
-permukaan implisit.
-
-
-Plot 3D suatu fungsi menggunakan plot3d. Cara termudah adalah memplot
-ekspresi dalam x dan y. Parameter r mengatur rentang plot di sekitar
-(0,0).
-
-
-\>aspect(1.5); plot3d("x^2+sin(y)",-5,5,0,6\*pi):
-
-\>plot3d("x^2+x\*sin(y)",-5,5,0,6\*pi):
-
-
-# Fungsi Dua Variabel
-
-Untuk grafik fungsi, gunakan
-
+Integral Tak Tentu,
 
 * 
-ekspresi sederhana dalam x dan y,
+Integral Tentu dan Aplikasinya,
 
 * 
-nama fungsi dua variabel
-
-* 
-atau matriks data.
+Barisan dan Deret (kekonvergenan barisan dan deret).
 
 
-Defaultnya adalah kisi kawat yang terisi dengan warna berbeda di kedua
-sisinya. Perhatikan bahwa jumlah interval kisi default adalah 10,
-tetapi plot menggunakan jumlah persegi panjang 40x40 default untuk
-membuat permukaan. Ini dapat diubah.
+EMT (bersama Maxima) dapat digunakan untuk melakukan semua perhitungan
+di dalam kalkulus, baik secara numerik maupun analitik (eksak).
+
+
+## Mendefinisikan Fungsi
+
+Terdapat beberapa cara mendefinisikan fungsi pada EMT, yakni:
 
 
 * 
-n=40, n=[40,40]: jumlah garis kisi di setiap arah
+Menggunakan format nama_fungsi := rumus fungsi (untuk fungsi
+* numerik),
 
 * 
-kisi=10, kisi=[10,10]: jumlah garis kisi di setiap arah.
-
-
-Kami menggunakan default n=40 dan kisi=10.
-
-
-\>plot3d("x^2+y^2"):
-
-
-Interaksi pengguna dimungkinkan dengan parameter &gt;user. Pengguna dapat
-menekan tombol berikut.
-
+Menggunakan format nama_fungsi &amp;= rumus fungsi (untuk fungsi
+* simbolik, namun dapat dihitung secara numerik),
 
 * 
-kiri, kanan, atas, bawah: mengubah sudut pandang
+Menggunakan format nama_fungsi &amp;&amp;= rumus fungsi (untuk fungsi
+* simbolik murni, tidak dapat dihitung langsung),
 
 * 
-+, -: memperbesar atau memperkecil
+Fungsi sebagai program EMT.
 
-* 
-a: menghasilkan anaglif (lihat di bawah)
 
-* 
-l: mengubah arah sumber cahaya (lihat di bawah)
+Setiap format harus diawali dengan perintah function (bukan sebagai
+ekspresi).
 
-* 
-spasi: mengatur ulang ke default
 
-* 
-return: mengakhiri interaksi
+Berikut adalah adalah beberapa contoh cara mendefinisikan fungsi.
 
 
-\>plot3d("exp(-x^2+y^2)",\>user, ...  
-\>     title="Turn with the vector keys (press return to finish)"):
+\>function f(x) := 2\*x^2+exp(sin(x)) // fungsi numerik
 
+\>f(0), f(1), f(pi)
 
-Rentang plot untuk fungsi dapat ditentukan dengan
 
+    1
+    4.31977682472
+    20.7392088022
 
-* 
-a,b: rentang x
+\>function g(x) := sqrt(x^2-3\*x)/(x+1)
 
-* 
-c,d: rentang y
+\>g(3)
 
-* 
-r: persegi simetris di sekitar (0,0).
 
-* 
-n: jumlah subinterval untuk plot.
+    0
 
+\>g(0)
 
-Ada beberapa parameter untuk menskalakan fungsi atau mengubah tampilan
-grafik.
 
+    0
 
-fscale: skala ke nilai fungsi (default adalah &lt;fscale).
+\>g(5)
 
 
-scale: angka atau vektor 1x2 untuk diskalakan ke arah x dan y.
+    0.527046276695
 
+\>f(g(5)) // komposisi fungsi
 
-frame: jenis frame (default 1).
 
+    2.20920171961
 
-\>plot3d("exp(-(x^2+y^2)/5)",r=10,n=80,fscale=4,scale=1.2,frame=3,\>user):
+\>g(f(5))
 
 
-Tampilan dapat diubah dengan berbagai cara.
+    0.950898070639
 
+\>f(0:10) // nilai-nilai f(1), f(2), ..., f(10)
 
-* 
-jarak: jarak pandang ke plot.
 
-* 
-perbesaran: nilai perbesaran.
+    [1,  4.31978,  10.4826,  19.1516,  32.4692,  50.3833,  72.7562,
+    99.929,  130.69,  163.51,  200.58]
 
-* 
-sudut: sudut ke sumbu y negatif dalam radian.
+\>fmap(0:10) // sama dengan f(0:10), berlaku untuk semua fungsi
 
-* 
-tinggi: tinggi tampilan dalam radian.
 
+    [1,  4.31978,  10.4826,  19.1516,  32.4692,  50.3833,  72.7562,
+    99.929,  130.69,  163.51,  200.58]
 
-Nilai default dapat diperiksa atau diubah dengan fungsi view(). Fungsi
-ini mengembalikan parameter dalam urutan di atas.
+Misalkan kita akan mendefinisikan fungsi
 
 
-\>view
+Fungsi tersebut tidak dapat didefinisikan sebagai fungsi numerik
+secara "inline" menggunakan format :=, melainkan didefinisikan sebagai
+program. Perhatikan, kata "map" digunakan agar fungsi dapat menerima
+vektor sebagai input, dan hasilnya berupa vektor. Jika tanpa kata
+"map" fungsinya hanya dapat menerima input satu nilai.
 
 
-    [5,  2.6,  2,  0.4]
+\>function map f(x) ...
 
-Jarak yang lebih dekat membutuhkan zoom yang lebih sedikit. Efeknya
-lebih seperti lensa sudut lebar.
 
-
-Dalam contoh berikut, sudut=0 dan tinggi=0 terlihat dari sumbu y
-negatif. Label sumbu untuk y disembunyikan dalam kasus ini.
-
-
-\>plot3d("x^2+y",distance=3,zoom=1,angle=pi/2,height=0):
-
-
-Plot selalu mengarah ke tengah kubus plot. Anda dapat memindahkan
-bagian tengah dengan parameter center.
-
-
-\>plot3d("x^4+y^2",a=0,b=1,c=-1,d=1,angle=-20°,height=20°, ...  
-\>     center=[0.4,0,0],zoom=5):
-
-
-Plot diskalakan agar sesuai dengan kubus satuan untuk dilihat. Jadi
-tidak perlu mengubah jarak atau zoom tergantung pada ukuran plot.
-Namun, label merujuk pada ukuran sebenarnya.
-
-
-Jika Anda menonaktifkannya dengan scale=false, Anda perlu berhati-hati
-agar plot tetap sesuai dengan jendela plot, dengan mengubah jarak
-tampilan atau zoom, dan memindahkan bagian tengah.
-
-
-\>plot3d("5\*exp(-x^2-y^2)",r=2,<fscale,<scale,distance=13,height=50°, ...  
-\>     center=[0,0,-2],frame=3):
-
-
-Plot polar juga tersedia. Parameter polar=true menggambar plot polar.
-Fungsi tersebut harus tetap berupa fungsi x dan y. Parameter "fscale"
-menskalakan fungsi dengan skalanya sendiri. Jika tidak, fungsi
-tersebut diskalakan agar sesuai dengan kubus.
-
-
-\>plot3d("1/(x^2+y^2+1)",r=5,\>polar, ...  
-\>   fscale=2,\>hue,n=100,zoom=4,\>contour,color=blue):
-
-\>function f(r) := exp(-r/2)\*cos(r); ...  
-\>   plot3d("f(x^2+y^2)",\>polar,scale=[1,1,0.4],r=pi,frame=3,zoom=4):
-
-
-Parameter rotate memutar fungsi dalam x di sekitar sumbu x.
-
-
-* 
-rotate=1: Menggunakan sumbu x
-
-* 
-rotate=2: Menggunakan sumbu z
-
-
-\>plot3d("x^2+1",a=-1,b=1,rotate=true,grid=5):
-
-\>plot3d("x^2+1",a=-1,b=1,rotate=2,grid=5):
-
-\>plot3d("sqrt(25-x^2)",a=0,b=5,rotate=1):
-
-\>plot3d("x\*sin(x)",a=0,b=6pi,rotate=2):
-
-
-Berikut adalah plot dengan tiga fungsi.
-
-
-\>plot3d("x","x^2+y^2","y",r=2,zoom=3.5,frame=3):
-
-
-# Plot Kontur
-
-Untuk plot, Euler menambahkan garis kisi. Sebagai gantinya,
-dimungkinkan untuk menggunakan garis level dan rona satu warna atau
-rona warna spektral. Euler dapat menggambar tinggi fungsi pada plot
-dengan bayangan. Dalam semua plot 3D, Euler dapat menghasilkan anaglif
-merah/sian.
-
-
-* 
-&gt;hue: Mengaktifkan bayangan terang alih-alih kabel.
-
-* 
-&gt;contour: Memplot garis kontur otomatis pada plot.
-
-* 
-level=... (atau level): Vektor nilai untuk garis kontur.
-
-
-Nilai default adalah level="auto", yang menghitung beberapa garis
-level secara otomatis. Seperti yang Anda lihat di plot, level
-sebenarnya adalah rentang level.
-
-
-Gaya default dapat diubah. Untuk plot kontur berikut, kami menggunakan
-kisi yang lebih halus untuk titik 100x100, menskalakan fungsi dan
-plot, dan menggunakan sudut pandang yang berbeda.
-
-
-\>plot3d("exp(-x^2-y^2)",r=2,n=100,level="thin", ...  
-\>    \>contour,\>spectral,fscale=1,scale=1.1,angle=45°,height=20°):
-
-\>plot3d("exp(x\*y)",angle=100°,\>contour,color=green):
-
-
-Shading default menggunakan warna abu-abu. Namun, rentang warna
-spektral juga tersedia.
-
-
-* 
-&gt;spectral: Menggunakan skema spektral default
-
-* 
-color=...: Menggunakan warna khusus atau skema spektral
-
-
-Untuk plot berikut, kami menggunakan skema spektral default dan
-menambah jumlah titik untuk mendapatkan tampilan yang sangat halus.
-
-
-\>plot3d("x^2+y^2",\>spectral,\>contour,n=100):
-
-
-Alih-alih garis level otomatis, kita juga dapat mengatur nilai garis
-level. Ini akan menghasilkan garis level tipis alih-alih rentang
-level.
-
-
-\>plot3d("x^2-y^2",0,5,0,5,level=-1:0.1:1,color=redgreen):
-
-
-Dalam plot berikut, kami menggunakan dua pita level yang sangat lebar
-dari -0,1 hingga 1, dan dari 0,9 hingga 1. Ini dimasukkan sebagai
-matriks dengan batas level sebagai kolom.
-
-
-Selain itu, kami melapisi kisi dengan 10 interval di setiap arah.
-
-
-\>plot3d("x^2+y^3",level=[-0.1,0.9;0,1], ...  
-\>     \>spectral,angle=30°,grid=10,contourcolor=gray):
-
-
-Dalam contoh berikut, kami memplot himpunan, di mana
-
-
-Kami menggunakan satu garis tipis untuk garis datar.
-
-
-\>plot3d("x^y-y^x",level=0,a=0,b=6,c=0,d=6,contourcolor=red,n=100):
-
-
-Dimungkinkan untuk menunjukkan bidang kontur di bawah plot. Warna dan
-jarak ke plot dapat ditentukan.
-
-
-\>plot3d("x^2+y^4",\>cp,cpcolor=green,cpdelta=0.2):
-
-
-Berikut ini beberapa gaya lainnya. Kami selalu menonaktifkan bingkai,
-dan menggunakan berbagai skema warna untuk plot dan kisi.
-
-
-\>figure(2,2); ...  
-\>   expr="y^3-x^2"; ...  
-\>   figure(1);  ...  
-\>     plot3d(expr,<frame,\>cp,cpcolor=spectral); ...  
-\>   figure(2);  ...  
-\>     plot3d(expr,<frame,\>spectral,grid=10,cp=2); ...  
-\>   figure(3);  ...  
-\>     plot3d(expr,<frame,\>contour,color=gray,nc=5,cp=3,cpcolor=greenred); ...  
-\>   figure(4);  ...  
-\>     plot3d(expr,<frame,\>hue,grid=10,\>transparent,\>cp,cpcolor=gray); ...  
-\>   figure(0):
-
-
-Ada beberapa skema spektral lain, yang diberi nomor dari 1 hingga 9.
-Namun, Anda juga dapat menggunakan color=value, di mana value
-
-
-* 
-spektral: untuk rentang dari biru hingga merah
-
-* 
-putih: untuk rentang yang lebih redup
-
-* 
-kuning biru, ungu hijau, biru kuning, hijau merah
-
-* 
-biru kuning, hijau ungu, kuning biru, merah hijau
-
-
-\>figure(3,3); ...  
-\>   for i=1:9;  ...  
-\>     figure(i); plot3d("x^2+y^2",spectral=i,\>contour,\>cp,<frame,zoom=4);  ...  
-\>   end; ...  
-\>   figure(0):
-
-
-Sumber cahaya dapat diubah dengan l dan tombol kursor selama interaksi
-pengguna. Sumber cahaya juga dapat diatur dengan parameter.
-
-
-* 
-light: arah cahaya
-
-* 
-amb: cahaya sekitar antara 0 dan 1
-
-
-Perlu dicatat bahwa program tidak membuat perbedaan antara sisi plot.
-Tidak ada bayangan. Untuk ini, Anda memerlukan Povray.
-
-
-\>plot3d("-x^2-y^2", ...  
-\>     hue=true,light=[0,1,1],amb=0,user=true, ...  
-\>     title="Press l and cursor keys (return to exit)"):
-
-
-Parameter warna mengubah warna permukaan. Warna garis level juga dapat
-diubah.
-
-
-\>plot3d("-x^2-y^2",color=rgb(0.2,0.2,0),hue=true,frame=false, ...  
-\>     zoom=3,contourcolor=red,level=-2:0.1:1,dl=0.01):
-
-
-Warna 0 memberikan efek pelangi khusus.
-
-
-\>plot3d("x^2/(x^2+y^2+1)",color=0,hue=true,grid=10):
-
-
-Permukaannya juga bisa transparan.
-
-
-\>plot3d("x^2+y^2",\>transparent,grid=10,wirecolor=red):
-
-
-# Plot Implisit
-
-Ada juga plot implisit dalam tiga dimensi. Euler menghasilkan potongan
-melalui objek. Fitur plot3d mencakup plot implisit. Plot ini
-menunjukkan himpunan nol dari suatu fungsi dalam tiga variabel.
-
-
-Solusi dari
-
-
-dapat divisualisasikan dalam potongan yang sejajar dengan bidang x-y,
-x-z, dan y-z.
-
-
-* 
-implicit=1: potongan sejajar dengan bidang y-z
-
-* 
-implicit=2: potongan sejajar dengan bidang x-z
-
-* 
-implicit=4: potongan sejajar dengan bidang x-y
-
-
-Tambahkan nilai-nilai ini, jika Anda suka. Dalam contoh ini, kami
-memplot
-
-
-\>plot3d("x^2+y^3+z\*y-1",r=5,implicit=3):
-
-\>c=1; d=1;
-
-\>plot3d("((x^2+y^2-c^2)^2+(z^2-1)^2)\*((y^2+z^2-c^2)^2+(x^2-1)^2)\*((z^2+x^2-c^2)^2+(y^2-1)^2)-d",r=2,<frame,\>implicit,\>user): 
-
-\>plot3d("x^2+y^2+4\*x\*z+z^3",\>implicit,r=2,zoom=2.5):
-
-
-# Merencanakan Data 3D
-
-Sama seperti plot2d, plot3d menerima data. Untuk objek 3D, Anda perlu
-menyediakan matriks dengan nilai x, y, dan z, atau tiga fungsi atau
-ekspresi fx(x,y), fy(x,y), fz(x,y).
-
-
-Karena x,y,z adalah matriks, kami berasumsi bahwa (t,s) berjalan
-melalui kisi persegi. Hasilnya, Anda dapat memplot gambar persegi
-panjang di ruang angkasa.
-
-
-Anda dapat menggunakan bahasa matriks Euler untuk menghasilkan
-koordinat secara efektif.
-
-
-Dalam contoh berikut, kami menggunakan vektor nilai t dan vektor kolom
-nilai s untuk membuat parameter permukaan bola. Dalam gambar, kami
-dapat menandai wilayah, dalam kasus kami wilayah kutub.
-
-
-\>t=linspace(0,2pi,180); s=linspace(-pi/2,pi/2,90)'; ...  
-\>   x=cos(s)\*cos(t); y=cos(s)\*sin(t); z=sin(s); ...  
-\>   plot3d(x,y,z,\>hue, ...  
-\>   color=blue,<frame,grid=[10,20], ...  
-\>   values=s,contourcolor=red,level=[90°-24°;90°-22°], ...  
-\>   scale=1.4,height=50°):
-
-
-Berikut adalah contoh, yang merupakan grafik suatu fungsi.
-
-
-\>t=-1:0.1:1; s=(-1:0.1:1)'; plot3d(t,s,t\*s,grid=10):
-
-
-Namun, kita dapat membuat berbagai macam permukaan. Berikut ini adalah
-permukaan yang sama sebagai fungsi
-
-
-\>plot3d(t\*s,t,s,angle=180°,grid=10):
-
-
-Dengan usaha lebih, kita dapat menghasilkan banyak permukaan.
-
-
-Dalam contoh berikut, kita membuat tampilan berbayang dari bola yang
-terdistorsi. Koordinat yang biasa untuk bola adalah
-
-
-dengan
-
-
-Kita mendistorsi ini dengan faktor
-
-
-\>t=linspace(0,2pi,320); s=linspace(-pi/2,pi/2,160)'; ...  
-\>   d=1+0.2\*(cos(4\*t)+cos(8\*s)); ...  
-\>   plot3d(cos(t)\*cos(s)\*d,sin(t)\*cos(s)\*d,sin(s)\*d,hue=1, ...  
-\>     light=[1,0,1],frame=0,zoom=5):
-
-
-Tentu saja, titik awan juga memungkinkan. Untuk memplot data titik di
-ruang, kita memerlukan tiga vektor untuk koordinat titik.
-
-
-Gayanya sama seperti di plot2d dengan points=true;
-
-
-\>n=500;  ...  
-\>     plot3d(normal(1,n),normal(1,n),normal(1,n),points=true,style="."):
-
-
-Anda juga dapat memplot kurva dalam 3D. Dalam kasus ini, lebih mudah
-untuk menghitung titik-titik kurva terlebih dahulu. Untuk kurva dalam
-bidang, kami menggunakan urutan koordinat dan parameter wire=true.
-
-
-\>t=linspace(0,8pi,500); ...  
-\>   plot3d(sin(t),cos(t),t/10,\>wire,zoom=3):
-
-\>t=linspace(0,4pi,1000); plot3d(cos(t),sin(t),t/2pi,\>wire, ...  
-\>   linewidth=3,wirecolor=blue):
-
-\>X=cumsum(normal(3,100)); ...  
-\>    plot3d(X[1],X[2],X[3],\>anaglyph,\>wire):
-
-
-EMT juga dapat membuat grafik dalam mode anaglif. Untuk melihat grafik
-tersebut, Anda memerlukan kacamata merah/sian.
-
-
-\> plot3d("x^2+y^3",\>anaglyph,\>contour,angle=30°):
-
-
-Seringkali, skema warna spektral digunakan untuk plot. Ini menekankan
-tinggi fungsi.
-
-
-\>plot3d("x^2\*y^3-y",\>spectral,\>contour,zoom=3.2):
-
-
-Euler juga dapat memplot permukaan berparameter, ketika parameternya
-adalah nilai x, y, dan z dari gambar kotak persegi panjang di ruang
-tersebut.
-
-
-Untuk demo berikut, kami menyiapkan parameter u dan v, dan
-menghasilkan koordinat ruang dari parameter tersebut.
-
-
-\>u=linspace(-1,1,10); v=linspace(0,2\*pi,50)'; ...  
-\>   X=(3+u\*cos(v/2))\*cos(v); Y=(3+u\*cos(v/2))\*sin(v); Z=u\*sin(v/2); ...  
-\>   plot3d(X,Y,Z,\>anaglyph,<frame,\>wire,scale=2.3):
-
-
-Berikut adalah contoh yang lebih rumit, yang tampak megah dengan kaca
-merah/cyan.
-
-
-\>u:=linspace(-pi,pi,160); v:=linspace(-pi,pi,400)';  ...  
-\>   x:=(4\*(1+.25\*sin(3\*v))+cos(u))\*cos(2\*v); ...  
-\>   y:=(4\*(1+.25\*sin(3\*v))+cos(u))\*sin(2\*v); ...  
-\>    z=sin(u)+2\*cos(3\*v); ...  
-\>   plot3d(x,y,z,frame=0,scale=1.5,hue=1,light=[1,0,-1],zoom=2.8,\>anaglyph):
-
-
-# Plot Statistik
-
-Plot batang juga dimungkinkan. Untuk ini, kita harus menyediakan
-
-
-* 
-x: vektor baris dengan n+1 elemen
-
-* 
-y: vektor kolom dengan n+1 elemen
-
-* 
-z: matriks nilai nxn.
-
-
-z dapat lebih besar, tetapi hanya nilai nxn yang akan digunakan.
-
-
-Dalam contoh, pertama-tama kita menghitung nilai. Kemudian kita
-menyesuaikan x dan y, sehingga vektor berpusat pada nilai yang
-digunakan.
-
-
-\>x=-1:0.1:1; y=x'; z=x^2+y^2; ...  
-\>   xa=(x|1.1)-0.05; ya=(y\_1.1)-0.05; ...  
-\>   plot3d(xa,ya,z,bar=true):
-
-
-Dimungkinkan untuk membagi bidang permukaan menjadi dua bagian atau
-lebih.
-
-
-\>x=-1:0.1:1; y=x'; z=x+y; d=zeros(size(x)); ...  
-\>   plot3d(x,y,z,disconnect=2:2:20):
-
-
-Jika memuat atau membuat matriks data M dari sebuah file dan perlu
-memplotnya dalam 3D, Anda dapat menskalakan matriks ke [-1,1] dengan
-scale(M), atau menskalakan matriks dengan &gt;zscale. Ini dapat
-dikombinasikan dengan faktor penskalaan individual yang diterapkan
-sebagai tambahan.
-
-
-\>i=1:20; j=i'; ...  
-\>   plot3d(i\*j^2+100\*normal(20,20),\>zscale,scale=[1,1,1.5],angle=-40°,zoom=1.8):
-
-\>Z=intrandom(5,100,6); v=zeros(5,6); ...  
-\>   loop 1 to 5; v[#]=getmultiplicities(1:6,Z[#]); end; ...  
-\>   columnsplot3d(v',scols=1:5,ccols=[1:5]):
-
-
-# Permukaan Benda Putar
-
-\>plot2d("(x^2+y^2-1)^3-x^2\*y^3",r=1.3, ...  
-\>   style="#",color=red,<outline, ...  
-\>   level=[-2;0],n=100):
-
-\>ekspresi &= (x^2+y^2-1)^3-x^2\*y^3; $ekspresi
-
-
-Kita ingin memutar kurva jantung di sekitar sumbu y. Berikut ini
-adalah ekspresi yang mendefinisikan jantung:
-
-
-Selanjutnya kita tetapkan
-
-
-\>function fr(r,a) &= ekspresi with [x=r\*cos(a),y=r\*sin(a)] | trigreduce; $fr(r,a)
-
-
-Hal ini memungkinkan untuk mendefinisikan fungsi numerik, yang
-memecahkan r, jika a diberikan. Dengan fungsi itu kita dapat memplot
-jantung yang diputar sebagai permukaan parametrik.
-
-
-\>function map f(a) := bisect("fr",0,2;a); ...  
-\>   t=linspace(-pi/2,pi/2,100); r=f(t);  ...  
-\>   s=linspace(pi,2pi,100)'; ...  
-\>   plot3d(r\*cos(t)\*sin(s),r\*cos(t)\*cos(s),r\*sin(t), ...  
-\>   \>hue,<frame,color=red,zoom=4,amb=0,max=0.7,grid=12,height=50°):
-
-
-Berikut ini adalah plot 3D dari gambar di atas yang diputar di sekitar
-sumbu z. Kami mendefinisikan fungsi yang menggambarkan objek tersebut.
-
-
-\>function f(x,y,z) ...
-
-
-    r=x^2+y^2;
-    return (r+z^2-1)^3-r*z^3;
-     endfunction
-</pre>
-\>plot3d("f(x,y,z)", ...  
-\>   xmin=0,xmax=1.2,ymin=-1.2,ymax=1.2,zmin=-1.2,zmax=1.4, ...  
-\>   implicit=1,angle=-30°,zoom=2.5,n=[10,100,60],\>anaglyph):
-
-
-# Plot 3D Khusus
-
-Fungsi plot3d memang bagus, tetapi tidak memenuhi semua kebutuhan.
-Selain rutinitas yang lebih mendasar, Anda dapat memperoleh plot
-berbingkai dari objek apa pun yang Anda suka.
-
-
-Meskipun Euler bukanlah program 3D, ia dapat menggabungkan beberapa
-objek dasar. Kami mencoba memvisualisasikan parabola dan garis
-singgungnya.
-
-
-\>function myplot ...
-
-
-      y=-1:0.01:1; x=(-1:0.01:1)';
-      plot3d(x,y,0.2*(x-0.1)/2,<scale,<frame,>hue, ..
-        hues=0.5,>contour,color=orange);
-      h=holding(1);
-      plot3d(x,y,(x^2+y^2)/2,<scale,<frame,>contour,>hue);
-      holding(h);
+      if x>0 then return x^3
+      else return x^2
+      endif;
     endfunction
 </pre>
-Sekarang framedplot() menyediakan bingkai dan mengatur tampilan.
+\>f(1)
 
 
-\>framedplot("myplot",[-1,1,-1,1,0,1],height=0,angle=-30°, ...  
-\>     center=[0,0,-0.7],zoom=3):
+    1
 
+\>f(-2)
 
-Dengan cara yang sama, Anda dapat memplot bidang kontur secara manual.
-Perhatikan bahwa plot3d() menetapkan jendela ke fullwindow() secara
-default, tetapi plotcontourplane() mengasumsikannya.
 
+    4
 
-\>x=-1:0.02:1.1; y=x'; z=x^2-y^4;
+\>f(-5:5)
 
-\>function myplot (x,y,z) ...  
-\>  
-<pre class="udf">      zoom(2);
-      wi=fullwindow();
-      plotcontourplane(x,y,z,level="auto",<scale);
-      plot3d(x,y,z,>hue,<scale,>add,color=white,level="thin");
-      window(wi);
-      reset();
-    endfunction
-</pre>
-\>myplot(x,y,z):
 
+    [25,  16,  9,  4,  1,  0,  1,  8,  27,  64,  125]
 
-# Animasi
+\>aspect(1.5); plot2d("f(x)",-5,5):
 
-Euler dapat menggunakan bingkai untuk melakukan pra-komputasi animasi.
-
-
-Salah satu fungsi yang memanfaatkan teknik ini adalah rotate. Fungsi
-ini dapat mengubah sudut pandang dan menggambar ulang plot 3D. Fungsi
-ini memanggil addpage() untuk setiap plot baru. Terakhir, fungsi ini
-menganimasikan plot tersebut.
-
-
-Silakan pelajari sumber rotate untuk melihat detail selengkapnya.
-
-
-\>function testplot () := plot3d("x^2+y^3"); ...  
-\>   rotate("testplot"); testplot():
-
-
-# Menggambar Povray
-
-Dengan bantuan file Euler povray.e, Euler dapat membuat file Povray.
-Hasilnya sangat bagus untuk dilihat.
-
-
-Anda perlu menginstal Povray (32bit atau 64bit) dari
-  <a href="http://www.povray.org/, dan meletakkan subdirektori "bin" dari Povray ke dalam jalur lingkungan, atau mengatur variabel "defaultpovray" dengan jalur lengkap yang mengarah ke "pvengine.exe".">http://www.povray.org/, dan meletakkan subdirektori "bin" dari Povray ke dalam jalur lingkungan, atau mengatur variabel "defaultpovray" dengan jalur lengkap yang mengarah ke "pvengine.exe".</a>
-
-
-Antarmuka Povray dari Euler membuat file Povray di direktori home
-pengguna, dan memanggil Povray untuk mengurai file-file ini. Nama file
-default adalah current.pov, dan direktori default adalah eulerhome(),
-biasanya c:\Users\Username\Euler. Povray membuat file PNG, yang dapat
-dimuat oleh Euler ke dalam buku catatan. Untuk membersihkan file-file
-ini, gunakan povclear().
-
-
-Fungsi pov3d memiliki semangat yang sama dengan plot3d. Fungsi ini
-dapat menghasilkan grafik fungsi f(x,y), atau permukaan dengan
-koordinat X,Y,Z dalam matriks, termasuk garis level opsional. Fungsi
-ini memulai raytracer secara otomatis, dan memuat adegan ke dalam buku
-catatan Euler.
-
-
-Selain pov3d(), ada banyak fungsi, yang menghasilkan objek Povray.
-Fungsi-fungsi ini mengembalikan string, yang berisi kode Povray untuk
-objek. Untuk menggunakan fungsi-fungsi ini, mulai file Povray dengan
-povstart(). Kemudian gunakan writeln(...) untuk menulis objek ke file
-adegan. Terakhir, akhiri file dengan povend(). Secara default,
-raytracer akan mulai, dan PNG akan dimasukkan ke dalam buku catatan
-Euler.
-
-
-Fungsi objek memiliki parameter yang disebut "look", yang memerlukan
-string dengan kode Povray untuk tekstur dan penyelesaian objek. Fungsi
-povlook() dapat digunakan untuk menghasilkan string ini. Fungsi ini
-memiliki parameter untuk warna, transparansi, Phong Shading, dll.
-
-
-Perhatikan bahwa alam semesta Povray memiliki sistem koordinat lain.
-Antarmuka ini menerjemahkan semua koordinat ke sistem Povray. Jadi
-Anda dapat terus berpikir dalam sistem koordinat Euler dengan z
-menunjuk vertikal ke atas, dan sumbu x, y, z dalam arah kanan.
-
-
-Anda perlu memuat berkas povray.
-
-
-\>load povray;
-
-
-Pastikan direktori bin Povray ada di jalur tersebut. Jika tidak, edit
-variabel berikut sehingga berisi jalur ke povray yang dapat
-dieksekusi.
-
-
-\>defaultpovray="C:\\Program Files\\POV-Ray\\v3.7\\bin\\pvengine.exe"
-
-
-    C:\Program Files\POV-Ray\v3.7\bin\pvengine.exe
-
-Untuk kesan pertama, kami membuat fungsi sederhana. Perintah berikut
-menghasilkan file povray di direktori pengguna Anda, dan menjalankan
-Povray untuk melakukan ray tracing pada file ini.
-
-
-Jika Anda menjalankan perintah berikut, GUI Povray akan terbuka,
-menjalankan file, dan menutup secara otomatis. Karena alasan keamanan,
-Anda akan ditanya apakah Anda ingin mengizinkan file exe untuk
-berjalan. Anda dapat menekan batal untuk menghentikan pertanyaan lebih
-lanjut. Anda mungkin harus menekan OK di jendela Povray untuk mengakui
-dialog awal Povray.
-
-
-\>plot3d("x^2+y^2",zoom=2):
-
-\>pov3d("x^2+y^2",zoom=3);
-
-
-Kita dapat membuat fungsi tersebut transparan dan menambahkan
-penyelesaian lainnya. Kita juga dapat menambahkan garis level pada
-plot fungsi.
-
-
-\>pov3d("x^2+y^3",axiscolor=red,angle=-45°,\>anaglyph, ...  
-\>     look=povlook(cyan,0.2),level=-1:0.5:1,zoom=3.8);
-
-
-Terkadang perlu untuk mencegah penskalaan fungsi, dan menskalakan
-fungsi secara manual.
-
-
-Kami memplot himpunan titik pada bidang kompleks, di mana hasil kali
-jarak ke 1 dan -1 sama dengan 1.
-
-
-\>pov3d("((x-1)^2+y^2)\*((x+1)^2+y^2)/40",r=2, ...  
-\>     angle=-120°,level=1/40,dlevel=0.005,light=[-1,1,1],height=10°,n=50, ...  
-\>     <fscale,zoom=3.8);
-
-
-# Membuat Plot dengan Koordinat
-
-Alih-alih menggunakan fungsi, kita dapat membuat plot dengan
-koordinat. Seperti pada plot3d, kita memerlukan tiga matriks untuk
-menentukan objek.
-
-
-Dalam contoh ini, kita memutar fungsi di sekitar sumbu z.
-
-
-\>function f(x) := x^3-x+1; ...  
-\>   x=-1:0.01:1; t=linspace(0,2pi,50)'; ...  
-\>   Z=x; X=cos(t)\*f(x); Y=sin(t)\*f(x); ...  
-\>   pov3d(X,Y,Z,angle=40°,look=povlook(red,0.1),height=50°,axis=0,zoom=4,light=[10,5,15]);
-
-
-Dalam contoh berikut, kami memplot gelombang yang diredam. Kami
-menghasilkan gelombang dengan bahasa matriks Euler.
-
-
-Kami juga menunjukkan, bagaimana objek tambahan dapat ditambahkan ke
-adegan pov3d. Untuk pembuatan objek, lihat contoh berikut. Perhatikan
-bahwa plot3d menskalakan plot, sehingga sesuai dengan kubus satuan.
-
-
-\>r=linspace(0,1,80); phi=linspace(0,2pi,80)'; ...  
-\>   x=r\*cos(phi); y=r\*sin(phi); z=exp(-5\*r)\*cos(8\*pi\*r)/3;  ...  
-\>   pov3d(x,y,z,zoom=6,axis=0,height=30°,add=povsphere([0.5,0,0.25],0.15,povlook(red)), ...  
-\>     w=500,h=300);
-
-
-Dengan metode shading Povray yang canggih, hanya sedikit titik yang
-dapat menghasilkan permukaan yang sangat halus. Hanya pada batas dan
-bayangan, triknya mungkin menjadi jelas.
-
-
-Untuk ini, kita perlu menambahkan vektor normal di setiap titik
-matriks.
-
-
-\>Z &= x^2\*y^3
+\>function f(x) &= 2\*E^x // fungsi simbolik
 
 
     
-                                     2  3
-                                    x  y
+                                        x
+                                     2 E
     
 
-Persamaan permukaannya adalah [x,y,Z]. Kita hitung dua turunan x dan y
-dari persamaan ini dan ambil perkalian silang sebagai normalnya.
-
-
-\>dx &= diff([x,y,Z],x); dy &= diff([x,y,Z],y);
-
-
-Kami mendefinisikan normal sebagai perkalian silang turunan-turunan
-ini dan mendefinisikan fungsi koordinat.
-
-
-\>N &= crossproduct(dx,dy); NX &= N[1]; NY &= N[2]; NZ &= N[3]; N,
+\>function g(x) &= 3\*x+1
 
 
     
-                                   3       2  2
-                           [- 2 x y , - 3 x  y , 1]
+                                   3 x + 1
     
 
-Kami hanya menggunakan 25 poin.
+\>function h(x) &= f(g(x)) // komposisi fungsi
 
 
-\>x=-1:0.5:1; y=x';
-
-\>pov3d(x,y,Z(x,y),angle=10°, ...  
-\>     xv=NX(x,y),yv=NY(x,y),zv=NZ(x,y),<shadow);
-
-
-Berikut ini adalah simpul Trefoil yang dibuat oleh A. Busser di
-Povray. Ada versi yang lebih baik dari simpul ini dalam
-contoh-contohnya.
-
-
-Lihat: Contoh\Simpul Trefoil | Simpul Trefoil
-
-
-Untuk tampilan yang bagus dengan tidak terlalu banyak titik, kami
-menambahkan vektor normal di sini. Kami menggunakan Maxima untuk
-menghitung normal bagi kami. Pertama, tiga fungsi untuk koordinat
-sebagai ekspresi simbolik.
-
-
-\>X &= ((4+sin(3\*y))+cos(x))\*cos(2\*y); ...  
-\>   Y &= ((4+sin(3\*y))+cos(x))\*sin(2\*y); ...  
-\>   Z &= sin(x)+2\*cos(3\*y);
-
-
-Kemudian dua vektor turunan ke x dan y.
-
-
-\>dx &= diff([X,Y,Z],x); dy &= diff([X,Y,Z],y);
-
-
-Sekarang normal, yang merupakan perkalian silang dari dua turunan.
-
-
-\>dn &= crossproduct(dx,dy);
-
-
-Sekarang mari kita evaluasi semua ini secara numerik.
-
-
-\>x:=linspace(-%pi,%pi,40); y:=linspace(-%pi,%pi,100)';
-
-
-Vektor normal adalah evaluasi ekspresi simbolik dn[i] untuk i=1,2,3.
-Sintaks untuk ini adalah &amp;"ekspresi"(parameter). Ini adalah alternatif
-untuk metode pada contoh sebelumnya, di mana kita mendefinisikan
-ekspresi simbolik NX, NY, NZ terlebih dahulu.
-
-
-\>pov3d(X(x,y),Y(x,y),Z(x,y),\>anaglyph,axis=0,zoom=5,w=450,h=350, ...  
-\>     <shadow,look=povlook(blue), ...  
-\>     xv=&"dn[1]"(x,y), yv=&"dn[2]"(x,y), zv=&"dn[3]"(x,y));
-
-
-Kita juga bisa membuat grid dalam 3D.
-
-
-\>povstart(zoom=4); ...  
-\>   x=-1:0.5:1; r=1-(x+1)^2/6; ...  
-\>   t=(0°:30°:360°)'; y=r\*cos(t); z=r\*sin(t); ...  
-\>   writeln(povgrid(x,y,z,d=0.02,dballs=0.05)); ...  
-\>   povend();
-
-
-Dengan povgrid(), kurva dimungkinkan.
-
-
-\>povstart(center=[0,0,1],zoom=3.6); ...  
-\>   t=linspace(0,2,1000); r=exp(-t); ...  
-\>   x=cos(2\*pi\*10\*t)\*r; y=sin(2\*pi\*10\*t)\*r; z=t; ...  
-\>   writeln(povgrid(x,y,z,povlook(red))); ...  
-\>   writeAxis(0,2,axis=3); ...  
-\>   povend();
-
-
-# Objek Povray
-
-Di atas, kami menggunakan pov3d untuk memplot permukaan. Antarmuka
-povray di Euler juga dapat menghasilkan objek Povray. Objek-objek ini
-disimpan sebagai string di Euler, dan perlu ditulis ke berkas Povray.
-
-
-Kami memulai output dengan povstart().
-
-
-\>povstart(zoom=4);
-
-
-Pertama, kita mendefinisikan tiga silinder, dan menyimpannya dalam
-string di Euler.
-
-
-Fungsi povx() dll. hanya mengembalikan vektor [1,0,0], yang dapat
-digunakan sebagai gantinya.
-
-
-\>c1=povcylinder(-povx,povx,1,povlook(red)); ...  
-\>   c2=povcylinder(-povy,povy,1,povlook(yellow)); ...  
-\>   c3=povcylinder(-povz,povz,1,povlook(blue)); ...  
-\>  
-Rangkaian tersebut berisi kode Povray, yang tidak perlu kita pahami
-saat itu.
-
-
-\>c2
-
-
-    cylinder { &lt;0,0,-1&gt;, &lt;0,0,1&gt;, 1
-     texture { pigment { color rgb &lt;0.941176,0.941176,0.392157&gt; }  } 
-     finish { ambient 0.2 } 
-     }
-
-Seperti yang Anda lihat, kami menambahkan tekstur ke objek dalam tiga
-warna berbeda.
-
-
-Hal itu dilakukan oleh povlook(), yang mengembalikan string dengan
-kode Povray yang relevan. Kita dapat menggunakan warna Euler default,
-atau menentukan warna kita sendiri. Kita juga dapat menambahkan
-transparansi, atau mengubah cahaya sekitar.
-
-
-\>povlook(rgb(0.1,0.2,0.3),0.1,0.5)
-
-
-     texture { pigment { color rgbf &lt;0.101961,0.2,0.301961,0.1&gt; }  } 
-     finish { ambient 0.5 } 
+    
+                                     3 x + 1
+                                  2 E
     
 
-Sekarang kita mendefinisikan objek persimpangan dan menulis hasilnya
-ke berkas.
+# Latihan
+
+Bukalah buku Kalkulus. Cari dan pilih beberapa (paling sedikit 5
+fungsi berbeda tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian
+definisikan di EMT pada baris-baris perintah berikut (jika perlu
+tambahkan lagi). Untuk setiap fungsi, hitung beberapa nilainya, baik
+untuk satu nilai maupun vektor. Gambar grafik tersebut.
 
 
-\>writeln(povintersection([c1,c2,c3]));
+Juga, carilah fungsi beberapa (dua) variabel. Lakukan hal sama seperti
+di atas.
 
 
-Persimpangan tiga silinder sulit dibayangkan, jika Anda belum pernah
-melihatnya sebelumnya.
+Jawab:
 
 
-\>povend;
+1. Fungsi 1
 
 
-Fungsi-fungsi berikut menghasilkan fraktal secara rekursif.
+\>function k(x) := x\*(x^5+3)^3
+
+\>k(3), k(5), k(7)
 
 
-Fungsi pertama menunjukkan bagaimana Euler menangani objek-objek
-Povray sederhana. Fungsi povbox() mengembalikan string yang berisi
-koordinat kotak, tekstur, dan hasil akhir.
+    44660808
+    153027765760
+    3.3250729687e+13
+
+\>kmap(-3:3)
 
 
-\>function onebox(x,y,z,d) := povbox([x,y,z],[x+d,y+d,z+d],povlook());
+    [4.1472e+07,  48778,  -8,  0,  64,  85750,  4.46608e+07]
 
-\>function fractal (x,y,z,h,n) ...  
-\>  
-<pre class="udf">     if n==1 then writeln(onebox(x,y,z,h));
-     else
-       h=h/3;
-       fractal(x,y,z,h,n-1);
-       fractal(x+2*h,y,z,h,n-1);
-       fractal(x,y+2*h,z,h,n-1);
-       fractal(x,y,z+2*h,h,n-1);
-       fractal(x+2*h,y+2*h,z,h,n-1);
-       fractal(x+2*h,y,z+2*h,h,n-1);
-       fractal(x,y+2*h,z+2*h,h,n-1);
-       fractal(x+2*h,y+2*h,z+2*h,h,n-1);
-       fractal(x+h,y+h,z+h,h,n-1);
-     endif;
+\>plot2d("k(x)"):
+
+
+2. Fungsi 2
+
+
+\>function m(x) := (x)^4/(3-x^2) 
+
+\>m(2), m(-2), m(1)
+
+
+    -16
+    -16
+    0.5
+
+\>mmap(-5:-5)
+
+
+    -28.4090909091
+
+\>plot2d("m(x)"):
+
+
+3. Fungsi 3
+
+
+\>function n(x) := 3\*x/(x+5)+2
+
+\>n(2), n(-1), n(-3), n(4)
+
+
+    2.85714285714
+    1.25
+    -2.5
+    3.33333333333
+
+\>nmap(2:5)
+
+
+    [2.85714,  3.125,  3.33333,  3.5]
+
+\>plot2d("n(x)"):
+
+
+4. Fungsi 4
+
+
+\>function l(x) := 3\*x^3/(x^4-3)
+
+\>l(5), l(4), l(3)
+
+
+    0.602893890675
+    0.758893280632
+    1.03846153846
+
+\>lmap(5:8)
+
+
+    [0.602894,  0.50116,  0.429108,  0.375275]
+
+\>plot2d("l(x)",-3,3,-600,600):
+
+
+5. Fungsi 5
+
+
+\>function j(x) := (cos(x))\*sin(2\*x)
+
+\>j(pi), j(0), j(pi/3)
+
+
+    0
+    0
+    0.433012701892
+
+\>jmap(0:3pi)
+
+
+    [0,  0.491295,  0.314941,  0.276619,  -0.646688,  -0.154318,
+    -0.515201,  0.746821,  0.0418899,  0.684247]
+
+\>plot2d("j(x)"):
+
+
+6. Fungsi 6
+
+
+\>function o(x) := x\*sqrt(x+2)
+
+\>o(3), o(5), o(7)
+
+
+    6.7082039325
+    13.2287565553
+    21
+
+\>omap(3:12)
+
+
+    [6.7082,  9.79796,  13.2288,  16.9706,  21,  25.2982,  29.8496,
+    34.641,  39.6611,  44.8999]
+
+\>plot2d("o(x)"):
+
+
+1. Fungsi 1
+
+
+\>function a(x,y) ...
+
+
+    return x^2+y^2-24
     endfunction
 </pre>
-\>povstart(fade=10,<shadow);
-
-\>fractal(-1,-1,-1,2,4);
-
-\>povend();
+\>a(2,1), a(5,4), a(2,4)
 
 
-Perbedaan memungkinkan pemisahan satu objek dari objek lainnya.
-Seperti halnya persimpangan, ada beberapa objek CSG dari Povray.
+    -19
+    17
+    -4
+
+\>amap(-2:2,3:3)
 
 
-\>povstart(light=[5,-5,5],fade=10);
+    [-11,  -14,  -15,  -14,  -11]
+
+\>aspect=1.5; plot3d("a(x,y)",a=-100,b=100,c=-80,d=80,angle=35°,height=30°,r=pi,n=100):
 
 
-Untuk demonstrasi ini, kami mendefinisikan objek dalam Povray,
-alih-alih menggunakan string dalam Euler. Definisi langsung ditulis ke
-berkas.
+2. Fungsi 2
 
 
-Koordinat kotak -1 berarti [-1,-1,-1].
+\>function q(x,y) ...
 
 
-\>povdefine("mycube",povbox(-1,1));
+    return y^2/(x^2/3)
+    endfunction
+</pre>
+\>q(4,2), q(2,3), q(4,3)
 
 
-Kita dapat menggunakan objek ini dalam povobject(), yang mengembalikan
-string seperti biasa.
+    0.75
+    6.75
+    1.6875
+
+\>qmap(2:2,-2:2)
 
 
-\>c1=povobject("mycube",povlook(red));
+    [3,  0.75,  0,  0.75,  3]
+
+\>aspect=1.5; plot3d("q(x,y)",a=-100,b=100,c=-80,d=80,angle=35°,height=30°,r=pi,n=100):
 
 
-Kita buat kubus kedua, lalu putar dan ubah skalanya sedikit.
+# Menghitung Limit
+
+Perhitungan limit pada EMT dapat dilakukan dengan menggunakan fungsi
+Maxima, yakni "limit". Fungsi "limit" dapat digunakan untuk menghitung
+limit fungsi dalam bentuk ekspresi maupun fungsi yang sudah
+didefinisikan sebelumnya. Nilai limit dapat dihitung pada sebarang
+nilai atau pada tak hingga (-inf, minf, dan inf). Limit kiri dan limit
+kanan juga dapat dihitung, dengan cara memberi opsi "plus" atau
+"minus". Hasil limit dapat berupa nilai, "und' (tak definisi), "ind"
+(tak tentu namun terbatas), "infinity" (kompleks tak hingga).
 
 
-\>c2=povobject("mycube",povlook(yellow),translate=[1,1,1], ...  
-\>     rotate=xrotate(10°)+yrotate(10°), scale=1.2);
+Perhatikan beberapa contoh berikut. Perhatikan cara menampilkan
+perhitungan secara lengkap, tidak hanya menampilkan hasilnya saja.
 
 
-Lalu kita ambil selisih kedua benda tersebut.
+\>$showev('limit(1/(2\*x-1),x,0))
+
+\>$showev('limit((x^2-3\*x-10)/(x-5),x,5))
+
+\>$showev('limit(sin(x)/x,x,0))
+
+\>plot2d("sin(x)/x",-pi,pi):
+
+\>$showev('limit(sin(x^3)/x,x,0))
+
+\>$showev('limit(log(x), x, minf))
+
+\>$showev('limit((-2)^x,x, inf))
+
+\>$showev('limit(t-sqrt(2-t),t,2,minus))
+
+\>$showev('limit(t-sqrt(2-t),t,5,plus)) // Perhatikan hasilnya
+
+\>plot2d("x-sqrt(2-x)",-2,5):
+
+\>$showev('limit((x^2-9)/(2\*x^2-5\*x-3),x,3))
+
+\>$showev('limit((1-cos(x))/x,x,0))
+
+\>$showev('limit((x^2+abs(x))/(x^2-abs(x)),x,0))
+
+\>$showev('limit((1+1/x)^x,x,inf))
+
+\>$showev('limit((1+k/x)^x,x,inf))
+
+\>$showev('limit((1+x)^(1/x),x,0))
+
+\>$showev('limit((x/(x+k))^x,x,inf))
+
+\>$showev('limit(sin(1/x),x,0))
+
+\>$showev('limit(sin(1/x),x,inf))
+
+\>plot2d("sin(1/x)",-5,5):
 
 
-\>writeln(povdifference(c1,c2));
+# Latihan
+
+Bukalah buku Kalkulus. Cari dan pilih beberapa (paling sedikit 5
+fungsi berbeda tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian
+definisikan di EMT pada baris-baris perintah berikut (jika perlu
+tambahkan lagi). Untuk setiap fungsi, hitung nilai limit fungsi
+tersebut di beberapa nilai dan di tak hingga. Gambar grafik fungsi
+tersebut untuk mengkonfirmasi nilai-nilai limit tersebut.
 
 
-Sekarang tambahkan tiga sumbu.
+Jawab:
 
 
-\>writeAxis(-1.2,1.2,axis=1); ...  
-\>   writeAxis(-1.2,1.2,axis=2); ...  
-\>   writeAxis(-1.2,1.2,axis=4); ...  
-\>   povend();
+1. Fungsi 1
 
 
-# Fungsi Implisit
+\>$showev('limit((3\*x-6)/(x+2),x,2))
 
-Povray dapat memplot himpunan di mana f(x,y,z)=0, sama seperti
-parameter implisit dalam plot3d. Namun, hasilnya terlihat jauh lebih
-baik.
+\>plot2d("(3\*x-6)/(x+2)",-2,3.5,-1,5):
 
 
-Sintaks untuk fungsi-fungsi tersebut sedikit berbeda. Anda tidak dapat
-menggunakan output dari ekspresi Maxima atau Euler.
+2. Fungsi 2
 
 
-\>povstart(angle=70°,height=50°,zoom=4);
+\>$showev('limit(cos(2\*x)/(sin(x) - cos (x)),x,0))
 
-\>c=0.1; d=0.1; ...  
-\>   writeln(povsurface ("(pow(pow(x^2)+pow(y^2)-pow(c^2)^2)+(pow(pow(z^2-1)^2))\*(pow(pow(y^2)+pow(z^2)-pow(c^2)^2)+pow(pow(x^2-1)^2))\*(pow(pow(z^2)+pow(x^2)-pow(c^2)^2)+pow(pow(y^2-1)^2))=d",povlook(red))) ; ...  
-\>   povend();
+\>plot2d("cos(2\*x)/(sin(x) - cos (x))",-1,1):
 
 
-    Error : Povray error!
+3. Fungsi 3
+
+
+\>$showev('limit(((2\*x^2-2\*x+5)/(3\*x^2+x-6)),x,3))
+
+\>plot2d("(2\*x^2-2\*x+5)/(3\*x^2+x-6)",-2,10,-10,5):
+
+
+4. Fungsi 4
+
+
+\>$showev('limit((4\*x^2-3),x,0))
+
+\>plot2d("(4\*x^2-3)"):
+
+
+5. Fungsi 5
+
+
+\>$showev('limit((x^(x^(x))),x,0,plus))
+
+\>plot2d("(x^(x^(x)))",-3,3,-1,7):
+
+
+6. Fungsi 6
+
+
+\>$showev('limit((3\*x\*tan(x))/(1-cos(4\*x)),x,0))
+
+\>plot2d("(3\*x\*tan(x))/(1-cos(4\*x))",-pi/2,2pi,0,2pi):
+
+
+# Turunan Fungsi
+
+Definisi turunan:
+
+
+Berikut adalah contoh-contoh menentukan turunan fungsi dengan
+menggunakan definisi turunan (limit).
+
+
+\>$showev('limit(((x+h)^2-x^2)/h,h,0)) // turunan x^2
+
+
+Mengapa hasilnya seperti itu? Tuliskan atau tunjukkan bahwa hasil
+limit tersebut benar, sehingga benar turunan fungsinya benar.  Tulis
+penjelasan Anda di komentar ini.
+
+
+Sebagai petunjuk, ekspansikan (x+h)^2 dengan menggunakan teorema
+binomial.
+
+
+Jawab:
+
+
+\>$showev('limit((-sin(x)+ sin(x+h))/h,h,0)) // turunan sin(x)
+
+
+Mengapa hasilnya seperti itu? Tuliskan atau tunjukkan bahwa hasil
+limit tersebut
+
+
+benar, sehingga benar turunan fungsinya benar.  Tulis penjelasan Anda
+di komentar ini.
+
+
+Sebagai petunjuk, ekspansikan sin(x+h) dengan menggunakan rumus jumlah
+dua sudut.
+
+
+Jawab:
+
+
+\>$showev('limit((log(x+h)-log(x))/h,h,0)) // turunan log(x)
+
+
+Mengapa hasilnya seperti itu? Tuliskan atau tunjukkan bahwa hasil
+limit tersebut
+
+
+benar, sehingga benar turunan fungsinya benar.  Tulis penjelasan Anda
+di komentar ini.
+
+
+Sebagai petunjuk, gunakan sifat-sifat logaritma dan hasil limit pada
+bagian sebelumnya di atas.
+
+
+Jawab:
+
+
+Bukti:
+
+
+\>$showev('limit((1/(x+h)-1/x)/h,h,0)) // turunan 1/x
+
+\>$showev('limit((e^(x+h)-e^x)/h,h,0)) // turunan f(x)=e^x
+
+
+    Answering "Is x an integer?" with "integer"
+    Answering "Is x an integer?" with "integer"
+    Answering "Is x an integer?" with "integer"
+    Answering "Is x an integer?" with "integer"
+    Answering "Is x an integer?" with "integer"
+    Maxima is asking
+    Acceptable answers are: yes, y, Y, no, n, N, unknown, uk
+    Is x an integer?
     
-    Error generated by error() command
+    Use assume!
+    Error in:
+     $showev('limit((e^(x+h)-e^x)/h,h,0)) // turunan f(x)=e^x ...
+                                         ^
+
+Maxima bermasalah dengan limit:
+
+
+Oleh karena itu diperlukan trik khusus agar hasilnya benar.
+
+
+\>$showev('limit((E^h-1)/h,h,0))
+
+\>$factor(E^(x+h)-E^x)
+
+\>$showev('limit(factor((E^(x+h)-E^x)/h),h,0)) // turunan f(x)=e^x
+
+\>function f(x) &= x^x
+
+
     
-    povray:
-        error("Povray error!");
-    Try "trace errors" to inspect local variables after errors.
-    povend:
-        povray(file,w,h,aspect,exit); 
+                                       x
+                                      x
+    
 
-\>povstart(angle=25°,height=10°);
+\>$showev('limit((f(x+h)-f(x))/h,h,0)) // turunan f(x)=x^x
 
-\>writeln(povsurface("pow(x,2)+pow(y,2)\*pow(z,2)-1",povlook(blue),povbox(-2,2,"")));
 
-\>povend();
+Di sini Maxima juga bermasalah terkait limit:
 
-\>povstart(angle=70°,height=50°,zoom=4); 
 
+Dalam hal ini diperlukan asumsi nilai x.
 
-Buat permukaan implisit. Perhatikan sintaksis yang berbeda dalam
-ekspresi.
 
+\>&assume(x\>0); $showev('limit((f(x+h)-f(x))/h,h,0)) // turunan f(x)=x^x
 
-\>writeln(povsurface("pow(x,2)\*y-pow(y,3)-pow(z,2)",povlook(green))); ...  
-\>   writeAxes(); ...  
-\>   povend();
+\>&forget(x\>0) // jangan lupa, lupakan asumsi untuk kembali ke semula
 
 
-# Objek Mesh
+    
+                                   [x &gt; 0]
+    
 
-Dalam contoh ini, kami menunjukkan cara membuat objek mesh, dan
-menggambarnya dengan informasi tambahan.
+\>&forget(x<0)
 
 
-Kami ingin memaksimalkan xy dalam kondisi x+y=1 dan menunjukkan
-sentuhan tangensial garis-garis level.
+    
+                                   [x &lt; 0]
+    
 
+\>&facts()
 
-\>povstart(angle=-10°,center=[0.5,0.5,0.5],zoom=7);
 
+    
+                                      []
+    
 
-Kita tidak dapat menyimpan objek dalam string seperti sebelumnya,
-karena terlalu besar. Jadi kita mendefinisikan objek dalam file Povray
-menggunakan #declare. Fungsi povtriangle() melakukan ini secara
-otomatis. Fungsi ini dapat menerima vektor normal seperti pov3d().
+\>$showev('limit((asin(x+h)-asin(x))/h,h,0)) // turunan arcsin(x)
 
+\>$showev('limit((tan(x+h)-tan(x))/h,h,0)) // turunan tan(x)
 
-Berikut ini mendefinisikan objek mesh, dan langsung menuliskannya ke
-dalam file.
+\>function f(x) &= sinh(x) // definisikan f(x)=sinh(x)
 
 
-\>x=0:0.02:1; y=x'; z=x\*y; vx=-y; vy=-x; vz=1;
+    
+                                   sinh(x)
+    
 
-\>mesh=povtriangles(x,y,z,"",vx,vy,vz);
+\>function df(x) &= limit((f(x+h)-f(x))/h,h,0); $df(x) // df(x) = f'(x)
 
+\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]):
 
-Sekarang kita definisikan dua cakram, yang akan berpotongan dengan
-permukaan.
 
+# Latihan
 
-\>cl=povdisc([0.5,0.5,0],[1,1,0],2); ...  
-\>   ll=povdisc([0,0,1/4],[0,0,1],2);
+Bukalah buku Kalkulus. Cari dan pilih beberapa (paling sedikit 5
+fungsi berbeda tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian
+definisikan di EMT pada baris-baris perintah berikut (jika perlu
+tambahkan lagi). Untuk setiap fungsi, tentukan turunannya dengan
+menggunakan definisi turunan (limit), seperti contoh-contoh tersebut.
+Gambar grafik fungsi asli dan fungsi turunannya pada sumbu koordinat
+yang sama.
 
 
-Tuliskan permukaan dikurangi kedua cakram.
+Jawab:
 
 
-\>writeln(povdifference(mesh,povunion([cl,ll]),povlook(green)));
+1. Fungsi 1
 
 
-Tuliskan dua titik potongnya.
+\>function f(x) := x^2
 
+\>$showev('limit((((x+h)^2-x^2)/h),h,0)) // turunan x^2
 
-\>writeln(povintersection([mesh,cl],povlook(red))); ...  
-\>   writeln(povintersection([mesh,ll],povlook(gray)));
+\>function df(x) &= limit((((x+h)^2-x^2)/h),h,0);  $df(x)// df(x) = f'(x)
 
+\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",2,0.6), label("df(x)",2,0.17):
 
-Tuliskan titik maksimumnya.
 
+2. Fungsi 2
 
-\>writeln(povpoint([1/2,1/2,1/4],povlook(gray),size=2\*defaultpointsize));
 
+\>function f(x) := sin(x)\*cos(x)
 
-Tambahkan sumbu dan selesaikan.
+\>$showev('limit(((sin(x+h)\*cos(x+h))-sin(x)\*cos(x))/h,h,0)) // turunan sin(x)\*cos(x)
 
+\>function df(x) &= limit(((sin(x+h)\*cos(x+h))-sin(x)\*cos(x))/h,h,0);  $df(x)// df(x) = f'(x)
 
-\>writeAxes(0,1,0,1,0,1,d=0.015); ...  
-\>   povend();
+\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",1,0), label("df(x)",2.3,1.2):
 
 
-# Anaglif dalam Povray
+3. Fungsi 3
 
-Untuk menghasilkan anaglif untuk kacamata merah/sian, Povray harus
-dijalankan dua kali dari posisi kamera yang berbeda. Ia menghasilkan
-dua file Povray dan dua file PNG, yang dimuat dengan fungsi
-loadanaglyph().
 
+\>function f(x) := sqrt(x)\*4
 
-Tentu saja, Anda memerlukan kacamata merah/sian untuk melihat contoh
-berikut dengan benar.
+\>$showev('limit((sqrt(x+h)\*4-sqrt(x)\*4)/h,h,0)) // turunan sqrt(x)\*4
 
+\>function df(x) &= limit((sqrt(x+h)\*4-sqrt(x)\*4)/h,h,0);  $df(x)// df(x) = f'(x)
 
-Fungsi pov3d() memiliki sakelar sederhana untuk menghasilkan anaglif.
+\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",-2,11), label("df(x)",-2,-10):
 
 
-\>pov3d("-exp(-x^2-y^2)/2",r=2,height=45°,\>anaglyph, ...  
-\>     center=[0,0,0.5],zoom=3.5);
+4. Fungsi 4
 
 
-Jika Anda membuat suatu pemandangan dengan objek, Anda perlu
-memasukkan pembuatan pemandangan tersebut ke dalam suatu fungsi, dan
-menjalankannya dua kali dengan nilai yang berbeda untuk parameter
-anaglyph.
+\>function f(x) := cos(1/x)
 
+\>$showev('limit((cos(1/(x+h))-cos(1/x))/h,h,0)) // turunan cos(1/x)
 
-\>function myscene ...
+\>function df(x) &= limit((cos(1/(x+h))-cos(1/x))/h,h,0);  $df(x)// df(x) = f'(x)
 
+\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",2,0.4), label("df(x)",1,-0.5):
 
-      s=povsphere(povc,1);
-      cl=povcylinder(-povz,povz,0.5);
-      clx=povobject(cl,rotate=xrotate(90°));
-      cly=povobject(cl,rotate=yrotate(90°));
-      c=povbox([-1,-1,0],1);
-      un=povunion([cl,clx,cly,c]);
-      obj=povdifference(s,un,povlook(red));
-      writeln(obj);
-      writeAxes();
-    endfunction
-</pre>
-Fungsi povanaglyph() melakukan semua ini. Parameternya seperti pada
-povstart() dan povend() yang digabungkan.
 
+5. Fungsi 5
 
-\>povanaglyph("myscene",zoom=4.5);
 
+\>function f(x) := (log(x))^5
 
-# Menentukan Objek Sendiri
+\>$showev('limit(((log(x+h))^5-(log(x))^5)/h,h,0)) // turunan (log(x))^5
 
-Antarmuka povray Euler berisi banyak objek. Namun, Anda tidak terbatas
-pada objek-objek ini. Anda dapat membuat objek sendiri, yang
-menggabungkan objek lain, atau objek yang sama sekali baru.
+\>function df(x) &= limit(((log(x+h))^5-(log(x))^5)/h,h,0);  $df(x)// df(x) = f'(x)
 
+\>plot2d(["f(x)","df(x)"],-50,100,-10,50,color=[blue,red]), label("f(x)",25,35), label("df(x)",50,1):
 
-Kami mendemonstrasikan sebuah torus. Perintah Povray untuk ini adalah
-"torus". Jadi, kami mengembalikan string dengan perintah ini dan
-parameternya. Perhatikan bahwa torus selalu berpusat di titik asal.
 
+6. Fungsi 6
 
-\>function povdonat (r1,r2,look="") ...
 
+\>function f(x) := sqrt(tan(x))
 
-      return "torus {"+r1+","+r2+look+"}";
-    endfunction
-</pre>
-Inilah torus pertama kita.
+\>$showev('limit((sqrt(tan(x+h))-sqrt(tan(x)))/h,h,0)) // turunan exp(x)\*cos(x)
 
+\>function df(x) &= limit((sqrt(tan(x+h))-sqrt(tan(x)))/h,h,0);  $df(x)// df(x) = f'(x)
 
-\>t1=povdonat(0.8,0.2)
+\>plot2d(["f(x)","df(x)"],-10,10,-10,10,color=[blue,red]), label("f(x)",4.5,0), label("df(x)",5.5,5):
 
 
-    torus {0.8,0.2}
+# Integral
 
-Mari kita gunakan objek ini untuk membuat torus kedua, diterjemahkan
-dan diputar.
+EMT dapat digunakan untuk menghitung integral, baik integral tak tentu
+maupun integral tentu. Untuk integral tak tentu (simbolik) sudah tentu
+EMT menggunakan Maxima, sedangkan untuk perhitungan integral tentu EMT
+sudah menyediakan beberapa fungsi yang mengimplementasikan algoritma
+kuadratur (perhitungan integral tentu menggunakan metode numerik).
 
 
-\>t2=povobject(t1,rotate=xrotate(90°),translate=[0.8,0,0])
+Pada notebook ini akan ditunjukkan perhitungan integral tentu dengan
+menggunakan Teorema Dasar Kalkulus:
 
 
-    object { torus {0.8,0.2}
-     rotate 90 *x 
-     translate &lt;0.8,0,0&gt;
-     }
+Fungsi untuk menentukan integral adalah integrate. Fungsi ini dapat
+digunakan untuk menentukan, baik integral tentu maupun tak tentu (jika
+fungsinya memiliki antiderivatif). Untuk perhitungan integral tentu
+fungsi integrate menggunakan metode numerik (kecuali fungsinya tidak
+integrabel, kita tidak akan menggunakan metode ini).
 
-Sekarang kita tempatkan objek-objek ini ke dalam sebuah scene. Untuk
-tampilannya, kita gunakan Phong Shading.
 
+\>$showev('integrate(x^n,x))
 
-\>povstart(center=[0.4,0,0],angle=0°,zoom=3.8,aspect=1.5); ...  
-\>   writeln(povobject(t1,povlook(green,phong=1))); ...  
-\>   writeln(povobject(t2,povlook(green,phong=1))); ...  
-\>  
-&gt;povend();
 
+    Answering "Is n equal to -1?" with "no"
 
-memanggil program Povray. Namun, jika terjadi kesalahan, program
-tersebut tidak menampilkan kesalahan tersebut. Oleh karena itu, Anda
-harus menggunakan
+\>$showev('integrate(1/(1+x),x))
 
+\>$showev('integrate(1/(1+x^2),x))
 
-&gt;povend(&lt;exit);
+\>$showev('integrate(1/sqrt(1-x^2),x))
 
+\>$showev('integrate(sin(x),x,0,pi))
 
-jika ada yang tidak berhasil. Ini akan membiarkan jendela Povray
-terbuka.
+\>$showev('integrate(sin(x),x,a,b))
 
+\>$showev('integrate(x^n,x,a,b))
 
-\>povend(h=320,w=480);
 
+    Answering "Is n positive, negative or zero?" with "positive"
 
-Berikut adalah contoh yang lebih rinci. Kami memecahkan
+\>$showev('integrate(x^2\*sqrt(2\*x+1),x))
 
+\>$showev('integrate(x^2\*sqrt(2\*x+1),x,0,2))
 
-dan menunjukkan titik-titik yang layak dan titik-titik optimum dalam
-plot 3D.
+\>$ratsimp(%)
 
+\>$showev('integrate((sin(sqrt(x)+a)\*E^sqrt(x))/sqrt(x),x,0,pi^2))
 
-\>A=[10,8,4;5,6,8;6,3,2;9,5,6];
+\>$factor(%)
 
-\>b=[10,10,10,10]';
+\>function map f(x) &= E^(-x^2); $f(x)
 
-\>c=[1,1,1];
+\>$showev('integrate(f(x),x))
 
 
-Pertama, mari kita periksa, apakah contoh ini punya solusi.
+Fungsi f tidak memiliki antiturunan, integralnya masih memuat integral
+lain.
 
 
-\>x=simplex(A,b,c,\>max,\>check)'
+Kita tidak dapat menggunakan teorema Dasar kalkulus untuk menghitung
+integral tentu fungsi tersebut jika semua batasnya berhingga. Dalam
+hal ini dapat digunakan metode numerik (rumus kuadratur).
 
 
-    [0,  1,  0.5]
+Misalkan kita akan menghitung:
 
-Ya, benar.
 
+maxima: 'integrate(f(x),x,0,pi)
 
-Berikutnya kita mendefinisikan dua objek. Yang pertama adalah bidang
-datar
 
+\>x=0:0.1:pi-0.1; plot2d(x,f(x+0.1),\>bar); plot2d("f(x)",0,pi,\>add):
 
-\>function oneplane (a,b,look="") ...
 
+Integral tentu
 
-      return povplane(a,b,look)
-    endfunction
-</pre>
-Kemudian kita mendefinisikan irisan semua ruang setengah dan sebuah
-kubus.
 
+maxima: 'integrate(f(x),x,0,pi)
 
-\>function adm (A, b, r, look="") ...
 
+dapat dihampiri dengan jumlah luas persegi-persegi panjang di bawah
+kurva y=f(x) tersebut. Langkah-langkahnya adalah sebagai berikut.
 
-      ol=[];
-      loop 1 to rows(A); ol=ol|oneplane(A[#],b[#]); end;
-      ol=ol|povbox([0,0,0],[r,r,r]);
-      return povintersection(ol,look);
-    endfunction
-</pre>
-Sekarang, kita dapat merencanakan adegannya.
 
+\>t &= makelist(a,a,0,pi-0.1,0.1); // t sebagai list untuk menyimpan nilai-nilai x
 
-\>povstart(angle=120°,center=[0.5,0.5,0.5],zoom=3.5); ...  
-\>   writeln(adm(A,b,2,povlook(green,0.4))); ...  
-\>   writeAxes(0,1.3,0,1.6,0,1.5); ...  
-\>  
-Berikut ini adalah lingkaran di sekitar titik optimum.
+\>fx &= makelist(f(t[i]+0.1),i,1,length(t)); // simpan nilai-nilai f(x)
 
+\>// jangan menggunakan x sebagai list, kecuali Anda pakar Maxima!
 
-\>writeln(povintersection([povsphere(x,0.5),povplane(c,c.x')], ...  
-\>     povlook(red,0.9)));
 
+Hasilnya adalah:
 
-Dan kesalahan dalam arah yang optimum.
 
+maxima: 'integrate(f(x),x,0,pi) = 0.1*sum(fx[i],i,1,length(fx))
 
-\>writeln(povarrow(x,c\*0.5,povlook(red)));
 
+Jumlah tersebut diperoleh dari hasil kali lebar sub-subinterval (=0.1)
+dan jumlah nilai-nilai f(x) untuk x = 0.1, 0.2, 0.3, ..., 3.2.
 
-Kita menambahkan teks ke layar. Teks hanyalah objek 3D. Kita perlu
-menempatkan dan memutarnya sesuai dengan pandangan kita.
 
+\>0.1\*sum(f(x+0.1)) // cek langsung dengan perhitungan numerik EMT
 
-\>writeln(povtext("Linear Problem",[0,0.2,1.3],size=0.05,rotate=5°)); ...  
-\>   povend();
 
+    0.836219610253
 
-# Contoh
+Untuk mendapatkan nilai integral tentu yang mendekati nilai sebenarnya, lebar
+sub-intervalnya dapat diperkecil lagi, sehingga daerah di bawah kurva tertutup
+semuanya, misalnya dapat digunakan lebar subinterval 0.001. (Silakan dicoba!)
 
-1. Buatlah Plot 3D dari fungsi
 
+Meskipun Maxima tidak dapat menghitung integral tentu fungsi tersebut untuk
+batas-batas yang berhingga, namun integral tersebut dapat dihitung secara eksak jika
+batas-batasnya tak hingga. Ini adalah salah satu keajaiban di dalam matematika, yang
+terbatas tidak dapat dihitung secara eksak, namun yang tak hingga malah dapat
+dihitung secara eksak.
 
-\>reset; ...  
-\>   plot3d("x^3+x\*sin(y)", -1,1,0,2\*pi):
 
+\>$showev('integrate(f(x),x,0,inf))
 
-2. Buatlah Animasi Plot 3D dari fungsi
 
+Berikut adalah contoh lain fungsi yang tidak memiliki antiderivatif, sehingga
+integral tentunya hanya dapat dihitung dengan metode numerik.
 
-\>reset; ...  
-\>   function testplot () := plot3d("sin(y)+cos(x^2)"); ...  
-\>   rotate("testplot"); testplot():
 
+\>function f(x) &= x^x; $f(x)
 
-3. Buatlah Plot 3D dari fungsi trigonometri dibawah ini
+\>$showev('integrate(f(x),x,0,1))
 
+\>x=0:0.1:1-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,1,\>add):
 
-\>reset; ...  
-\>   plot3d("log(2\*x\*y)"):
+
+Maxima gagal menghitung integral tentu tersebut secara langsung menggunakan perintah
+integrate. Berikut kita lakukan seperti contoh sebelumnya untuk mendapat hasil atau
+pendekatan nilai integral tentu tersebut.
+
+
+\>t &= makelist(a,a,0,1-0.01,0.01);
+
+\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
+
+
+# Latihan
+
+* 
+Bukalah buku Kalkulus.
+
+* 
+Cari dan pilih beberapa (paling sedikit 5 fungsi berbeda
+* tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian definisikan di
+* EMT pada baris-baris perintah berikut (jika perlu tambahkan lagi).
+
+* 
+Untuk setiap fungsi, tentukan anti turunannya (jika ada), hitunglah
+* integral tentu dengan batas-batas yang menarik (Anda tentukan
+* sendiri), seperti contoh-contoh tersebut.
+
+* 
+Lakukan hal yang sama untuk fungsi-fungsi yang tidak dapat
+* diintegralkan (cari sedikitnya 3 fungsi).
+
+* 
+Gambar grafik fungsi dan daerah integrasinya pada sumbu koordinat
+* yang sama.
+
+* 
+Gunakan integral tentu untuk mencari luas daerah yang dibatasi oleh
+* dua kurva yang berpotongan di dua titik. (Cari dan gambar kedua kurva
+* dan arsir (warnai) daerah yang dibatasi oleh keduanya.)
+
+* 
+Gunakan integral tentu untuk menghitung volume benda putar kurva y=
+* f(x) yang diputar mengelilingi sumbu x dari x=a sampai x=b, yakni
+
+
+(Pilih fungsinya dan gambar kurva dan benda putar yang dihasilkan.
+Anda dapat mencari contoh-contoh bagaimana cara menggambar benda hasil
+perputaran suatu kurva.)
+
+
+- Gunakan integral tentu untuk menghitung panjang kurva y=f(x) dari
+x=a sampai x=b dengan menggunakan rumus:
+
+
+(Pilih fungsi dan gambar kurvanya.)
+
+
+Jawab:
+
+
+1. Fungsi 1
+
+
+\>function f(x) &= 5\*x^2; $f(x)
+
+\>$showev('integrate(f(x),x))
+
+\>$showev('integrate(f(x),x,2,3))
+
+\>x=0.01:0.03:4; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",2,3,\>add):
+
+
+2. Fungsi 2
+
+
+\>function f(x) &= cos(2\*x+5); $f(x)
+
+\>$showev('integrate(f(x),x))
+
+\>$showev('integrate(f(x),x,pi,2\*pi))
+
+\>x=0:0.05:pi-0.1; plot2d(x,f(x+0.03),\>bar); plot2d("f(x)",pi,2\*pi,\>add):
+
+
+3. Fungsi 3
+
+
+\>function f(x) &= (sin(x))\*(cos((x)))^2; $f(x)
+
+\>$showev('integrate(f(x),x))
+
+\>$showev('integrate(f(x),x,0,pi))
+
+\>x=-pi:0.04:pi; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,pi,\>add):
+
+
+4. Fungsi 4
+
+
+\>function f(x) &= (x^2\*(2-x^3)^(1/2)); $f(x)
+
+\>$showev('integrate(f(x),x))
+
+\>$showev('integrate(f(x),x,0,1))
+
+\>x=-1:0.04:1; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,1,\>add):
+
+
+5. Fungsi 5
+
+
+\>function f(x) &= sqrt(24-x^2); $f(x)
+
+\>$showev('integrate(f(x),x))
+
+\>$showev('integrate(f(x),x,1,2))
+
+\>x=-2:0.04:1; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",1,2,\>add):
+
+
+6. Fungsi 6
+
+
+\>t &= makelist(a,a,0,1-0.01,0.01);
+
+\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
+
+\>function f(x) &= x^2+50; $f(x)
+
+\>x=0:0.1:pi-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,pi,\>add):
+
+\>0.01\*sum(f(x+0.01))
+
+
+    17.051552
+
+7. Fungsi 7
+
+
+\>t &= makelist(a,a,0,1-0.01,0.01);
+
+\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
+
+\>function f(x) &= cos(x)/x; $f(x)
+
+\>x=-pi:0.07:pi-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,pi,\>add):
+
+\>0.01\*sum(f(x+0.01))
+
+
+    0.415163991256
+
+8. Fungsi 8
+
+
+\>t &= makelist(a,a,0,1-0.01,0.01);
+
+\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
+
+\>function f(x) &= sqrt(x^2-1); $f(x)
+
+\>x=3:0.04:pi-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,2,\>add):
+
+\>0.01\*sum(f(x+0.01))
+
+
+    0.11610107668
+
+## Luas daerah dibatasi 2 kurva
+
+1). Fungsi 1
+
+
+\>function f(x) &= x^3; $f(x)
+
+\>function g(x) &= x; $g(x)
+
+\>plot2d(["x^4","x^3"],-2,2,-1,2):
+
+\>function h(x) &= f(x)-g(x); $h(x)
+
+\>$showev('integrate(h(x),x))
+
+\>$&solve(f(x)=g(x))
+
+\>$showev('integrate(h(x),x,0,1)) // menghitung luas daerah yang dibatasi 2 kurva
+
+
+\>x=-1:0.01:1; plot2d(x,f(x),\>bar,\>filled,style="-",fillcolor=orange,\>grid); plot2d(x,g(x),\>bar,\>add,\>filled,style="-",fillcolor=white); label("f(x)",0,2.1); label("g(x)",0.5,0.3):
+
+
+2). Fungsi 2
+
+
+\>function f(x) &= x^3+1; $f(x)
+
+\>function g(x) &= x^2; $g(x)
+
+\>plot2d(["-x^2+2","x^2"],-2,2,-1,2):
+
+\>function h(x) &= f(x)-g(x); $h(x)
+
+\>$&solve(f(x)=g(x))
+
+\>$showev('integrate(h(x),x,-1,1)) // menghitung luas daerah yang dibatasi 2 kurva
+
+
+\>x=-1:0.01:1; plot2d(x,f(x),\>bar,\>filled,style="-",fillcolor=orange,\>grid); plot2d(x,g(x),\>bar,\>add,\>filled,style="-",fillcolor=white); label("f(x)",0,2.1); label("g(x)",0.5,0.3):
+
+
+## Volume benda putar
+
+Menghitung volume hasil perputaran kurva
+
+
+
+
+dari x=-1 sampai x=0. Diputar terhadap sumbu-x.
+
+
+Jawab:
+
+
+\>function m(x) &= x^4+3; $m(x)
+
+\>$showev('integrate(pi\*(m(x))^2,x,-1,0)) // Menghitung volume hasil perputaran m(x)
+
+
+Daerah di bawah kurva yang akan dirotasi terhadap sumbu x sebagai
+berikut:
+
+
+\>plot2d("m(x)",-1,0,-1,2,grid=7,\>filled, style="/\\"): 
+
+
+Hasil perputaran m(x) terhadap sumbu x sebagai berikut:
+
+
+\>plot3d("m(x)",-1,0,-1,1,\>rotate,angle=6.3,\>hue,\>contour,color=redgreen,height=11):
+
+
+## Menghitung panjang kurva
+
+
+
+Menghitung panjang kurva
+
+
+
+
+dari x=1 sampai x=3.
+
+
+\>function d(x) &= x^2-x+1; $d(x)
+
+\>plot2d("d(x)",-5,6): // gambar kurva d(x)
+
+\>$showev('limit((d(x+h)-d(x))/h,h,0))
+
+\>function dd(x) &= limit((d(x+h)-d(x))/h,h,0); $dd(x)
+
+\>function q(x) &= ((dd(x))^2); $q(x)
+
+\>$showev('integrate(sqrt(1+q(x)),x,1,3)) // menghitung panjang kurva
+
+
+Jadi, panjang kurva
+
+
+
+
+dari x=0 sampai x=4 adalah
+
+
+# Barisan dan Deret
+
+(Catatan: bagian ini belum lengkap. Anda dapat membaca contoh-contoh
+pengguanaan EMT dan Maxima untuk menghitung limit barisan, rumus
+jumlah parsial suatu deret, jumlah tak hingga suatu deret konvergen,
+dan sebagainya. Anda dapat mengeksplor contoh-contoh di EMT atau
+perbagai panduan penggunaan Maxima di software Maxima atau dari
+Internet.)
+
+
+Barisan dapat didefinisikan dengan beberapa cara di dalam EMT, di
+antaranya:
+
+
+* 
+dengan cara yang sama seperti mendefinisikan vektor dengan
+* elemen-elemen beraturan (menggunakan titik dua ":");
+
+* 
+menggunakan perintah "sequence" dan rumus barisan (suku ke -n);
+
+* 
+menggunakan perintah "iterate" atau "niterate";
+
+* 
+menggunakan fungsi Maxima "create_list" atau "makelist" untuk
+* menghasilkan barisan simbolik;
+
+* 
+menggunakan fungsi biasa yang inputnya vektor atau barisan;
+
+* 
+menggunakan fungsi rekursif.
+
+
+EMT menyediakan beberapa perintah (fungsi) terkait barisan, yakni:
+
+
+* 
+sum: menghitung jumlah semua elemen suatu barisan
+
+* 
+cumsum: jumlah kumulatif suatu barisan
+
+* 
+differences: selisih antar elemen-elemen berturutan
+
+
+EMT juga dapat digunakan untuk menghitung jumlah deret berhingga
+maupun deret tak hingga, dengan menggunakan perintah (fungsi) "sum".
+Perhitungan dapat dilakukan secara numerik maupun simbolik dan eksak.
+
+
+Berikut adalah beberapa contoh perhitungan barisan dan deret
+menggunakan EMT.
+
+
+\>1:10 // barisan sederhana
+
+
+    [1,  2,  3,  4,  5,  6,  7,  8,  9,  10]
+
+\>1:2:30
+
+
+    [1,  3,  5,  7,  9,  11,  13,  15,  17,  19,  21,  23,  25,  27,  29]
+
+\>sum(1:2:30), sum(1/(1:2:30))
+
+
+    225
+    2.33587263431
+
+\>$'sum(k, k, 1, n) = factor(ev(sum(k, k, 1, n),simpsum=true)) // simpsum:menghitung deret secara simbolik
+
+\>$'sum(1/(3^k+k), k, 0, inf) = factor(ev(sum(1/(3^k+k), k, 0, inf),simpsum=true))
+
+\>$'sum(1/x^2, x, 1, inf)= ev(sum(1/x^2, x, 1, inf),simpsum=true) // ev: menghitung nilai ekspresi
+
+\>$'sum((-1)^(k-1)/k, k, 1, inf) = factor(ev(sum((-1)^(x-1)/x, x, 1, inf),simpsum=true))
+
+
+Di sini masih gagal, hasilnya tidak dihitung.
+
+
+\>$'sum((-1)^k/(2\*k-1), k, 1, inf) = factor(ev(sum((-1)^k/(2\*k-1), k, 1, inf),simpsum=true))
+
+\>$ev(sum(1/n!, n, 0, inf),simpsum=true)
+
+
+Di sini masih gagal, hasilnya tidak dihitung, harusnya hasilnya e.
+
+
+\>&assume(abs(x)<1); $'sum(a\*x^k, k, 0, inf)=ev(sum(a\*x^k, k, 0, inf),simpsum=true), &forget(abs(x)<1);
+
+
+# Deret Taylor
+
+Deret Taylor suatu fungsi f yang diferensiabel sampai tak hingga di
+sekitar x=a adalah:
+
+
+\>$'e^x =taylor(exp(x),x,0,10) // deret Taylor e^x di sekitar x=0, sampai suku ke-11
+
+\>$'log(x)=taylor(log(x),x,1,10)// deret log(x) di sekitar x=1
 
