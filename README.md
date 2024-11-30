@@ -1,4 +1,4 @@
-# MATERI GEOMETRI
+# EMT untuk Statistika
 Nama  : Elviana Eka Putri
 
 
@@ -10,2893 +10,3003 @@ Kelas : Matematika E 2023
 
 ---
 
-## Visualisasi dan Perhitungan Geometri dengan EMT
 
-Euler menyediakan beberapa fungsi untuk melakukan visualisasi dan
-perhitungan geometri, baik secara numerik maupun analitik (seperti
-biasanya tentunya, menggunakan Maxima). Fungsi-fungsi untuk
-visualisasi dan perhitungan geometeri tersebut disimpan di dalam file
-program "geometry.e", sehingga file tersebut harus dipanggil sebelum
-menggunakan fungsi-fungsi atau perintah-perintah untuk geometri.
 
+Dalam buku catatan ini, kami mendemonstrasikan plot statistik utama,
+tes, dan distribusi dalam Euler.
 
-\>load geometry
 
+Mari kita mulai dengan beberapa statistik deskriptif. Ini bukanlah
+sebuah pengantar statistik. Jadi, Anda mungkin memerlukan latar
+belakang untuk memahami detailnya.
 
-    Numerical and symbolic geometry.
 
-## Fungsi-fungsi Geometri
+Asumsikan pengukuran berikut ini. Kita ingin menghitung nilai
+rata-rata dan deviasi standar yang diukur.
 
-Fungsi-fungsi untuk Menggambar Objek Geometri:
 
+\>M=[1000,1004,998,997,1002,1001,998,1004,998,997]; ...  
+\>   median(M), mean(M), dev(M),
 
-  defaultd:=textheight()*1.5: nilai asli untuk parameter d  
-  setPlotrange(x1,x2,y1,y2): menentukan rentang x dan y pada bidang  
 
-koordinat
+    999
+    999.9
+    2.72641400622
 
+Kita dapat memplot plot kotak dan kumis untuk data tersebut. Dalam
+kasus kami, tidak ada pencilan.
 
-  setPlotRange(r): pusat bidang koordinat (0,0) dan batas-batas
-sumbu-x dan y adalah -r sd r
 
+\>aspect(1.75); boxplot(M):
 
-  plotPoint (P, "P"): menggambar titik P dan diberi label "P"
 
+Kami menghitung probabilitas bahwa suatu nilai lebih besar dari 1005,
+dengan mengasumsikan nilai yang diukur dari distribusi normal.
 
-  plotSegment (A,B, "AB", d): menggambar ruas garis AB, diberi label
-"AB" sejauh d
 
+Semua fungsi untuk distribusi dalam Euler diakhiri dengan ...dis dan
+menghitung distribusi probabilitas kumulatif (CPF).
 
-  plotLine (g, "g", d): menggambar garis g diberi label "g" sejauh d
 
+Kami mencetak hasilnya dalam % dengan akurasi 2 digit menggunakan
+fungsi cetak.
 
-  plotCircle (c,"c",v,d): Menggambar lingkaran c dan diberi label "c"
 
+\>print((1-normaldis(1005,mean(M),dev(M)))\*100,2,unit=" %")
 
-  plotLabel (label, P, V, d): menuliskan label pada posisi P
 
+          3.07 %
 
-Fungsi-fungsi Geometri Analitik (numerik maupun simbolik):
+Untuk contoh berikutnya, kami mengasumsikan jumlah pria berikut ini
+dalam rentang ukuran tertentu.
 
 
-  turn(v, phi): memutar vektor v sejauh phi  
-  turnLeft(v):   memutar vektor v ke kiri  
-  turnRight(v):  memutar vektor v ke kanan  
-  normalize(v): normal vektor v  
-  crossProduct(v, w): hasil kali silang vektorv dan w.  
-  lineThrough(A, B): garis melalui A dan B, hasilnya [a,b,c] sdh.  
+\>r=155.5:4:187.5; v=[22,71,136,169,139,71,32,8];
 
-ax+by=c.
 
+Berikut ini adalah plot distribusinya.
 
-  lineWithDirection(A,v): garis melalui A searah vektor v
 
+\>plot2d(r,v,a=150,b=200,c=0,d=190,bar=1,style="\\/"):
 
-  getLineDirection(g): vektor arah (gradien) garis g
 
+Kita dapat memasukkan data mentah tersebut ke dalam tabel.
 
-  getNormal(g): vektor normal (tegak lurus) garis g
 
+Tabel adalah sebuah metode untuk menyimpan data statistik. Tabel kita
+harus berisi tiga kolom: Awal rentang, akhir rentang, jumlah orang
+dalam rentang.
 
-  getPointOnLine(g):  titik pada garis g
 
+Tabel dapat dicetak dengan header. Kami menggunakan vektor string
+untuk mengatur header.
 
-  perpendicular(A, g):  garis melalui A tegak lurus garis g
 
+\>T:=r[1:8]' | r[2:9]' | v'; writetable(T,labc=["BB","BA","Frek"])
 
-  parallel (A, g):  garis melalui A sejajar garis g
 
+            BB        BA      Frek
+         155.5     159.5        22
+         159.5     163.5        71
+         163.5     167.5       136
+         167.5     171.5       169
+         171.5     175.5       139
+         175.5     179.5        71
+         179.5     183.5        32
+         183.5     187.5         8
 
-  lineIntersection(g, h):  titik potong garis g dan h
+Jika kita membutuhkan nilai rata-rata dan statistik lain dari ukuran,
+kita perlu menghitung titik tengah rentang. Kita dapat menggunakan dua
+kolom pertama dari tabel kita untuk hal ini.
 
 
-  projectToLine(A, g):   proyeksi titik A pada garis g
+Sumbol “|” digunakan untuk memisahkan kolom, fungsi “writetable”
+digunakan untuk menulis tabel, dengan opsi “labc” untuk menentukan
+judul kolom.
 
 
-  distance(A, B):  jarak titik A dan B
+\>(T[,1]+T[,2])/2 // the midpoint of each interval
 
 
-  distanceSquared(A, B):  kuadrat jarak A dan B
+            157.5 
+            161.5 
+            165.5 
+            169.5 
+            173.5 
+            177.5 
+            181.5 
+            185.5 
 
+Tetapi akan lebih mudah, untuk melipat rentang dengan vektor
+[1/2,1/2].
 
-  quadrance(A, B): kuadrat jarak A dan B
 
+\>M=fold(r,[0.5,0.5])
 
-  areaTriangle(A, B, C):  luas segitiga ABC
 
+    [157.5,  161.5,  165.5,  169.5,  173.5,  177.5,  181.5,  185.5]
 
-  computeAngle(A, B, C):   besar sudut &lt;ABC
+Sekarang kita dapat menghitung rata-rata dan deviasi sampel dengan
+frekuensi yang diberikan.
 
 
-  angleBisector(A, B, C): garis bagi sudut &lt;ABC
+\>{m,d}=meandev(M,v); m, d,
 
 
-  circleWithCenter (A, r): lingkaran dengan pusat A dan jari-jari r
+    169.901234568
+    5.98912964449
 
+Mari kita tambahkan distribusi normal dari nilai-nilai tersebut ke
+dalam diagram batang di atas. Rumus untuk distribusi normal dengan
+rata-rata m dan deviasi standar d adalah:
 
-  getCircleCenter(c):  pusat lingkaran c
 
+Karena nilainya antara 0 dan 1, untuk memplotnya pada diagram batang,
+nilai tersebut harus dikalikan dengan 4 kali jumlah data.
 
-  getCircleRadius(c):  jari-jari lingkaran c
 
+\>plot2d("qnormal(x,m,d)\*sum(v)\*4", ...  
+\>     xmin=min(r),xmax=max(r),thickness=3,add=1):
 
-  circleThrough(A,B,C):  lingkaran melalui A, B, C
 
+# Tabel
 
-  middlePerpendicular(A, B): titik tengah AB
+Dalam direktori buku catatan ini, Anda dapat menemukan file dengan
+tabel. Data tersebut mewakili hasil survei. Berikut adalah empat baris
+pertama dari file tersebut. Data berasal dari sebuah buku online
+berbahasa Jerman “Einführung in die Statistik mit R” oleh A. Handl.
 
 
-  lineCircleIntersections(g, c): titik potong garis g dan lingkran c
+\>printfile("table.dat",4);
 
 
-  circleCircleIntersections (c1, c2):  titik potong lingkaran c1 dan
-c2
+    Could not open the file
+    table.dat
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    printfile:
+        open(filename,"r");
 
+Tabel berisi 7 kolom angka atau token (string). Kita ingin membaca
+tabel tersebut dari file. Pertama, kita menggunakan terjemahan kita
+sendiri untuk token-token tersebut.
 
-  planeThrough(A, B, C):  bidang melalui titik A, B, C
 
+Untuk itu, kita mendefinisikan set token. Fungsi strtokens()
+mendapatkan vektor string token dari string yang diberikan.
 
-Fungsi-fungsi Khusus Untuk Geometri Simbolik:
 
+\>mf:=["m","f"]; yn:=["y","n"]; ev:=strtokens("g vg m b vb");
 
-  getLineEquation (g,x,y): persamaan garis g dinyatakan dalam x dan y  
-  getHesseForm (g,x,y,A): bentuk Hesse garis g dinyatakan dalam x dan  
 
-y dengan titik A pada
+Sekarang kita membaca tabel dengan terjemahan ini.
 
 
-  sisi positif (kanan/atas) garis
+Argumen tok2, tok4, dan lain-lain adalah terjemahan dari kolom-kolom
+tabel. Argumen-argumen ini tidak ada dalam daftar parameter
+readtable(), jadi Anda perlu memberikannya dengan “:=”.
 
 
-  quad(A,B): kuadrat jarak AB
+\>{MT,hd}=readtable("table.dat",tok2:=mf,tok4:=yn,tok5:=ev,tok7:=yn);
 
 
-  spread(a,b,c): Spread segitiga dengan panjang sisi-sisi a,b,c, yakni
-sin(alpha)^2 dengan
+    Could not open the file
+    table.dat
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    readtable:
+        if filename!=none then open(filename,"r"); endif;
 
+\>load over statistics;
 
-  alpha sudut yang menghadap sisi a.
 
+Untuk mencetak, kita perlu menentukan set token yang sama. Kami
+mencetak empat baris pertama saja.
 
-  crosslaw(a,b,c,sa): persamaan 3 quads dan 1 spread pada segitiga
-dengan panjang sisi a, b, c.
 
+\>writetable(MT[1:10],labc=hd,wc=5,tok2:=mf,tok4:=yn,tok5:=ev,tok7:=yn);
 
-  triplespread(sa,sb,sc): persamaan 3 spread sa,sb,sc yang memebntuk
-suatu segitiga
 
+    MT is not a variable!
+    Error in:
+    writetable(MT[1:10],labc=hd,wc=5,tok2:=mf,tok4:=yn,tok5:=ev,to ...
+                       ^
 
-  doublespread(sa): Spread sudut rangkap Spread 2*phi, dengan
-sa=sin(phi)^2 spread a.
+The dots "." represent values, which are not available.
 
 
-## Contoh 1: Luas, Lingkaran Luar, Lingkaran Dalam Segitiga
+If we do not want to specify the tokens for the translation in
+advance, we only need to specify, which columns contain tokens and not
+numbers.
 
-Untuk menggambar objek-objek geometri, langkah pertama adalah
-menentukan rentang sumbu-sumbu koordinat. Semua objek geometri akan
-digambar pada satu bidang koordinat, sampai didefinisikan bidang
-koordinat yang baru.
 
+\>ctok=[2,4,5,7]; {MT,hd,tok}=readtable("table.dat",ctok=ctok);
 
-\>setPlotRange(-0.5,2.5,-0.5,2.5): // mendefinisikan bidang koordinat baru 
 
+    Could not open the file
+    table.dat
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    readtable:
+        if filename!=none then open(filename,"r"); endif;
 
-Sekarang tetapkan tiga poin dan plot mereka.
+Fungsi readtable() sekarang mengembalikan satu set token.
 
 
-\>A=[1,0]; plotPoint(A,"A"); // definisi dan gambar tiga titik
+\>tok
 
-\>B=[0,1]; plotPoint(B,"B");
 
-\>C=[2,2]; plotPoint(C,"C");
+    Variable tok not found!
+    Error in:
+    tok ...
+       ^
 
+Tabel berisi entri dari file dengan token yang diterjemahkan menjadi
+angka.
 
-Kemudian tiga segmen.
 
+String khusus NA=“.” ditafsirkan sebagai “Tidak Tersedia”, dan
+mendapatkan NAN (bukan angka) dalam tabel. Terjemahan ini dapat diubah
+dengan parameter NA, dan NAval.
 
-\>plotSegment(A,B,"c"); // c=AB
 
-\>plotSegment(B,C,"a"); // a=BC
+\>MT[1]
 
-\>plotSegment(A,C,"b"); // b=AC
 
+    MT is not a variable!
+    Error in:
+    MT[1] ...
+         ^
 
-Fungsi geometri meliputi fungsi untuk membuat garis dan lingkaran.
-Format garis adalah [a,b,c], yang mewakili garis dengan persamaan
-ax+by=c.
+Berikut ini adalah isi tabel dengan angka yang tidak diterjemahkan.
 
 
-\>lineThrough(B,C) // garis yang melalui B dan C
+\>writetable(MT,wc=5)
 
 
-    [-1,  2,  2]
+    Variable or function MT not found.
+    Error in:
+    writetable(MT,wc=5) ...
+                 ^
 
-Hitunglah garis tegak lurus yang melalui A pada BC.
+Untuk kenyamanan, Anda dapat menaruh output dari readtable() ke dalam
+sebuah daftar.
 
 
-\>h=perpendicular(A,lineThrough(B,C)); // garis h tegak lurus BC melalui A
+\>Table={{readtable("table.dat",ctok=ctok)}};
 
 
-Dan persimpangannya dengan BC.
+    Could not open the file
+    table.dat
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    readtable:
+        if filename!=none then open(filename,"r"); endif;
 
+Dengan menggunakan kolom token yang sama dan token yang dibaca dari
+file, kita dapat mencetak tabel. Kita dapat menentukan ctok, tok, dll.
+atau menggunakan daftar Tabel.
 
-\>D=lineIntersection(h,lineThrough(B,C)); // D adalah titik potong h dan BC
 
+\>writetable(Table,ctok=ctok,wc=5);
 
-Plot itu.
 
+    Variable or function Table not found.
+    Error in:
+    writetable(Table,ctok=ctok,wc=5); ...
+                    ^
 
-\>plotPoint(D,value=1); // koordinat D ditampilkan
+Fungsi tablecol() mengembalikan nilai kolom dari tabel, melewatkan
+setiap baris dengan nilai NAN (“.” dalam file), dan indeks kolom, yang
+berisi nilai-nilai ini.
 
-\>aspect(1); plotSegment(A,D): // tampilkan semua gambar hasil plot...()
 
+\>{c,i}=tablecol(MT,[5,6]);
 
-Hitung luas ABC:
 
+    Variable or function MT not found.
+    Error in:
+    {c,i}=tablecol(MT,[5,6]); ...
+                     ^
 
-\>norm(A-D)\*norm(B-C)/2 // AD=norm(A-D), BC=norm(B-C)
+Kita dapat menggunakan ini untuk mengekstrak kolom dari tabel untuk
+tabel baru.
 
 
-    1.5
+\>j=[1,5,6]; writetable(MT[i,j],labc=hd[j],ctok=[2],tok=tok)
 
-Bandingkan dengan rumus determinan.
 
+    Variable or function i not found.
+    Error in:
+    j=[1,5,6]; writetable(MT[i,j],labc=hd[j],ctok=[2],tok=tok) ...
+                              ^
 
-\>areaTriangle(A,B,C) // hitung luas segitiga langusng dengan fungsi
+Tentu saja, kita perlu mengekstrak tabel itu sendiri dari daftar Tabel
+dalam kasus ini.
 
 
-    1.5
+\>MT=Table[1];
 
-Cara lain menghitung luas segitigas ABC:
 
+    Table is not a variable!
+    Error in:
+    MT=Table[1]; ...
+               ^
 
-\>distance(A,D)\*distance(B,C)/2
+Tentu saja, kita juga dapat menggunakannya untuk menentukan nilai
+rata-rata kolom atau nilai statistik lainnya.
 
 
-    1.5
+\>mean(tablecol(MT,6))
 
-Sudut di C
 
+    Variable or function MT not found.
+    Error in:
+    mean(tablecol(MT,6)) ...
+                    ^
 
-\>degprint(computeAngle(B,C,A))
+Fungsi getstatistics() mengembalikan elemen-elemen dalam sebuah
+vektor, dan jumlahnya. Kita menerapkannya pada nilai “m” dan “f” pada
+kolom kedua tabel kita.
 
 
-    36°52'11.63''
+\>{xu,count}=getstatistics(tablecol(MT,2)); xu, count,
 
-Sekarang lingkaran luar segitiga.
 
+    Variable or function MT not found.
+    Error in:
+    {xu,count}=getstatistics(tablecol(MT,2)); xu, count, ...
+                                        ^
 
-\>c=circleThrough(A,B,C); // lingkaran luar segitiga ABC
+Kita bisa mencetak hasilnya dalam tabel baru.
 
-\>R=getCircleRadius(c); // jari2 lingkaran luar 
 
-\>O=getCircleCenter(c); // titik pusat lingkaran c 
+\>writetable(count',labr=tok[xu])
 
-\>plotPoint(O,"O"); // gambar titik "O"
 
-\>plotCircle(c,"Lingkaran luar segitiga ABC"):
+    Variable count not found!
+    Error in:
+    writetable(count',labr=tok[xu]) ...
+                     ^
 
+Fungsi selecttable() mengembalikan sebuah tabel baru dengan nilai
+dalam satu kolom yang dipilih dari vektor indeks. Pertama, kita
+mencari indeks dari dua nilai kita dalam tabel token.
 
-Tampilkan koordinat titik pusat dan jari-jari lingkaran luar.
 
+\>v:=indexof(tok,["g","vg"])
 
-\>O, R
 
+    Variable or function tok not found.
+    Error in:
+    v:=indexof(tok,["g","vg"]) ...
+                  ^
 
-    [1.16667,  1.16667]
-    1.17851130198
+Sekarang kita dapat memilih baris-baris dari tabel, yang memiliki
+salah satu nilai dalam v di baris ke-5.
 
-Sekarang akan digambar lingkaran dalam segitiga ABC. Titik pusat lingkaran dalam adalah
-titik potong garis-garis bagi sudut.
 
+\>MT1:=MT[selectrows(MT,5,v)]; i:=sortedrows(MT1,5);
 
-\>l=angleBisector(A,C,B); // garis bagi <ACB
 
-\>g=angleBisector(C,A,B); // garis bagi <CAB
+    Variable or function MT not found.
+    Error in:
+    MT1:=MT[selectrows(MT,5,v)]; i:=sortedrows(MT1,5); ...
+                         ^
 
-\>P=lineIntersection(l,g) // titik potong kedua garis bagi sudut
+Sekarang kita dapat mencetak tabel, dengan nilai yang diekstrak dan
+diurutkan di kolom ke-5.
 
 
-    [0.86038,  0.86038]
+\>writetable(MT1[i],labc=hd,ctok=ctok,tok=tok,wc=7);
 
-Tambahkan semuanya ke plot.
 
+    Variable or function i not found.
+    Error in:
+    writetable(MT1[i],labc=hd,ctok=ctok,tok=tok,wc=7); ...
+                    ^
 
-\>color(5); plotLine(l); plotLine(g); color(1); // gambar kedua garis bagi sudut
+Untuk statistik berikutnya, kita ingin menghubungkan dua kolom tabel.
+Jadi kita mengekstrak kolom 2 dan 4 dan mengurutkan tabel.
 
-\>plotPoint(P,"P"); // gambar titik potongnya
 
-\>r=norm(P-projectToLine(P,lineThrough(A,B))) // jari-jari lingkaran dalam
+\>i=sortedrows(MT,[2,4]);  ...  
+\>     writetable(tablecol(MT[i],[2,4])',ctok=[1,2],tok=tok)
 
 
-    0.509653732104
+    Variable or function MT not found.
+    Error in:
+    i=sortedrows(MT,[2,4]);    writetable(tablecol(MT[i],[2,4])',c ...
+                   ^
 
-\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segitiga ABC"): // gambar lingkaran dalam
+Dengan getstatistics(), kita juga dapat menghubungkan hitungan dalam
+dua kolom tabel satu sama lain.
 
 
-## Latihan
+\>MT24=tablecol(MT,[2,4]); ...  
+\>   {xu1,xu2,count}=getstatistics(MT24[1],MT24[2]); ...  
+\>   writetable(count,labr=tok[xu1],labc=tok[xu2])
 
-1. Tentukan ketiga titik singgung lingkaran dalam dengan sisi-sisi
-segitiga ABC.
 
+    Variable or function MT not found.
+    Error in:
+    MT24=tablecol(MT,[2,4]); {xu1,xu2,count}=getstatistics(MT24[1] ...
+                    ^
 
-\>setPlotRange(-2.5,4.5,-2.5,4.5);
+Tabel dapat ditulis ke sebuah file.
 
-\>A=[-2,1]; plotPoint(A,"A");
 
-\>B=[1,-2]; plotPoint(B,"B");
+\>filename="test.dat"; ...  
+\>   writetable(count,labr=tok[xu1],labc=tok[xu2],file=filename);
 
-\>C=[4,4]; plotPoint(C,"C");
 
-\>aspect(1):
+    Variable or function count not found.
+    Error in:
+    filename="test.dat"; writetable(count,labr=tok[xu1],labc=tok[x ...
+                                         ^
 
+Kemudian kita dapat membaca tabel dari file tersebut.
 
-2. Gambar segitiga dengan titik-titik sudut ketiga titik singgung
-tersebut.
 
+\>{MT2,hd,tok2,hdr}=readtable(filename,\>clabs,\>rlabs); ...  
+\>   writetable(MT2,labr=hdr,labc=hd)
 
-\>plotSegment(A,B,"c")
 
-\>plotSegment(B,C,"a")
+    Could not open the file
+    test.dat
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    readtable:
+        if filename!=none then open(filename,"r"); endif;
 
-\>plotSegment(A,C,"b")
+Dan menghapus file tersebut.
 
-\>aspect(1):
 
+\>fileremove(filename);
 
-4. Tunjukkan bahwa garis bagi sudut yang ke tiga juga melalui titik
-pusat lingkaran dalam.
 
+# Distribusi
 
-\>l=angleBisector(A,C,B);
+Dengan plot2d, ada metode yang sangat mudah untuk memplot distribusi
+data eksperimen.
 
-\>g=angleBisector(C,A,B);
 
-\>P=lineIntersection(l,g)
+\>p=normal(1,1000); //1000 random normal-distributed sample p
 
+\>plot2d(p,distribution=20,style="\\/"); // plot the random sample p
 
-    [0.581139,  0.581139]
+\>plot2d("qnormal(x,0,1)",add=1): // add the standard normal distribution plot
 
-\>color(5); plotLine(l); plotLine(g); color(1);
 
-\>plotPoint(P,"P");
+Perhatikan perbedaan antara plot batang (sampel) dan kurva normal
+(distribusi sesungguhnya). Masukkan kembali ketiga perintah tersebut
+untuk melihat hasil pengambilan sampel yang lain.
 
-\>r=norm(P-projectToLine(P,lineThrough(A,B)))
 
+Berikut ini adalah perbandingan 10 simulasi dari 1000 nilai
+terdistribusi normal dengan menggunakan apa yang disebut plot kotak.
+Plot ini menunjukkan median, kuartil 25% dan 75%, nilai minimal dan
+maksimal, serta pencilan.
 
-    1.52896119631
 
-\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segitiga ABC"):
+\>p=normal(10,1000); boxplot(p):
 
 
-Jadi, terbukti bahwa garis bagi sudut yang ketiga juga melalui titik
-pusat lingkaran dalam.
+Untuk menghasilkan bilangan bulat acak, Euler memiliki intrandom. Mari
+kita simulasikan pelemparan dadu dan memplot distribusinya.
 
 
-5. Gambar jari-jari lingkaran dalam.
+Kita menggunakan fungsi getmultiplicities(v,x), yang menghitung
+seberapa sering elemen-elemen dari v muncul di dalam x. Kemudian kita
+memplot hasilnya menggunakan columnsplot().
 
 
-\>r=norm(P-projectToLine(P,lineThrough(A,B)))
+\>k=intrandom(1,6000,6);  ...  
+\>   columnsplot(getmultiplicities(1:6,k));  ...  
+\>   ygrid(1000,color=red):
 
 
-    1.52896119631
+Meskipun intrandom(n,m,k) menghasilkan bilangan bulat yang
+terdistribusi secara seragam dari 1 sampai k, adalah mungkin untuk
+menggunakan distribusi bilangan bulat yang lain dengan randpint().
 
-\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segitiga ABC"):
 
+Pada contoh berikut, probabilitas untuk 1,2,3 adalah 0.4, 0.1, 0.5
+secara berurutan.
 
-## Contoh 2: Geometri Simbolik
 
-Kita dapat menghitung geometri eksak dan simbolik menggunakan Maxima.
+\>randpint(1,1000,[0.4,0.1,0.5]); getmultiplicities(1:3,%)
 
 
-File geometri.e menyediakan fungsi yang sama (dan lebih banyak lagi)
-di Maxima. Namun, kita dapat menggunakan perhitungan simbolis
-sekarang.
+    [378,  102,  520]
 
+Euler dapat menghasilkan nilai acak dari lebih banyak distribusi.
+Lihatlah ke dalam referensi.
 
-\>A &= [1,0]; B &= [0,1]; C &= [2,2]; // menentukan tiga titik A, B, C
 
+Misalnya, kita mencoba distribusi eksponensial. Sebuah variabel acak
+kontinu X dikatakan memiliki distribusi eksponensial, jika PDF-nya
+diberikan oleh
 
-Fungsi untuk garis dan lingkaran bekerja seperti fungsi Euler, tetapi
-memberikan perhitungan simbolis.
 
 
-\>c &= lineThrough(B,C) // c=BC
 
+dengan parameter
 
-    
-                                 [- 1, 2, 2]
-    
 
-Kita bisa mendapatkan persamaan garis dengan mudah.
+\>plot2d(randexponential(1,1000,2),\>distribution):
 
 
-\>$getLineEquation(c,x,y), $solve(%,y) | expand // persamaan garis c
+Untuk banyak distribusi, Euler dapat menghitung fungsi distribusi dan
+kebalikannya.
 
-\>$getLineEquation(lineThrough(A,[x1,y1]),x,y) // persamaan garis melalui A dan (x1, y1)
 
-\>h &= perpendicular(A,lineThrough(B,C)) // h melalui A tegak lurus BC
+\>plot2d("normaldis",-4,4): 
 
 
-    
-                                  [2, 1, 2]
-    
+Berikut ini adalah salah satu cara untuk memplot kuantil.
 
-\>Q &= lineIntersection(c,h) // Q titik potong garis c=BC dan h
 
+\>plot2d("qnormal(x,1,1.5)",-4,6);  ...  
+\>   plot2d("qnormal(x,1,1.5)",a=2,b=5,\>add,\>filled):
 
-    
-                                     2  6
-                                    [-, -]
-                                     5  5
-    
 
-\>$projectToLine(A,lineThrough(B,C)) // proyeksi A pada BC
 
-\>$distance(A,Q) // jarak AQ
 
-\>cc &= circleThrough(A,B,C); $cc // (titik pusat dan jari-jari) lingkaran melalui A, B, C
+Probabilitas untuk berada di area hijau adalah sebagai berikut.
 
-\>r&=getCircleRadius(cc); $r , $float(r) // tampilkan nilai jari-jari
 
-\>$computeAngle(A,C,B) // nilai <ACB
+\>normaldis(5,1,1.5)-normaldis(2,1,1.5)
 
-\>$solve(getLineEquation(angleBisector(A,C,B),x,y),y)[1] // persamaan garis bagi <ACB
 
-\>P &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A)); $P // titik potong 2 garis bagi sudut
+    0.248662156979
 
-\>P() // hasilnya sama dengan perhitungan sebelumnya
+Hal ini dapat dihitung secara numerik dengan integral berikut ini.
 
 
-    [0.86038,  0.86038]
+\>gauss("qnormal(x,1,1.5)",2,5)
 
-## Garis dan Lingkaran yang Berpotongan
 
-Tentu saja, kita juga dapat memotong garis dengan lingkaran, dan
-lingkaran dengan lingkaran.
+    0.248662156979
 
+Mari kita bandingkan distribusi binomial dengan distribusi normal
+dengan rata-rata dan deviasi yang sama. Fungsi invbindis()
+menyelesaikan interpolasi linier antara nilai bilangan bulat.
 
-\>A &:= [1,0]; c=circleWithCenter(A,4);
 
-\>B &:= [1,2]; C &:= [2,1]; l=lineThrough(B,C);
+\>invbindis(0.95,1000,0.5), invnormaldis(0.95,500,0.5\*sqrt(1000))
 
-\>setPlotRange(5); plotCircle(c); plotLine(l);
 
+    525.516721219
+    526.007419394
 
-Perpotongan garis dengan lingkaran menghasilkan dua titik dan jumlah
-titik potong.
+Fungsi qdis() adalah densitas dari distribusi chi-square. Seperti
+biasa, Euler memetakan vektor ke fungsi ini. Dengan demikian kita
+mendapatkan plot semua distribusi chi-kuadrat dengan derajat 5 hingga
+30 dengan mudah dengan cara berikut.
 
 
-\>{P1,P2,f}=lineCircleIntersections(l,c);
+\>plot2d("qchidis(x,(5:5:50)')",0,50):
 
-\>P1, P2,
 
+Euler memiliki fungsi-fungsi yang akurat untuk mengevaluasi
+distribusi-distribusi. Mari kita periksa chidis() dengan sebuah
+integral.
 
-    [4.64575,  -1.64575]
-    [-0.645751,  3.64575]
 
-\>plotPoint(P1); plotPoint(P2):
+Penamaannya diusahakan untuk konsisten. Sebagai contoh,
 
 
-Begitu pula di Maxima.
+* 
+distribusi chi-kuadrat adalah chidis(),
 
+* 
+fungsi kebalikannya adalah invchidis(),
 
-\>c &= circleWithCenter(A,4) // lingkaran dengan pusat A jari-jari 4
+* 
+densitasnya adalah qchidis().
 
 
-    
-                                  [1, 0, 4]
-    
+Pelengkap dari distribusi (ekor atas) adalah chicdis().
 
-\>l &= lineThrough(B,C) // garis l melalui B dan C
 
+\>chidis(1.5,2), integrate("qchidis(x,2)",0,1.5)
 
-    
-                                  [1, 1, 3]
-    
 
-\>$lineCircleIntersections(l,c) | radcan, // titik potong lingkaran c dan garis l
+    0.527633447259
+    0.527633447259
 
+# Distribusi Diskrit
 
-Akan ditunjukkan bahwa sudut-sudut yang menghadap bsuusr yang sama adalah sama besar.
+Untuk menentukan distribusi diskrit Anda sendiri, Anda dapat
+menggunakan metode berikut.
 
 
-\>C=A+normalize([-2,-3])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
+Pertama, kita tetapkan fungsi distribusinya.
 
-\>degprint(computeAngle(P1,C,P2))
 
+\>wd = 0|((1:6)+[-0.01,0.01,0,0,0,0])/6
 
-    69°17'42.68''
 
-\>C=A+normalize([-4,-3])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
+    [0,  0.165,  0.335,  0.5,  0.666667,  0.833333,  1]
 
-\>degprint(computeAngle(P1,C,P2))
+Artinya, dengan probabilitas wd[i+1]-wd[i] kita menghasilkan nilai
+acak i.
 
 
-    69°17'42.68''
+Ini hampir merupakan distribusi yang seragam. Mari kita definisikan
+sebuah generator bilangan acak untuk ini. Fungsi find(v,x) menemukan
+nilai x dalam vektor v. Fungsi ini juga dapat digunakan untuk vektor
+x.
 
-\>insimg;
 
+\>function wrongdice (n,m) := find(wd,random(n,m))
 
-## Garis Sumbu
 
-Berikut adalah langkah-langkah menggambar garis sumbu ruas garis AB:
+Kesalahan ini sangat halus sehingga kita hanya bisa melihatnya setelah
+melakukan iterasi yang sangat banyak.
 
 
-1. Gambar lingkaran dengan pusat A melalui B.
+\>columnsplot(getmultiplicities(1:6,wrongdice(1,1000000))):
 
 
-2. Gambar lingkaran dengan pusat B melalui A.
+Berikut ini adalah fungsi sederhana untuk memeriksa distribusi seragam
+dari nilai 1... K dalam v. Kami menerima hasilnya, jika untuk semua
+frekuensi
 
 
-3. Tarik garis melallui kedua titik potong kedua lingkaran tersebut. Garis ini merupakan
-garis sumbu (melalui titik tengah dan tegak lurus) AB.
+\>function checkrandom (v, delta=1) ...
 
 
-\>A=[2,2]; B=[-1,-2];
+      K=max(v); n=cols(v);
+      fr=getfrequencies(v,1:K);
+      return max(fr/n-1/K)<delta/sqrt(n);
+      endfunction
+</pre>
+Memang fungsi ini menolak distribusi seragam.
 
-\>c1=circleWithCenter(A,distance(A,B));
 
-\>c2=circleWithCenter(B,distance(A,B));
+\>checkrandom(wrongdice(1,1000000))
 
-\>{P1,P2,f}=circleCircleIntersections(c1,c2);
 
-\>l=lineThrough(P1,P2);
+    0
 
-\>setPlotRange(5); plotCircle(c1); plotCircle(c2);
+Dan ini menerima generator acak bawaan.
 
-\>plotPoint(A); plotPoint(B); plotSegment(A,B); plotLine(l):
 
-
-Selanjutnya, kami melakukan hal yang sama di Maxima dengan koordinat
-umum.
-
-
-\>A &= [a1,a2]; B &= [b1,b2];
-
-\>c1 &= circleWithCenter(A,distance(A,B));
-
-\>c2 &= circleWithCenter(B,distance(A,B));
-
-\>P &= circleCircleIntersections(c1,c2); P1 &= P[1]; P2 &= P[2];
-
-
-Persamaan untuk persimpangan cukup terlibat. Tetapi kita dapat
-menyederhanakannya, jika kita memecahkan y.
-
-
-\>g &= getLineEquation(lineThrough(P1,P2),x,y);
-
-\>$solve(g,y)
-
-
-Ini memang sama dengan tegak lurus tengah, yang dihitung dengan cara
-yang sama sekali berbeda.
-
-
-\>$solve(getLineEquation(middlePerpendicular(A,B),x,y),y)
-
-\>h &=getLineEquation(lineThrough(A,B),x,y);
-
-\>$solve(h,y)
-
-
-Perhatikan hasil kali gradien garis g dan h adalah:
-
-
-Artinya kedua garis tegak lurus.
-
-
-## Contoh 3: Rumus Heron
-
-Rumus Heron menyatakan bahwa luas segitiga dengan panjang sisi-sisi a,
-b dan c adalah:
-
-
-Untuk membuktikan hal ini kita misalkan C(0,0), B(a,0) dan A(x,y),
-b=AC, c=AB. Luas segitiga ABC adalah
-
-
-Nilai y didapat dengan menyelesaikan sistem persamaan:
-
-
-\>sol &= solve([x^2+y^2 = b^2,(x-a)^2+y^2=c^2],[x,y]):
-
-\>setPlotRange(-1,10,-1,8); plotPoint([0,0], "C(0,0)"); plotPoint([5.5,0], "B(a,0)");  ...  
-\>   plotPoint([7.5,6], "A(x,y)");
-
-\>plotSegment([0,0],[5.5,0], "a",25); plotSegment([5.5,0],[7.5,6],"c",15);  ...  
-\>   plotSegment([0,0],[7.5,6],"b",25); 
-
-\>plotSegment([7.5,6],[7.5,0],"t=y",25):
-
-\>sol &= solve([x^2+y^2=b^2,(x-a)^2+y^2=c^2],[x,y]):
-
-
-Ekstrak solusi y.
-
-
-\>ysol &= y with sol[2][2] $ysol:
-
-
-Kami mendapatkan rumus Heron.
-
-
-\>function H(a,b,c) &= sqrt(factor((ysol\*a/2)^2)); $'H(a,b,c)=H(a,b,c)
-
-\>$'Luas=H(3,4,5) // luas segitiga dengan panjang sisi-sisi 3, 4, 5
-
-
-Dan buat fungsi ini.
-
-
-\>function fx(a,c,d) &= rhs(s1[1]); $fx(a,c,d), function fy(a,c,d) &= rhs(s1[2]); $fy(a,c,d)
-
-
-Sekarang kita bisa menggambar setnya. Sisi b bervariasi dari 1 hingga
-4. Diketahui bahwa kita mendapatkan elips.
-
-
-\>aspect(1); plot2d(&fx(3,x,5),&fy(3,x,5),xmin=1,xmax=4,square=1):
-
-
-Kita dapat memeriksa persamaan umum untuk elips ini, yaitu.
-
-
-di mana (xm,ym) adalah pusat, dan u dan v adalah setengah sumbu.
-
-
-\>$ratsimp((fx(a,c,d)-a/2)^2/u^2+fy(a,c,d)^2/v^2 with [u=d/2,v=sqrt(d^2-a^2)/2])
-
-
-Kita lihat bahwa tinggi dan luas segitiga adalah maksimal untuk x=0.
-Jadi luas segitiga dengan a+b+c=d maksimal jika segitiga sama sisi.
-Kami ingin menurunkan ini secara analitis.
-
-
-\>eqns &= [diff(H(a,b,d-(a+b))^2,a)=0,diff(H(a,b,d-(a+b))^2,b)=0]; $eqns
-
-
-Kami mendapatkan beberapa minima, yang termasuk dalam segitiga dengan
-satu sisi 0, dan solusinya a=b=c=d/3.
-
-
-\>$solve(eqns,[a,b])
-
-
-\>B &= [0,0]; $B, C &= [a,0]; $C
-
-
-Hitung tegak lurus tengah di Maxima.
-
-
-\>h &= middlePerpendicular(A,B); g &= middlePerpendicular(B,C);
-
-
-Dan pusat lingkaran.
-
-
-\>U &= lineIntersection(h,g);
-
-
-Kami mendapatkan rumus untuk jari-jari lingkaran.
-
-
-\>&assume(a\>0,b\>0,c\>0); $distance(U,B) | radcan
-
-
-Menggunakan geometri, kami memperoleh rumus sederhana
-
-
-untuk radiusnya. Kami dapat memeriksa, apakah ini benar dengan Maxima.
-Maxima akan memfaktorkan ini hanya jika kita kuadratkan.
-
-
-\>$c^2/sin(computeAngle(A,B,C))^2  | factor
-
-
-## Contoh 4: Garis Euler dan Parabola
-
-Garis Euler adalah garis yang ditentukan dari sembarang segitiga yang
-tidak sama sisi. Ini adalah garis tengah segitiga, dan melewati
-beberapa titik penting yang ditentukan dari segitiga, termasuk
-orthocenter, circumcenter, centroid, titik Exeter dan pusat lingkaran
-sembilan titik segitiga.
-
-
-Untuk demonstrasi, kami menghitung dan memplot garis Euler dalam
-sebuah segitiga.
-
-
-Pertama, kita mendefinisikan sudut-sudut segitiga di Euler. Kami
-menggunakan definisi, yang terlihat dalam ekspresi simbolis.
-
-
-\>A::=[-1,-1]; B::=[2,0]; C::=[1,2];
-
-
-Untuk memplot objek geometris, kami menyiapkan area plot, dan
-menambahkan titik ke sana. Semua plot objek geometris ditambahkan ke
-plot saat ini.
-
-
-\>setPlotRange(3); plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C");
-
-
-Kita juga bisa menambahkan sisi segitiga.
-
-
-\>plotSegment(A,B,""); plotSegment(B,C,""); plotSegment(C,A,""):
-
-
-Berikut adalah luas segitiga, menggunakan rumus determinan. Tentu
-saja, kita harus mengambil nilai absolut dari hasil ini.
-
-
-\>$areaTriangle(A,B,C)
-
-
-Kita dapat menghitung koefisien sisi c.
-
-
-\>c &= lineThrough(A,B)
-
-
-    
-                                [- 1, 3, - 2]
-    
-
-Dan juga dapatkan rumus untuk baris ini.
-
-
-\>$getLineEquation(c,x,y)
-
-
-Untuk bentuk Hesse, kita perlu menentukan sebuah titik, sehingga titik
-tersebut berada di sisi positif dari bentuk Hesse. Memasukkan titik
-menghasilkan jarak positif ke garis.
-
-
-\>$getHesseForm(c,x,y,C), $at(%,[x=C[1],y=C[2]])
-
-
-Sekarang kita hitung lingkaran luar ABC.
-
-
-\>LL &= circleThrough(A,B,C); $getCircleEquation(LL,x,y)
-
-\>O &= getCircleCenter(LL); $O
-
-
-Gambarkan lingkaran dan pusatnya. Cu dan U adalah simbolis. Kami
-mengevaluasi ekspresi ini untuk Euler.
-
-
-\>plotCircle(LL()); plotPoint(O(),"O"):
-
-
-Kita dapat menghitung perpotongan ketinggian di ABC (orthocenter)
-secara numerik dengan perintah berikut.
-
-
-\>H &= lineIntersection(perpendicular(A,lineThrough(C,B)),...  
-\>     perpendicular(B,lineThrough(A,C))); $H
-
-
-Sekarang kita dapat menghitung garis Euler dari segitiga.
-
-
-\>el &= lineThrough(H,O); $getLineEquation(el,x,y)
-
-
-Tambahkan ke plot kami.
-
-
-\>plotPoint(H(),"H"); plotLine(el(),"Garis Euler"):
-
-
-Pusat gravitasi harus berada di garis ini.
-
-
-\>M &= (A+B+C)/3; $getLineEquation(el,x,y) with [x=M[1],y=M[2]]
-
-\>plotPoint(M(),"M"): // titik berat
-
-
-Teorinya memberitahu kita MH=2*MO. Kita perlu menyederhanakan dengan
-radcan untuk mencapai ini.
-
-
-\>$distance(M,H)/distance(M,O)|radcan
-
-
-Fungsi termasuk fungsi untuk sudut juga.
-
-
-\>$computeAngle(A,C,B), degprint(%())
-
-
-    60°15'18.43''
-
-Persamaan untuk pusat incircle tidak terlalu bagus.
-
-
-\>Q &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A))|radcan; $Q
-
-
-Mari kita hitung juga ekspresi untuk jari-jari lingkaran yang
-tertulis.
-
-
-\>r &= distance(Q,projectToLine(Q,lineThrough(A,B)))|ratsimp; $r
-
-\>LD &=  circleWithCenter(Q,r); // Lingkaran dalam
-
-
-Mari kita tambahkan ini ke plot.
-
-
-\>color(5); plotCircle(LD()):
-
-
-## Parabola
-
-Selanjutnya akan dicari persamaan tempat kedudukan titik-titik yang berjarak sama ke titik C
-dan ke garis AB.
-
-
-\>p &= getHesseForm(lineThrough(A,B),x,y,C)-distance([x,y],C); $p='0
-
-
-Persamaan tersebut dapat digambar menjadi satu dengan gambar sebelumnya.
-
-
-\>plot2d(p,level=0,add=1,contourcolor=6):
-
-
-Ini seharusnya menjadi beberapa fungsi, tetapi pemecah default Maxima
-hanya dapat menemukan solusinya, jika kita kuadratkan persamaannya.
-Akibatnya, kami mendapatkan solusi palsu.
-
-
-\>akar &= solve(getHesseForm(lineThrough(A,B),x,y,C)^2-distance([x,y],C)^2,y)
-
-
-    
-            [y = - 3 x - sqrt(70) sqrt(9 - 2 x) + 26, 
-                                  y = - 3 x + sqrt(70) sqrt(9 - 2 x) + 26]
-    
-
-Solusi pertama adalah
-
-
-maxima: akar[1]
-
-
-Menambahkan solusi pertama ke plot menunjukkan, bahwa itu memang jalan
-yang kita cari. Teorinya memberi tahu kita bahwa itu adalah parabola
-yang diputar.
-
-
-\>plot2d(&rhs(akar[1]),add=1):
-
-\>function g(x) &= rhs(akar[1]); $'g(x)= g(x)// fungsi yang mendefinisikan kurva di atas
-
-\>T &=[-1, g(-1)]; // ambil sebarang titik pada kurva tersebut
-
-\>dTC &= distance(T,C); $fullratsimp(dTC), $float(%) // jarak T ke C
-
-\>U &= projectToLine(T,lineThrough(A,B)); $U // proyeksi T pada garis AB 
-
-\>dU2AB &= distance(T,U); $fullratsimp(dU2AB), $float(%) // jatak T ke AB
-
-
-Ternyata jarak T ke C sama dengan jarak T ke AB. Coba Anda pilih titik T yang lain dan
-ulangi perhitungan-perhitungan di atas untuk menunjukkan bahwa hasilnya juga sama.
-
-
-## Contoh 5: Trigonometri Rasional
-
-Ini terinspirasi dari ceramah N.J.Wildberger. Dalam bukunya "Divine
-Proportions", Wildberger mengusulkan untuk mengganti pengertian klasik
-tentang jarak dan sudut dengan kuadrat dan penyebaran. Dengan
-menggunakan ini, memang mungkin untuk menghindari fungsi trigonometri
-dalam banyak contoh, dan tetap "rasional".
-
-
-Berikut ini, saya memperkenalkan konsep, dan memecahkan beberapa
-masalah. Saya menggunakan perhitungan simbolik Maxima di sini, yang
-menyembunyikan keuntungan utama dari trigonometri rasional bahwa
-perhitungan hanya dapat dilakukan dengan kertas dan pensil. Anda
-diundang untuk memeriksa hasil tanpa komputer.
-
-
-Intinya adalah bahwa perhitungan rasional simbolis sering kali
-menghasilkan hasil yang sederhana. Sebaliknya, trigonometri klasik
-menghasilkan hasil trigonometri yang rumit, yang hanya mengevaluasi
-perkiraan numerik.
-
-
-\>load geometry;
-
-
-Untuk pengenalan pertama, kami menggunakan segitiga persegi panjang
-dengan proporsi Mesir terkenal 3, 4 dan 5. Perintah berikut adalah
-perintah Euler untuk merencanakan geometri bidang yang terdapat dalam
-file Euler "geometry.e".
-
-
-\>C&:=[0,0]; A&:=[4,0]; B&:=[0,3]; ...  
-\>   setPlotRange(-1,5,-1,5); ...  
-\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
-\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
-\>   insimg(30);
-
-
-Tentu saja,
-
-
-di mana wa adalah sudut di A. Cara yang biasa untuk menghitung sudut
-ini, adalah dengan mengambil invers dari fungsi sinus. Hasilnya adalah
-sudut yang tidak dapat dicerna, yang hanya dapat dicetak kira-kira.
-
-
-\>wa := arcsin(3/5); degprint(wa)
-
-
-    36°52'11.63''
-
-Trigonometri rasional mencoba menghindari hal ini.
-
-
-Gagasan pertama trigonometri rasional adalah kuadran, yang
-menggantikan jarak. Sebenarnya, itu hanya jarak kuadrat. Berikut ini,
-a, b, dan c menunjukkan kuadrat dari sisi-sisinya.
-
-
-Teorema Pythogoras menjadi a+b=c.
-
-
-\>a &= 3^2; b &= 4^2; c &= 5^2; &a+b=c
-
-
-    
-                                   25 = 25
-    
-
-Pengertian kedua dari trigonometri rasional adalah penyebaran. Spread
-mengukur pembukaan antar baris. Ini adalah 0, jika garis-garisnya
-sejajar, dan 1, jika garis-garisnya persegi panjang. Ini adalah
-kuadrat sinus sudut antara dua garis.
-
-
-Penyebaran garis AB dan AC pada gambar di atas didefinisikan sebagai:
-
-
-di mana a dan c adalah kuadrat dari sembarang segitiga siku-siku
-dengan salah satu sudut di A.
-
-
-\>sa &= a/c; $sa
-
-
-Ini lebih mudah dihitung daripada sudut, tentu saja. Tetapi Anda
-kehilangan properti bahwa sudut dapat ditambahkan dengan mudah.
-
-
-Tentu saja, kita dapat mengonversi nilai perkiraan untuk sudut wa
-menjadi sprad, dan mencetaknya sebagai pecahan.
-
-
-\>fracprint(sin(wa)^2)
-
-
-    9/25
-
-Hukum kosinus trgonometri klasik diterjemahkan menjadi "hukum silang"
-berikut.
-
-
-Di sini a, b, dan c adalah kuadrat dari sisi-sisi segitiga, dan sa
-adalah penyebaran sudut A. Sisi a, seperti biasa, berhadapan dengan
-sudut A.
-
-
-Hukum ini diimplementasikan dalam file geometri.e yang kami muat ke
-Euler.
-
-
-\>$crosslaw(aa,bb,cc,saa)
-
-
-Dalam kasus kami, kami mendapatkan
-
-
-\>$crosslaw(a,b,c,sa)
-
-
-Mari kita gunakan crosslaw ini untuk mencari spread di A. Untuk
-melakukan ini, kita buat crosslaw untuk kuadran a, b, dan c, dan
-selesaikan untuk spread yang tidak diketahui sa.
-
-
-Anda dapat melakukannya dengan tangan dengan mudah, tetapi saya
-menggunakan Maxima. Tentu saja, kami mendapatkan hasilnya, kami sudah
-memilikinya.
-
-
-\>$crosslaw(a,b,c,x), $solve(%,x)
-
-
-Kita sudah tahu ini. Definisi spread adalah kasus khusus dari
-crosslaw.
-
-
-Kita juga dapat menyelesaikan ini untuk umum a,b,c. Hasilnya adalah
-rumus yang menghitung penyebaran sudut segitiga yang diberikan kuadrat
-dari ketiga sisinya.
-
-
-\>$solve(crosslaw(aa,bb,cc,x),x)
-
-
-Kita bisa membuat fungsi dari hasilnya. Fungsi seperti itu sudah
-didefinisikan dalam file geometri.e dari Euler.
-
-
-\>$spread(a,b,c)
-
-
-Sebagai contoh, kita dapat menggunakannya untuk menghitung sudut
-segitiga dengan sisi
-
-
-Hasilnya rasional, yang tidak begitu mudah didapat jika kita
-menggunakan trigonometri klasik.
-
-
-\>$spread(a,a,4\*a/7)
-
-
-Ini adalah sudut dalam derajat.
-
-
-\>degprint(arcsin(sqrt(6/7)))
-
-
-    67°47'32.44''
-
-## Contoh lain
-
-Sekarang, mari kita coba contoh yang lebih maju.
-
-
-Kami mengatur tiga sudut segitiga sebagai berikut.
-
-
-\>A&:=[1,2]; B&:=[4,3]; C&:=[0,4]; ...  
-\>   setPlotRange(-1,5,1,7); ...  
-\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
-\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
-\>   insimg;
-
-
-Menggunakan Pythogoras, mudah untuk menghitung jarak antara dua titik.
-Saya pertama kali menggunakan jarak fungsi file Euler untuk geometri.
-Jarak fungsi menggunakan geometri klasik.
-
-
-\>$distance(A,B)
-
-
-Euler juga mengandung fungsi untuk kuadran antara dua titik.
-
-
-Dalam contoh berikut, karena c+b bukan a, maka segitiga itu bukan
-persegi panjang.
-
-
-\>c &= quad(A,B); $c, b &= quad(A,C); $b, a &= quad(B,C); $a,
-
-
-Pertama, mari kita hitung sudut tradisional. Fungsi computeAngle
-menggunakan metode biasa berdasarkan hasil kali titik dua vektor.
-Hasilnya adalah beberapa pendekatan floating point.
-
-
-\>wb &= computeAngle(A,B,C); $wb, $(wb/pi\*180)()
-
-
-    32.4711922908
-
-Dengan menggunakan pensil dan kertas, kita dapat melakukan hal yang
-sama dengan hukum silang. Kami memasukkan kuadran a, b, dan c ke dalam
-hukum silang dan menyelesaikan x.
-
-
-\>$crosslaw(a,b,c,x), $solve(%,x), //(b+c-a)^=4b.c(1-x)
-
-
-Yaitu, apa yang dilakukan oleh penyebaran fungsi yang didefinisikan
-dalam "geometry.e".
-
-
-\>sb &= spread(b,a,c); $sb
-
-
-Maxima mendapatkan hasil yang sama menggunakan trigonometri biasa,
-jika kita memaksanya. Itu menyelesaikan istilah sin(arccos(...))
-menjadi hasil pecahan. Sebagian besar siswa tidak dapat melakukan ini.
-
-
-\>$sin(computeAngle(A,B,C))^2
-
-
-Setelah kita memiliki spread di B, kita dapat menghitung tinggi ha di
-sisi a. Ingat bahwa
-
-
-Menurut definisi.
-
-
-\>ha &= c\*sb; $ha
-
-
-Menurut definisi, panjang ha adalah akar kuadrat dari kuadratnya.
-
-
-\>$sqrt(ha)
-
-
-Sekarang kita dapat menghitung luas segitiga. Jangan lupa, bahwa kita
-berhadapan dengan kuadrat!
-
-
-\>$sqrt(ha)\*sqrt(a)/2
-
-
-Rumus determinan biasa menghasilkan hasil yang sama.
-
-
-\>$areaTriangle(B,A,C)
-
-
-## Rumus Bangau
-
-Sekarang, mari kita selesaikan masalah ini secara umum!
-
-
-\>&remvalue(a,b,c,sb,ha);
-
-
-Pertama kita hitung spread di B untuk segitiga dengan sisi a, b, dan
-c. Kemudian kita menghitung luas kuadrat ("quadrea"?), faktorkan
-dengan Maxima, dan kita mendapatkan rumus Heron yang terkenal.
-
-
-Memang, ini sulit dilakukan dengan pensil dan kertas.
-
-
-\>$spread(b^2,c^2,a^2), $factor(%\*c^2\*a^2/4)
-
-
-## Aturan Triple Spread
-
-Kerugian dari spread adalah mereka tidak lagi hanya menambahkan sudut
-yang sama.
-
-
-Namun, tiga spread dari sebuah segitiga memenuhi aturan "triple
-spread" berikut.
-
-
-\>&remvalue(sa,sb,sc); $triplespread(sa,sb,sc)
-
-
-Aturan ini berlaku untuk setiap tiga sudut yang menambah 180 °.
-
-
-Sejak menyebar
-
-
-sama, aturan triple spread juga benar, jika
-
-
-Karena penyebaran sudut negatif adalah sama, aturan penyebaran rangkap
-tiga juga berlaku, jika
-
-
-Misalnya, kita dapat menghitung penyebaran sudut 60°. Ini 3/4.
-Persamaan memiliki solusi kedua, bagaimanapun, di mana semua spread
-adalah 0.
-
-
-\>$solve(triplespread(x,x,x),x)
-
-
-Sebaran 90° jelas 1. Jika dua sudut dijumlahkan menjadi 90°,
-sebarannya menyelesaikan persamaan sebaran rangkap tiga dengan a,b,1.
-Dengan perhitungan berikut kita mendapatkan a+b=1.
-
-
-\>$triplespread(x,y,1), $solve(%,x)
-
-
-Karena sebaran 180°-t sama dengan sebaran t, rumus sebaran rangkap
-tiga juga berlaku, jika satu sudut adalah jumlah atau selisih dua
-sudut lainnya.
-
-
-Jadi kita dapat menemukan penyebaran sudut berlipat ganda. Perhatikan
-bahwa ada dua solusi lagi. Kami membuat ini fungsi.
-
-
-\>$solve(triplespread(a,a,x),x), function doublespread(a) &= factor(rhs(%[1]))
-
-
-    
-                                - 4 (a - 1) a
-    
-
-## Pembagi Sudut
-
-Ini situasinya, kita sudah tahu.
-
-
-\>C&:=[0,0]; A&:=[4,0]; B&:=[0,3]; ...  
-\>   setPlotRange(-1,5,-1,5); ...  
-\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
-\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
-\>   insimg;
-
-
-Mari kita hitung panjang garis bagi sudut di A. Tetapi kita ingin
-menyelesaikannya untuk umum a,b,c.
-
-
-\>&remvalue(a,b,c);
-
-
-Jadi pertama-tama kita hitung penyebaran sudut yang dibagi dua di A,
-dengan menggunakan rumus sebaran rangkap tiga.
-
-
-Masalah dengan rumus ini muncul lagi. Ini memiliki dua solusi. Kita
-harus memilih yang benar. Solusi lainnya mengacu pada sudut terbelah
-180 °-wa.
-
-
-\>$triplespread(x,x,a/(a+b)), $solve(%,x), sa2 &= rhs(%[1]); $sa2
-
-
-Mari kita periksa persegi panjang Mesir.
-
-
-\>$sa2 with [a=3^2,b=4^2]
-
-
-Kami dapat mencetak sudut dalam Euler, setelah mentransfer penyebaran
-ke radian.
-
-
-\>wa2 := arcsin(sqrt(1/10)); degprint(wa2)
-
-
-    18°26'5.82''
-
-Titik P adalah perpotongan garis bagi sudut dengan sumbu y.
-
-
-\>P := [0,tan(wa2)\*4]
-
-
-    [0,  1.33333]
-
-\>plotPoint(P,"P"); plotSegment(A,P):
-
-
-Mari kita periksa sudut dalam contoh spesifik kita.
-
-
-\>computeAngle(C,A,P), computeAngle(P,A,B)
-
-
-    0.321750554397
-    0.321750554397
-
-Sekarang kita hitung panjang garis bagi AP.
-
-
-Kami menggunakan teorema sinus dalam segitiga APC. Teorema ini
-menyatakan bahwa
-
-
-berlaku dalam segitiga apa pun. Kuadratkan, itu diterjemahkan ke dalam
-apa yang disebut "hukum penyebaran"
-
-
-di mana a,b,c menunjukkan qudrances.
-
-
-Karena spread CPA adalah 1-sa2, kita dapatkan darinya bisa/1=b/(1-sa2)
-dan dapat menghitung bisa (kuadran dari garis-bagi sudut).
-
-
-\>&factor(ratsimp(b/(1-sa2))); bisa &= %; $bisa
-
-
-Mari kita periksa rumus ini untuk nilai-nilai Mesir kita.
-
-
-\>sqrt(mxmeval("at(bisa,[a=3^2,b=4^2])")), distance(A,P)
-
-
-    4.21637021356
-    4.21637021356
-
-Kita juga dapat menghitung P menggunakan rumus spread.
-
-
-\>py&=factor(ratsimp(sa2\*bisa)); $py
-
-
-Nilainya sama dengan yang kita dapatkan dengan rumus trigonometri.
-
-
-\>sqrt(mxmeval("at(py,[a=3^2,b=4^2])"))
-
-
-    1.33333333333
-
-## Sudut Akord
-
-Perhatikan situasi berikut.
-
-
-\>setPlotRange(1.2); ...  
-\>   color(1); plotCircle(circleWithCenter([0,0],1)); ...  
-\>   A:=[cos(1),sin(1)]; B:=[cos(2),sin(2)]; C:=[cos(6),sin(6)]; ...  
-\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
-\>   color(3); plotSegment(A,B,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
-\>   color(1); O:=[0,0];  plotPoint(O,"0"); ...  
-\>   plotSegment(A,O); plotSegment(B,O); plotSegment(C,O,"r"); ...  
-\>   insimg;
-
-
-Kita dapat menggunakan Maxima untuk menyelesaikan rumus penyebaran
-rangkap tiga untuk sudut-sudut di pusat O untuk r. Jadi kita
-mendapatkan rumus untuk jari-jari kuadrat dari pericircle dalam hal
-kuadrat dari sisi.
-
-
-Kali ini, Maxima menghasilkan beberapa nol kompleks, yang kita
-abaikan.
-
-
-\>&remvalue(a,b,c,r); // hapus nilai-nilai sebelumnya untuk perhitungan baru
-
-\>rabc &= rhs(solve(triplespread(spread(b,r,r),spread(a,r,r),spread(c,r,r)),r)[4]); $rabc
-
-
-Kita dapat menjadikannya sebagai fungsi Euler.
-
-
-\>function periradius(a,b,c) &= rabc;
-
-
-Mari kita periksa hasilnya untuk poin A,B,C.
-
-
-\>a:=quadrance(B,C); b:=quadrance(A,C); c:=quadrance(A,B);
-
-
-Jari-jarinya memang 1.
-
-
-\>periradius(a,b,c)
+\>checkrandom(intrandom(1,1000000,6))
 
 
     1
 
-Faktanya, spread CBA hanya bergantung pada b dan c. Ini adalah teorema
-sudut chord.
+Kita dapat menghitung distribusi binomial. Pertama, ada binomialsum(),
+yang mengembalikan probabilitas i atau kurang dari n percobaan.
 
 
-\>$spread(b,a,c)\*rabc | ratsimp
+\>bindis(410,1000,0.4)
 
 
-Sebenarnya spreadnya adalah b/(4r), dan kita melihat bahwa sudut chord
-dari chord b adalah setengah dari sudut pusat.
+    0.751401349654
 
+Fungsi Beta invers digunakan untuk menghitung interval kepercayaan
+Clopper-Pearson untuk parameter p. Tingkat defaultnya adalah alpha.
 
-\>$doublespread(b/(4\*r))-spread(b,r,r) | ratsimp
 
+Arti dari interval ini adalah jika p berada di luar interval, hasil
+yang diamati sebesar 410 dalam 1000 jarang terjadi.
 
-## Contoh 6: Jarak Minimal pada Bidang
 
-## Catatan awal
+\>clopperpearson(410,1000)
 
-Fungsi yang, ke titik M di bidang, menetapkan jarak AM antara titik
-tetap A dan M, memiliki garis level yang agak sederhana: lingkaran
-berpusat di A.
 
+    [0.37932,  0.441212]
 
-\>&remvalue();
+Perintah berikut ini adalah cara langsung untuk mendapatkan hasil di
+atas. Tetapi untuk n yang besar, penjumlahan langsung tidak akurat dan
+lambat.
 
-\>A=[-1,-1];
 
-\>function d1(x,y):=sqrt((x-A[1])^2+(y-A[2])^2)
+\>p=0.4; i=0:410; n=1000; sum(bin(n,i)\*p^i\*(1-p)^(n-i))
 
-\>fcontour("d1",xmin=-2,xmax=0,ymin=-2,ymax=0,hue=1, ...  
-\>   title="If you see ellipses, please set your window square"):
 
+    0.751401349655
 
-dan grafiknya juga agak sederhana: bagian atas kerucut:
+Omong-omong, invbinsum() menghitung kebalikan dari binomialsum().
 
 
-\>plot3d("d1",xmin=-2,xmax=0,ymin=-2,ymax=0):
+\>invbindis(0.75,1000,0.4)
 
 
-Tentu saja minimal 0 dicapai di A.
+    409.932733047
 
+Dalam Bridge, kita mengasumsikan 5 kartu yang terbuka (dari 52 kartu)
+di dua tangan (26 kartu). Mari kita hitung probabilitas distribusi
+yang lebih buruk dari 3:2 (misalnya 0:5, 1:4, 4:1, atau 5:0).
 
-## Dua poin
 
-Sekarang kita lihat fungsi MA+MB dimana A dan B adalah dua titik
-(tetap). Ini adalah "fakta yang diketahui" bahwa kurva level adalah
-elips, titik fokusnya adalah A dan B; kecuali untuk AB minimum yang
-konstan pada segmen [AB]:
+\>2\*hypergeomsum(1,5,13,26)
 
 
-\>B=[1,-1];
+    0.321739130435
 
-\>function d2(x,y):=d1(x,y)+sqrt((x-B[1])^2+(y-B[2])^2)
+Ada juga simulasi distribusi multinomial.
 
-\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
 
+\>randmultinomial(10,1000,[0.4,0.1,0.5])
 
-Grafiknya lebih menarik:
 
+              381           100           519 
+              376            91           533 
+              417            80           503 
+              440            94           466 
+              406           112           482 
+              408            94           498 
+              395           107           498 
+              399            96           505 
+              428            87           485 
+              400            99           501 
 
-\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
+# Memplot Data
 
+Untuk memplot data, kami mencoba hasil pemilihan umum Jerman sejak
+tahun 1990, yang diukur dalam kursi.
 
-Pembatasan garis (AB) lebih terkenal:
 
+\>BW := [ ...  
+\>   1990,662,319,239,79,8,17; ...  
+\>   1994,672,294,252,47,49,30; ...  
+\>   1998,669,245,298,43,47,36; ...  
+\>   2002,603,248,251,47,55,2; ...  
+\>   2005,614,226,222,61,51,54; ...  
+\>   2009,622,239,146,93,68,76; ...  
+\>   2013,631,311,193,0,63,64];
 
-\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
 
+Untuk pesta, kami menggunakan serangkaian nama.
 
-## Tiga poin
 
-Sekarang hal-hal yang kurang sederhana: Ini sedikit kurang terkenal
-bahwa MA+MB+MC mencapai minimum pada satu titik pesawat tetapi untuk
-menentukan itu kurang sederhana:
+\>P:=["CDU/CSU","SPD","FDP","Gr","Li"];
 
 
-1) Jika salah satu sudut segitiga ABC lebih dari 120° (katakanlah di
-A), maka minimum dicapai pada titik ini (misalnya AB+AC).
+Mari kita cetak persentasenya dengan baik.
 
 
-Contoh:
+Pertama kita ekstrak kolom-kolom yang diperlukan. Kolom 3 sampai 7
+adalah kursi masing-masing partai, dan kolom 2 adalah jumlah total
+kursi. kolom adalah tahun pemilihan.
 
 
-\>C=[-4,1];
+\>BT:=BW[,3:7]; BT:=BT/sum(BT); YT:=BW[,1]';
 
-\>function d3(x,y):=d2(x,y)+sqrt((x-C[1])^2+(y-C[2])^2)
 
-\>plot3d("d3",xmin=-5,xmax=3,ymin=-4,ymax=4);
+Kemudian kita mencetak statistik dalam bentuk tabel. Kita menggunakan
+nama sebagai judul kolom, dan tahun sebagai judul baris. Lebar default
+untuk kolom adalah wc = 10, tetapi kami lebih suka output yang lebih
+padat. Kolom-kolom akan diperluas untuk label-label kolom, jika perlu.
 
-\>insimg;
 
-\>fcontour("d3",xmin=-4,xmax=1,ymin=-2,ymax=2,hue=1,title="The minimum is on A");
+\>writetable(BT\*100,wc=6,dc=0,\>fixed,labc=P,labr=YT)
 
-\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
 
-\>insimg;
+           CDU/CSU   SPD   FDP    Gr    Li
+      1990      48    36    12     1     3
+      1994      44    38     7     7     4
+      1998      37    45     6     7     5
+      2002      41    42     8     9     0
+      2005      37    36    10     8     9
+      2009      38    23    15    11    12
+      2013      49    31     0    10    10
 
+Perkalian matriks berikut ini mengekstrak jumlah persentase dua partai
+besar yang menunjukkan bahwa partai-partai kecil telah memperoleh
+suara di parlemen hingga tahun 2009.
 
-2) Tetapi jika semua sudut segitiga ABC kurang dari 120 °, minimumnya
-adalah pada titik F di bagian dalam segitiga, yang merupakan
-satu-satunya titik yang melihat sisi-sisi ABC dengan sudut yang sama
-(maka masing-masing 120 ° ):
 
+\>BT1:=(BT.[1;1;0;0;0])'\*100
 
-\>C=[-0.5,1];
 
-\>plot3d("d3",xmin=-2,xmax=2,ymin=-2,ymax=2):
+    [84.29,  81.25,  81.1659,  82.7529,  72.9642,  61.8971,  79.8732]
 
-\>fcontour("d3",xmin=-2,xmax=2,ymin=-2,ymax=2,hue=1,title="The Fermat point");
+Ada juga plot statistik sederhana. Kita menggunakannya untuk
+menampilkan garis dan titik secara bersamaan. Alternatif lainnya
+adalah memanggil plot2d dua kali dengan &gt;add.
 
-\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
 
-\>insimg;
+\>statplot(YT,BT1,"b"):
 
 
-Merupakan kegiatan yang menarik untuk mewujudkan gambar di atas dengan
-perangkat lunak geometri; misalnya, saya tahu soft yang ditulis di
-Jawa yang memiliki instruksi "garis kontur" ...
+Tentukan beberapa warna untuk masing-masing pihak.
 
 
-Semua ini di atas telah ditemukan oleh seorang hakim Perancis bernama
-Pierre de Fermat; dia menulis surat kepada dilettants lain seperti
-pendeta Marin Mersenne dan Blaise Pascal yang bekerja di pajak
-penghasilan. Jadi titik unik F sedemikian rupa sehingga FA+FB+FC
-minimal, disebut titik Fermat segitiga. Tetapi tampaknya beberapa
-tahun sebelumnya, Torriccelli Italia telah menemukan titik ini sebelum
-Fermat melakukannya! Bagaimanapun tradisinya adalah mencatat poin ini
-F...
+\>CP:=[rgb(0.5,0.5,0.5),red,yellow,green,rgb(0.8,0,0)];
 
 
-## Empat poin
+Sekarang kita dapat memplot hasil pemilu 2009 dan perubahannya ke
+dalam satu plot menggunakan figure. Kita dapat menambahkan vektor
+kolom pada setiap plot.
 
-Langkah selanjutnya adalah menambahkan 4 titik D dan mencoba
-meminimalkan MA+MB+MC+MD; katakan bahwa Anda adalah operator TV kabel
-dan ingin mencari di bidang mana Anda harus meletakkan antena sehingga
-Anda dapat memberi makan empat desa dan menggunakan panjang kabel
-sesedikit mungkin!
 
+\>figure(2,1);  ...  
+\>   figure(1); columnsplot(BW[6,3:7],P,color=CP); ...  
+\>   figure(2); columnsplot(BW[6,3:7]-BW[5,3:7],P,color=CP);  ...  
+\>   figure(0):
 
-\>D=[1,1];
 
-\>function d4(x,y):=d3(x,y)+sqrt((x-D[1])^2+(y-D[2])^2)
+Plot data menggabungkan baris data statistik dalam satu plot.
 
-\>plot3d("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5):
 
-\>fcontour("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5,hue=1);
+\>J:=BW[,1]'; DP:=BW[,3:7]'; ...  
+\>   dataplot(YT,BT',color=CP);  ...  
+\>   labelbox(P,colors=CP,styles="[]",\>points,w=0.2,x=0.3,y=0.4):
 
-\>P=(A\_B\_C\_D)'; plot2d(P[1],P[2],points=1,add=1,color=12);
 
-\>insimg;
+Plot kolom 3D menunjukkan deretan data statistik dalam bentuk kolom.
+Kami menyediakan label untuk baris dan kolom. angle adalah sudut
+pandang.
 
 
-Masih ada minimum dan tidak tercapai di salah satu simpul A, B, C atau
-D:
+\>columnsplot3d(BT,scols=P,srows=YT, ...  
+\>     angle=30°,ccols=CP):
 
 
-\>function f(x):=d4(x[1],x[2])
+Representasi lainnya adalah plot mosaik. Perhatikan bahwa kolom-kolom
+pada plot mewakili kolom-kolom pada matriks di sini. Karena panjangnya
+label CDU/CSU, kita mengambil jendela yang lebih kecil dari biasanya.
 
-\>neldermin("f",[0.2,0.2])
 
+\>shrinkwindow(\>smaller);  ...  
+\>   mosaicplot(BT',srows=YT,scols=P,color=CP,style="#"); ...  
+\>   shrinkwindow():
 
-    [0.142858,  0.142857]
 
-Tampaknya dalam kasus ini, koordinat titik optimal adalah rasional
-atau mendekati rasional...
+Kita juga bisa membuat diagram lingkaran. Karena warna hitam dan
+kuning membentuk koalisi, kita menyusun ulang elemen-elemennya.
 
 
-Sekarang ABCD adalah persegi, kami berharap bahwa titik optimal akan
-menjadi pusat ABCD:
+\>i=[1,3,5,4,2]; piechart(BW[6,3:7][i],color=CP[i],lab=P[i]):
 
 
-\>C=[-1,1];
+Berikut ini jenis plot yang lain.
 
-\>plot3d("d4",xmin=-1,xmax=1,ymin=-1,ymax=1):
 
-\>fcontour("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5,hue=1);
+\>starplot(normal(1,10)+4,lab=1:10,\>rays):
 
-\>P=(A\_B\_C\_D)'; plot2d(P[1],P[2],add=1,color=12,points=1);
 
-\>insimg;
+Beberapa plot di plot2d bagus untuk statika. Berikut ini adalah plot
+impuls dari data acak, yang terdistribusi secara seragam dalam [0,1].
 
 
-## Contoh 7: Bola Dandelin dengan Povray
+\>plot2d(makeimpulse(1:10,random(1,10)),\>bar):
 
-Anda dapat menjalankan demonstrasi ini, jika Anda telah menginstal
-Povray, dan pvengine.exe di jalur program.
 
+Tetapi untuk data yang terdistribusi secara eksponensial, kita mungkin
+memerlukan plot logaritmik.
 
-Pertama kita hitung jari-jari bola.
 
+\>logimpulseplot(1:10,-log(random(1,10))\*10):
 
-Jika Anda melihat gambar di bawah, Anda melihat bahwa kita membutuhkan
-dua lingkaran yang menyentuh dua garis yang membentuk kerucut, dan
-satu garis yang membentuk bidang yang memotong kerucut.
 
+Fungsi columnsplot() lebih mudah digunakan, karena hanya membutuhkan
+sebuah vektor nilai. Selain itu, fungsi ini dapat mengatur labelnya
+menjadi apa pun yang kita inginkan, kita telah mendemonstrasikan hal
+ini dalam tutorial ini.
 
-Kami menggunakan file geometri.e dari Euler untuk ini.
 
+Berikut ini adalah aplikasi lain, di mana kita menghitung karakter
+dalam sebuah kalimat dan memplot statistik.
 
-\>load geometry;
 
+\>v=strtochar("the quick brown fox jumps over the lazy dog"); ...  
+\>   w=ascii("a"):ascii("z"); x=getmultiplicities(w,v); ...  
+\>   cw=[]; for k=w; cw=cw|char(k); end; ...  
+\>   columnsplot(x,lab=cw,width=0.05):
 
-Pertama dua garis yang membentuk kerucut.
 
+Anda juga dapat menetapkan sumbu secara manual.
 
-\>g1 &= lineThrough([0,0],[1,a])
 
+\>n=10; p=0.4; i=0:n; x=bin(n,i)\*p^i\*(1-p)^(n-i); ...  
+\>   columnsplot(x,lab=i,width=0.05,<frame,<grid); ...  
+\>   yaxis(0,0:0.1:1,style="-\>",\>left); xaxis(0,style="."); ...  
+\>   label("p",0,0.25), label("i",11,0); ...  
+\>   textbox(["Binomial distribution","with p=0.4"]):
 
-    
-                                 [- a, 1, 0]
-    
 
-\>g2 &= lineThrough([0,0],[-1,a])
+Berikut ini adalah cara untuk memplot frekuensi angka dalam vektor.
 
 
-    
-                                [- a, - 1, 0]
-    
+Kami membuat vektor angka acak bilangan bulat 1 hingga 6.
 
-Kemudian saya baris ketiga.
 
+\>v:=intrandom(1,10,10)
 
-\>g &= lineThrough([-1,0],[1,1])
 
+    [8,  5,  8,  8,  6,  8,  8,  3,  5,  5]
 
-    
-                                 [- 1, 2, 1]
-    
+Kemudian ekstrak nomor unik dalam v.
 
-Kami merencanakan semuanya sejauh ini.
 
+\>vu:=unique(v)
 
-\>setPlotRange(-1,1,0,2);
 
-\>color(black); plotLine(g(),"")
+    [3,  5,  6,  8]
 
-\>a:=2; color(blue); plotLine(g1(),""), plotLine(g2(),""):
+Dan memplot frekuensi dalam plot kolom.
 
 
-Sekarang kita ambil titik umum pada sumbu y.
+\>columnsplot(getmultiplicities(vu,v),lab=vu,style="/"):
 
 
-\>P &= [0,u]
+Kami ingin mendemonstrasikan fungsi untuk distribusi nilai empiris.
 
 
-    
-                                    [0, u]
-    
+\>x=normal(1,20);
 
-Hitung jarak ke g1.
 
+Fungsi empdist(x,vs) membutuhkan larik nilai yang telah diurutkan.
+Jadi kita harus mengurutkan x sebelum dapat menggunakannya.
 
-\>d1 &= distance(P,projectToLine(P,g1)); $d1
 
+\>xs=sort(x);
 
-Hitung jarak ke g.
 
+Kemudian kita memplot distribusi empiris dan beberapa batang kepadatan
+ke dalam satu plot. Alih-alih plot batang untuk distribusi, kali ini
+kami menggunakan plot gigi gergaji.
 
-\>d &= distance(P,projectToLine(P,g)); $d
 
+\>figure(2,1); ...  
+\>   figure(1); plot2d("empdist",-4,4;xs); ...  
+\>   figure(2); plot2d(histo(x,v=-4:0.2:4,<bar));  ...  
+\>   figure(0):
 
-Dan temukan pusat kedua lingkaran yang jaraknya sama.
 
+Plot sebaran mudah dilakukan di Euler dengan plot titik biasa. Grafik
+berikut ini menunjukkan bahwa X dan X+Y berkorelasi positif secara
+jelas.
 
-\>sol &= solve(d1^2=d^2,u); $sol
 
+\>x=normal(1,100); plot2d(x,x+rotright(x),\>points,style=".."):
 
-Ada dua solusi.
 
+Sering kali, kita ingin membandingkan dua sampel dari distribusi yang
+berbeda. Hal ini dapat dilakukan dengan plot kuantil-kuantil.
 
-Kami mengevaluasi solusi simbolis, dan menemukan kedua pusat, dan
-kedua jarak.
 
+Untuk pengujian, kami mencoba distribusi student-t dan distribusi
+eksponensial.
 
-\>u := sol()
 
+\>x=randt(1,1000,5); y=randnormal(1,1000,mean(x),dev(x)); ...  
+\>   plot2d("x",r=6,style="--",yl="normal",xl="student-t",\>vertical); ...  
+\>   plot2d(sort(x),sort(y),\>points,color=red,style="x",\>add):
 
-    [0.333333,  1]
 
-\>dd := d()
+Plot ini dengan jelas menunjukkan bahwa nilai yang terdistribusi
+normal cenderung lebih kecil pada ujung yang ekstrim.
 
 
-    [0.149071,  0.447214]
+Jika kita memiliki dua distribusi dengan ukuran yang berbeda, kita
+dapat memperluas distribusi yang lebih kecil atau memperkecil
+distribusi yang lebih besar. Fungsi berikut ini bagus untuk keduanya.
+Fungsi ini mengambil nilai median dengan persentase antara 0 dan 1.
 
-Plot lingkaran ke dalam gambar.
 
+\>function medianexpand (x,n) := median(x,p=linspace(0,1,n-1));
 
-\>color(red);
 
-\>plotCircle(circleWithCenter([0,u[1]],dd[1]),"");
+Mari kita bandingkan dua distribusi yang sama.
 
-\>plotCircle(circleWithCenter([0,u[2]],dd[2]),"");
 
-\>insimg;
+\>x=random(1000); y=random(400); ...  
+\>   plot2d("x",0,1,style="--"); ...  
+\>   plot2d(sort(medianexpand(x,400)),sort(y),\>points,color=red,style="x",\>add):
 
 
-## Plot dengan Povray
+# Regresi dan Korelasi
 
-Selanjutnya kami merencanakan semuanya dengan Povray. Perhatikan bahwa
-Anda mengubah perintah apa pun dalam urutan perintah Povray berikut,
-dan menjalankan kembali semua perintah dengan Shift-Return.
+Regresi linier dapat dilakukan dengan fungsi polyfit() atau berbagai
+fungsi kecocokan.
 
 
-Pertama kita memuat fungsi povray.
+Sebagai permulaan, kita mencari garis regresi untuk data univariat
+dengan polyfit(x,y,1).
 
 
-\>load povray;
+\>x=1:10; y=[2,3,1,5,6,3,7,8,9,8]; writetable(x'|y',labc=["x","y"])
 
-\>defaultpovray="C:\\Program Files\\POV-Ray\\v3.7\\bin\\pvengine.exe"
 
+             x         y
+             1         2
+             2         3
+             3         1
+             4         5
+             5         6
+             6         3
+             7         7
+             8         8
+             9         9
+            10         8
 
-    C:\Program Files\POV-Ray\v3.7\bin\pvengine.exe
+Kami ingin membandingkan kecocokan tanpa bobot dan dengan bobot.
+Pertama, koefisien dari kecocokan linier.
 
-Kami mengatur adegan dengan tepat.
 
+\>p=polyfit(x,y,1)
 
-\>povstart(zoom=11,center=[0,0,0.5],height=10°,angle=140°);
 
+    [0.733333,  0.812121]
 
-Selanjutnya kita menulis dua bidang ke file Povray.
+Sekarang, koefisien dengan bobot yang menekankan nilai terakhir.
 
 
-\>writeln(povsphere([0,0,u[1]],dd[1],povlook(red)));
+\>w &= "exp(-(x-10)^2/10)"; pw=polyfit(x,y,1,w=w(x))
 
-\>writeln(povsphere([0,0,u[2]],dd[2],povlook(red)));
 
+    [4.71566,  0.38319]
 
-Dan kerucutnya, transparan.
+Kami menempatkan semuanya ke dalam satu plot untuk titik-titik dan
+garis regresi, dan untuk bobot yang digunakan.
 
 
-\>writeln(povcone([0,0,0],0,[0,0,a],1,povlook(lightgray,1)));
+\>figure(2,1);  ...  
+\>   figure(1); statplot(x,y,"b",xl="Regression"); ...  
+\>     plot2d("evalpoly(x,p)",\>add,color=blue,style="--"); ...  
+\>     plot2d("evalpoly(x,pw)",5,10,\>add,color=red,style="--"); ...  
+\>   figure(2); plot2d(w,1,10,\>filled,style="/",fillcolor=red,xl=w); ...  
+\>   figure(0):
 
 
-Kami menghasilkan bidang terbatas pada kerucut.
+Untuk contoh lain, kita membaca survei tentang siswa, usia mereka,
+usia orang tua mereka, dan jumlah saudara kandung dari sebuah file.
 
 
-\>gp=g();
+Tabel ini berisi “m” dan “f” pada kolom kedua. Kita menggunakan
+variabel tok2 untuk mengatur terjemahan yang tepat dan bukannya
+membiarkan readtable() mengumpulkan terjemahan.
 
-\>pc=povcone([0,0,0],0,[0,0,a],1,"");
 
-\>vp=[gp[1],0,gp[2]]; dp=gp[3];
+\>{MS,hd}:=readtable("table1.dat",tok2:=["m","f"]);  ...  
+\>   writetable(MS,labc=hd,tok2:=["m","f"]);
 
-\>writeln(povplane(vp,dp,povlook(blue,0.5),pc));
 
+    Could not open the file
+    table1.dat
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    readtable:
+        if filename!=none then open(filename,"r"); endif;
 
-Sekarang kita menghasilkan dua titik pada lingkaran, di mana bola
-menyentuh kerucut.
+Bagaimana usia saling bergantung satu sama lain? Kesan pertama datang
+dari scatterplot berpasangan.
 
 
-\>function turnz(v) := return [-v[2],v[1],v[3]]
+\>scatterplots(tablecol(MS,3:5),hd[3:5]):
 
-\>P1=projectToLine([0,u[1]],g1()); P1=turnz([P1[1],0,P1[2]]);
 
-\>writeln(povpoint(P1,povlook(yellow)));
+    Variable or function MS not found.
+    Error in:
+    scatterplots(tablecol(MS,3:5),hd[3:5]): ...
+                            ^
 
-\>P2=projectToLine([0,u[2]],g1()); P2=turnz([P2[1],0,P2[2]]);
+Jelas bahwa usia ayah dan ibu saling bergantung satu sama lain. Mari
+kita tentukan dan plot garis regresinya.
 
-\>writeln(povpoint(P2,povlook(yellow)));
 
+\>cs:=MS[,4:5]'; ps:=polyfit(cs[1],cs[2],1)
 
-Kemudian kami menghasilkan dua titik di mana bola menyentuh bidang.
-Ini adalah fokus dari elips.
 
+    MS is not a variable!
+    Error in:
+    cs:=MS[,4:5]'; ps:=polyfit(cs[1],cs[2],1) ...
+                ^
 
-\>P3=projectToLine([0,u[1]],g()); P3=[P3[1],0,P3[2]];
+Ini jelas merupakan model yang salah. Garis regresinya adalah s = 17 +
+0,74t, di mana t adalah usia ibu dan s adalah usia ayah. Perbedaan
+usia mungkin sedikit bergantung pada usia, tetapi tidak terlalu
+banyak.
 
-\>writeln(povpoint(P3,povlook(yellow)));
 
-\>P4=projectToLine([0,u[2]],g()); P4=[P4[1],0,P4[2]];
+Sebaliknya, kami menduga fungsi seperti s = a + t. Kemudian a adalah
+rata-rata dari s-t. Ini adalah perbedaan usia rata-rata antara ayah
+dan ibu.
 
-\>writeln(povpoint(P4,povlook(yellow)));
 
+\>da:=mean(cs[2]-cs[1])
 
-Selanjutnya kita hitung perpotongan P1P2 dengan bidang.
 
+    cs is not a variable!
+    Error in:
+    da:=mean(cs[2]-cs[1]) ...
+                  ^
 
-\>t1=scalp(vp,P1)-dp; t2=scalp(vp,P2)-dp; P5=P1+t1/(t1-t2)\*(P2-P1);
+Mari kita plotkan ini ke dalam satu scatter plot.
 
-\>writeln(povpoint(P5,povlook(yellow)));
 
+\>plot2d(cs[1],cs[2],\>points);  ...  
+\>   plot2d("evalpoly(x,ps)",color=red,style=".",\>add);  ...  
+\>   plot2d("x+da",color=blue,\>add):
 
-Kami menghubungkan titik-titik dengan segmen garis.
 
+    cs is not a variable!
+    Error in:
+    plot2d(cs[1],cs[2],&gt;points);  plot2d("evalpoly(x,ps)",color=re ...
+                ^
 
-\>writeln(povsegment(P1,P2,povlook(yellow)));
+Berikut ini adalah plot kotak dari kedua usia tersebut. Ini hanya
+menunjukkan, bahwa usia keduanya berbeda.
 
-\>writeln(povsegment(P5,P3,povlook(yellow)));
 
-\>writeln(povsegment(P5,P4,povlook(yellow)));
+\>boxplot(cs,["mothers","fathers"]):
 
 
-Sekarang kita menghasilkan pita abu-abu, di mana bola menyentuh
-kerucut.
+    Variable or function cs not found.
+    Error in:
+    boxplot(cs,["mothers","fathers"]): ...
+              ^
 
+Sangat menarik bahwa perbedaan dalam median tidak sebesar perbedaan
+dalam mean.
 
-\>pcw=povcone([0,0,0],0,[0,0,a],1.01);
 
-\>pc1=povcylinder([0,0,P1[3]-defaultpointsize/2],[0,0,P1[3]+defaultpointsize/2],1);
+\>median(cs[2])-median(cs[1])
 
-\>writeln(povintersection([pcw,pc1],povlook(gray)));
 
-\>pc2=povcylinder([0,0,P2[3]-defaultpointsize/2],[0,0,P2[3]+defaultpointsize/2],1);
+    cs is not a variable!
+    Error in:
+    median(cs[2])-median(cs[1]) ...
+                ^
 
-\>writeln(povintersection([pcw,pc2],povlook(gray)));
+Koefisien korelasi menunjukkan korelasi positif.
 
 
-Mulai program Povray.
+\>correl(cs[1],cs[2])
 
 
-\>povend();
+    cs is not a variable!
+    Error in:
+    correl(cs[1],cs[2]) ...
+                ^
 
+Korelasi peringkat adalah ukuran untuk urutan yang sama dalam kedua
+vektor. Korelasi ini juga cukup positif.
 
-Untuk mendapatkan Anaglyph ini kita perlu memasukkan semuanya ke dalam
-fungsi scene. Fungsi ini akan digunakan dua kali kemudian.
 
+\>rankcorrel(cs[1],cs[2])
 
-\>function scene () ...
 
+    cs is not a variable!
+    Error in:
+    rankcorrel(cs[1],cs[2]) ...
+                    ^
 
-    global a,u,dd,g,g1,defaultpointsize;
-    writeln(povsphere([0,0,u[1]],dd[1],povlook(red)));
-    writeln(povsphere([0,0,u[2]],dd[2],povlook(red)));
-    writeln(povcone([0,0,0],0,[0,0,a],1,povlook(lightgray,1)));
-    gp=g();
-    pc=povcone([0,0,0],0,[0,0,a],1,"");
-    vp=[gp[1],0,gp[2]]; dp=gp[3];
-    writeln(povplane(vp,dp,povlook(blue,0.5),pc));
-    P1=projectToLine([0,u[1]],g1()); P1=turnz([P1[1],0,P1[2]]);
-    writeln(povpoint(P1,povlook(yellow)));
-    P2=projectToLine([0,u[2]],g1()); P2=turnz([P2[1],0,P2[2]]);
-    writeln(povpoint(P2,povlook(yellow)));
-    P3=projectToLine([0,u[1]],g()); P3=[P3[1],0,P3[2]];
-    writeln(povpoint(P3,povlook(yellow)));
-    P4=projectToLine([0,u[2]],g()); P4=[P4[1],0,P4[2]];
-    writeln(povpoint(P4,povlook(yellow)));
-    t1=scalp(vp,P1)-dp; t2=scalp(vp,P2)-dp; P5=P1+t1/(t1-t2)*(P2-P1);
-    writeln(povpoint(P5,povlook(yellow)));
-    writeln(povsegment(P1,P2,povlook(yellow)));
-    writeln(povsegment(P5,P3,povlook(yellow)));
-    writeln(povsegment(P5,P4,povlook(yellow)));
-    pcw=povcone([0,0,0],0,[0,0,a],1.01);
-    pc1=povcylinder([0,0,P1[3]-defaultpointsize/2],[0,0,P1[3]+defaultpointsize/2],1);
-    writeln(povintersection([pcw,pc1],povlook(gray)));
-    pc2=povcylinder([0,0,P2[3]-defaultpointsize/2],[0,0,P2[3]+defaultpointsize/2],1);
-    writeln(povintersection([pcw,pc2],povlook(gray)));
+# Membuat Fungsi baru
+
+Tentu saja, bahasa EMT dapat digunakan untuk memprogram fungsi baru.
+Misalnya, kita mendefinisikan fungsi kemiringan.
+
+
+di mana m adalah rata-rata dari x.
+
+
+\>function skew (x:vector) ...
+
+
+    m=mean(x);
+    return sqrt(cols(x))*sum((x-m)^3)/(sum((x-m)^2))^(3/2);
     endfunction
 </pre>
-Anda membutuhkan kacamata merah/sian untuk menghargai efek berikut.
+Seperti yang Anda lihat, kita dapat dengan mudah menggunakan bahasa
+matriks untuk mendapatkan implementasi yang sangat singkat dan
+efisien. Mari kita coba fungsi ini.
 
 
-\>povanaglyph("scene",zoom=11,center=[0,0,0.5],height=10°,angle=140°);
+\>data=normal(20); skew(normal(10))
 
 
-## Contoh 8: Geometri Bumi
+    -0.198710316203
 
-Dalam buku catatan ini, kami ingin melakukan beberapa perhitungan
-sferis. Fungsi-fungsi tersebut terdapat dalam file "spherical.e" di
-folder contoh. Kita perlu memuat file itu terlebih dahulu.
+Berikut ini adalah fungsi lain, yang disebut koefisien kemencengan
+Pearson.
 
 
-\>load "spherical.e";
+\>function skew1 (x) := 3\*(mean(x)-median(x))/dev(x)
 
+\>skew1(data)
 
-Untuk memasukkan posisi geografis, kami menggunakan vektor dengan dua
-koordinat dalam radian (utara dan timur, nilai negatif untuk selatan
-dan barat). Berikut koordinat Kampus FMIPA UNY.
 
+    -0.0801873249135
 
-\>FMIPA=[rad(-7,-46.467),rad(110,23.05)]
+# Simulasi Monte Carlo
 
+Euler dapat digunakan untuk mensimulasikan kejadian acak. Kita telah
+melihat contoh sederhana di atas. Berikut ini adalah contoh lainnya,
+yang mensimulasikan 1000 kali pelemparan 3 dadu, dan menanyakan
+distribusi dari jumlah tersebut.
 
-    [-0.13569,  1.92657]
 
-Anda dapat mencetak posisi ini dengan sposprint (cetak posisi
-spherical).
+\>ds:=sum(intrandom(1000,3,6))';  fs=getmultiplicities(3:18,ds)
 
 
-\>sposprint(FMIPA) // posisi garis lintang dan garis bujur FMIPA UNY
+    [5,  17,  35,  44,  75,  97,  114,  116,  143,  116,  104,  53,  40,
+    22,  13,  6]
 
+Kita bisa merencanakan ini sekarang.
 
-    S 7°46.467' E 110°23.050'
 
-Mari kita tambahkan dua kota lagi, Solo dan Semarang.
+\>columnsplot(fs,lab=3:18):
 
 
-\>Solo=[rad(-7,-34.333),rad(110,49.683)]; Semarang=[rad(-6,-59.05),rad(110,24.533)];
+Untuk menentukan distribusi yang diharapkan tidaklah mudah. Kami
+menggunakan rekursi tingkat lanjut untuk hal ini.
 
-\>sposprint(Solo), sposprint(Semarang),
 
+Fungsi berikut ini menghitung jumlah cara angka k dapat
+direpresentasikan sebagai jumlah n angka dalam rentang 1 hingga m.
+Fungsi ini bekerja secara rekursif dengan cara yang jelas.
 
-    S 7°34.333' E 110°49.683'
-    S 6°59.050' E 110°24.533'
 
-Pertama kita menghitung vektor dari satu ke yang lain pada bola ideal.
-Vektor ini [pos,jarak] dalam radian. Untuk menghitung jarak di bumi,
-kita kalikan dengan jari-jari bumi pada garis lintang 7°.
+\>function map countways (k; n, m) ...
 
 
-\>br=svector(FMIPA,Solo); degprint(br[1]), br[2]\*rearth(7°)-\>km // perkiraan jarak FMIPA-Solo
-
-
-    65°20'26.60''
-    53.8945384608
-
-Ini adalah perkiraan yang baik. Rutinitas berikut menggunakan
-perkiraan yang lebih baik. Pada jarak yang begitu pendek hasilnya
-hampir sama.
-
-
-\>esdist(FMIPA,Semarang)-\>" km", // perkiraan jarak FMIPA-Semarang
-
-
-    88.0114026318 km
-
-Ada fungsi untuk heading, dengan mempertimbangkan bentuk elips bumi.
-Sekali lagi, kami mencetak dengan cara yang canggih.
-
-
-\>sdegprint(esdir(FMIPA,Solo))
-
-
-         65.34°
-
-Sudut segitiga melebihi 180° pada bola.
-
-
-\>asum=sangle(Solo,FMIPA,Semarang)+sangle(FMIPA,Solo,Semarang)+sangle(FMIPA,Semarang,Solo); degprint(asum)
-
-
-    180°0'10.77''
-
-Ini dapat digunakan untuk menghitung luas segitiga. Catatan: Untuk
-segitiga kecil, ini tidak akurat karena kesalahan pengurangan dalam
-asum-pi.
-
-
-\>(asum-pi)\*rearth(48°)^2-\>" km^2", // perkiraan luas segitiga FMIPA-Solo-Semarang
-
-
-    2116.02948749 km^2
-
-Ada fungsi untuk ini, yang menggunakan garis lintang rata-rata
-segitiga untuk menghitung jari-jari bumi, dan menangani kesalahan
-pembulatan untuk segitiga yang sangat kecil.
-
-
-\>esarea(Solo,FMIPA,Semarang)-\>" km^2", //perkiraan yang sama dengan fungsi esarea()
-
-
-    2123.64310526 km^2
-
-Kita juga dapat menambahkan vektor ke posisi. Sebuah vektor berisi
-heading dan jarak, keduanya dalam radian. Untuk mendapatkan vektor,
-kami menggunakan vektor. Untuk menambahkan vektor ke posisi, kami
-menggunakan vektor sadd.
-
-
-\>v=svector(FMIPA,Solo); sposprint(saddvector(FMIPA,v)), sposprint(Solo),
-
-
-    S 7°34.333' E 110°49.683'
-    S 7°34.333' E 110°49.683'
-
-Fungsi-fungsi ini mengasumsikan bola yang ideal. Hal yang sama di
-bumi.
-
-
-\>sposprint(esadd(FMIPA,esdir(FMIPA,Solo),esdist(FMIPA,Solo))), sposprint(Solo),
-
-
-    S 7°34.333' E 110°49.683'
-    S 7°34.333' E 110°49.683'
-
-Mari kita beralih ke contoh yang lebih besar, Tugu Jogja dan Monas
-Jakarta (menggunakan Google Earth untuk mencari koordinatnya).
-
-
-\>Tugu=[-7.7833°,110.3661°]; Monas=[-6.175°,106.811944°];
-
-\>sposprint(Tugu), sposprint(Monas)
-
-
-    S 7°46.998' E 110°21.966'
-    S 6°10.500' E 106°48.717'
-
-Menurut Google Earth, jaraknya adalah 429,66 km. Kami mendapatkan
-pendekatan yang baik.
-
-
-\>esdist(Tugu,Monas)-\>" km", // perkiraan jarak Tugu Jogja - Monas Jakarta
-
-
-    431.565659488 km
-
-Judulnya sama dengan judul yang dihitung di Google Earth.
-
-
-\>degprint(esdir(Tugu,Monas))
-
-
-    294°17'2.85''
-
-Namun, kita tidak lagi mendapatkan posisi target yang tepat, jika kita
-menambahkan heading dan jarak ke posisi semula. Hal ini terjadi,
-karena kita tidak menghitung fungsi invers secara tepat, tetapi
-mengambil perkiraan jari-jari bumi di sepanjang jalan.
-
-
-\>sposprint(esadd(Tugu,esdir(Tugu,Monas),esdist(Tugu,Monas)))
-
-
-    S 6°10.500' E 106°48.717'
-
-Namun, kesalahannya tidak besar.
-
-
-\>sposprint(Monas),
-
-
-    S 6°10.500' E 106°48.717'
-
-Tentu kita tidak bisa berlayar dengan tujuan yang sama dari satu
-tujuan ke tujuan lainnya, jika kita ingin menempuh jalur terpendek.
-Bayangkan, Anda terbang NE mulai dari titik mana pun di bumi. Kemudian
-Anda akan berputar ke kutub utara. Lingkaran besar tidak mengikuti
-heading yang konstan!
-
-
-Perhitungan berikut menunjukkan bahwa kami jauh dari tujuan yang
-benar, jika kami menggunakan pos yang sama selama perjalanan kami.
-
-
-\>dist=esdist(Tugu,Monas); hd=esdir(Tugu,Monas);
-
-
-Sekarang kita tambahkan 10 kali sepersepuluh dari jarak, menggunakan
-pos ke Monas, kita sampai di Tugu.
-
-
-\>p=Tugu; loop 1 to 10; p=esadd(p,hd,dist/10); end;
-
-
-Hasilnya jauh.
-
-
-\>sposprint(p), skmprint(esdist(p,Monas))
-
-
-    S 6°11.250' E 106°48.372'
-         1.529km
-
-Sebagai contoh lain, mari kita ambil dua titik di bumi pada garis
-lintang yang sama.
-
-
-\>P1=[30°,10°]; P2=[30°,50°];
-
-
-Jalur terpendek dari P1 ke P2 bukanlah lingkaran garis lintang 30°,
-melainkan jalur terpendek yang dimulai 10° lebih jauh ke utara di P1.
-
-
-\>sdegprint(esdir(P1,P2))
-
-
-         79.69°
-
-Tapi, jika kita mengikuti pembacaan kompas ini, kita akan berputar ke
-kutub utara! Jadi kita harus menyesuaikan arah kita di sepanjang
-jalan. Untuk tujuan kasar, kami menyesuaikannya pada 1/10 dari total
-jarak.
-
-
-\>p=P1;  dist=esdist(P1,P2); ...  
-\>     loop 1 to 10; dir=esdir(p,P2); sdegprint(dir), p=esadd(p,dir,dist/10); end;
-
-
-         79.69°
-         81.67°
-         83.71°
-         85.78°
-         87.89°
-         90.00°
-         92.12°
-         94.22°
-         96.29°
-         98.33°
-
-Jaraknya tidak tepat, karena kita akan menambahkan sedikit kesalahan,
-jika kita mengikuti heading yang sama terlalu lama.
-
-
-\>skmprint(esdist(p,P2))
-
-
-         0.203km
-
-Kami mendapatkan perkiraan yang baik, jika kami menyesuaikan pos
-setelah setiap 1/100 dari total jarak dari Tugu ke Monas.
-
-
-\>p=Tugu; dist=esdist(Tugu,Monas); ...  
-\>     loop 1 to 100; p=esadd(p,esdir(p,Monas),dist/100); end;
-
-\>skmprint(esdist(p,Monas))
-
-
-         0.000km
-
-Untuk keperluan navigasi, kita bisa mendapatkan urutan posisi GPS di
-sepanjang lingkaran besar menuju Monas dengan fungsi navigasi.
-
-
-\>load spherical; v=navigate(Tugu,Monas,10); ...  
-\>     loop 1 to rows(v); sposprint(v[#]), end;
-
-
-    S 7°46.998' E 110°21.966'
-    S 7°37.422' E 110°0.573'
-    S 7°27.829' E 109°39.196'
-    S 7°18.219' E 109°17.834'
-    S 7°8.592' E 108°56.488'
-    S 6°58.948' E 108°35.157'
-    S 6°49.289' E 108°13.841'
-    S 6°39.614' E 107°52.539'
-    S 6°29.924' E 107°31.251'
-    S 6°20.219' E 107°9.977'
-    S 6°10.500' E 106°48.717'
-
-Kami menulis sebuah fungsi, yang memplot bumi, dua posisi, dan posisi
-di antaranya.
-
-
-\>function testplot ...
-
-
-    useglobal;
-    plotearth;
-    plotpos(Tugu,"Tugu Jogja"); plotpos(Monas,"Tugu Monas");
-    plotposline(v);
+      if n==1 then return k>=1 && k<=m
+      else
+        sum=0; 
+        loop 1 to m; sum=sum+countways(k-#,n-1,m); end;
+        return sum;
+      end;
     endfunction
 </pre>
-Sekarang rencanakan semuanya.
+Berikut ini adalah hasil dari tiga lemparan dadu.
 
 
-\>plot3d("testplot",angle=25, height=6,\>own,\>user,zoom=4):
+\>countways(5:25,5,5)
 
 
-Atau gunakan plot3d untuk mendapatkan tampilan anaglyph. Ini terlihat
-sangat bagus dengan kacamata merah/sian.
+    [1,  5,  15,  35,  70,  121,  185,  255,  320,  365,  381,  365,  320,
+    255,  185,  121,  70,  35,  15,  5,  1]
 
+\>cw=countways(3:18,3,6)
 
-\>plot3d("testplot",angle=25,height=6,distance=5,own=1,anaglyph=1,zoom=4):
 
+    [1,  3,  6,  10,  15,  21,  25,  27,  27,  25,  21,  15,  10,  6,  3,
+    1]
 
-## MENCOBA RUMUS-RUMUS PADA MATERI DI ATAS
+Kami menambahkan nilai yang diharapkan ke plot.
 
-## Geometri Simbolik
 
-\>A &:= [2,0]; B &:= [0,2]; C &:= [3,3]; // menentukan tiga titik A, B, C
+\>plot2d(cw/6^3\*1000,\>add); plot2d(cw/6^3\*1000,\>points,\>add):
 
-\>c &:= lineThrough(B,C) // c=BC
 
+Untuk simulasi lainnya, deviasi nilai rata-rata dari n variabel acak
+berdistribusi normal 0-1 adalah 1/sqrt(n).
 
-    [-1,  3,  6]
 
-\>$getLineEquation(c,x,y), $solve(%,y) | expand // persamaan garis c
+\>longformat; 1/sqrt(10)
 
-\>h &= perpendicular(A,lineThrough(B,C)) // h melalui A tegak lurus BC
 
+    0.316227766017
 
-    
-                                  [3, 1, 6]
-    
+Mari kita periksa hal ini dengan sebuah simulasi. Kami menghasilkan
+10.000 kali 10 vektor acak.
 
-\>Q &= lineIntersection(c,h) // Q titik potong garis c=BC dan h
 
+\>M=normal(10000,10); dev(mean(M)')
 
-    
-                                    6  12
-                                   [-, --]
-                                    5  5
-    
 
-\>$projectToLine(A,lineThrough(B,C)) // proyeksi A pada BC
+    0.319493614817
 
-\>$distance(A,Q) // jarak AQ
+\>plot2d(mean(M)',\>distribution):
 
-\>cc &= circleThrough(A,B,C); $cc // (titik pusat dan jari-jari) lingkaran melalui A, B, C
 
-\>r&=getCircleRadius(cc); $r , $float(r) // tampilkan nilai jari-jari
+Median dari 10 bilangan acak berdistribusi normal 0-1 memiliki deviasi
+yang lebih besar.
 
-\>$computeAngle(A,C,B) // nilai <ACB
 
-\>$solve(getLineEquation(angleBisector(A,C,B),x,y),y)[1] // persamaan garis bagi <ACB
+\>dev(median(M)')
 
-\>P &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A)); $P // titik potong 2
 
+    0.374460271535
 
-## Garis dan Lingkaran yang berpotongan
+Karena kita dapat dengan mudah menghasilkan jalan acak, kita dapat
+mensimulasikan proses Wiener. Kami mengambil 1000 langkah dari 1000
+proses. Kami kemudian memplot deviasi standar dan rata-rata dari
+langkah ke-n dari proses-proses ini bersama dengan nilai yang
+diharapkan dalam warna merah.
 
-\>A &:= [2,0]; c =circleWithCenter(A,4);
 
-\>B &:= [2,3]; C &:= [3,2]; l =lineThrough(B,C);
+\>n=1000; m=1000; M=cumsum(normal(n,m)/sqrt(m)); ...  
+\>   t=(1:n)/n; figure(2,1); ...  
+\>   figure(1); plot2d(t,mean(M')'); plot2d(t,0,color=red,\>add); ...  
+\>   figure(2); plot2d(t,dev(M')'); plot2d(t,sqrt(t),color=red,\>add); ...  
+\>   figure(0):
 
-\>setPlotRange(5); plotCircle(c); plotLine(l);
 
-\>{P1,P2,f}=lineCircleIntersections(l,c);
+# Tes
 
-\>P1, P2,
+Tes adalah alat yang penting dalam statistik. Dalam Euler, banyak tes
+yang diterapkan. Semua tes ini mengembalikan kesalahan yang kita
+terima jika kita menolak hipotesis nol.
 
 
-    [5.89792,  -0.897916]
-    [1.10208,  3.89792]
+Sebagai contoh, kita menguji lemparan dadu untuk distribusi yang
+seragam. Pada 600 lemparan, kita mendapatkan nilai berikut, yang kita
+masukkan ke dalam uji chi-kuadrat.
 
-\>plotPoint(P1); plotPoint(P2):
 
+\>chitest([90,103,114,101,103,89],dup(100,6)')
 
-\>c &= circleWithCenter(A,4) // lingkaran dengan pusat A jari-jari 4
 
+    0.498830517952
 
-    
-                                  [2, 0, 4]
-    
+Uji chi-square juga memiliki mode, yang menggunakan simulasi Monte
+Carlo untuk menguji statistik. Hasilnya seharusnya hampir sama.
+Parameter &gt;p menginterpretasikan vektor y sebagai vektor probabilitas.
 
-\>l &= lineThrough(B,C) // garis l melalui B dan C
 
+\>chitest([90,103,114,101,103,89],dup(1/6,6)',\>p,\>montecarlo)
 
-    
-                                  [1, 1, 5]
-    
 
-\>$lineCircleIntersections(l,c) | radcan, // titik potong lingkaran c dan garis l
+    0.526
 
+Kesalahan ini terlalu besar. Jadi kita tidak bisa menolak distribusi
+seragam. Ini tidak membuktikan bahwa dadu kita adil. Tetapi kita tidak
+dapat menolak hipotesis kita.
 
-\>C=A+normalize([-3,-4])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
 
-\>degprint(computeAngle(P1,C,P2))
+Selanjutnya kita buat 1000 lemparan dadu dengan menggunakan generator
+bilangan acak, dan lakukan pengujian yang sama.
 
 
-    57°58'20.06''
+\>n=1000; t=random([1,n\*6]); chitest(count(t\*6,6),dup(n,6)')
 
-\>C=A+normalize([-4,-5])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
 
-\>degprint(computeAngle(P1,C,P2))
+    0.528028118442
 
+Mari kita uji nilai rata-rata 100 dengan uji-t.
 
-    57°58'20.06''
 
-\>insimg;
+\>s=200+normal([1,100])\*10; ...  
+\>   ttest(mean(s),dev(s),100,200)
 
 
-##  Garis Sumbu
+    0.0218365848476
 
-\>A &:=[3,3]; B &:=[-2,-3];
+Fungsi ttest() membutuhkan nilai rata-rata, deviasi, jumlah data, dan
+nilai rata-rata untuk diuji.
 
-\>c1=circleWithCenter(A,distance(A,B));
 
-\>c2=circleWithCenter(B,distance(A,B));
+Sekarang mari kita periksa dua pengukuran untuk mean yang sama. Kita
+tolak hipotesis bahwa kedua pengukuran tersebut memiliki nilai
+rata-rata yang sama, jika hasilnya &lt; 0,05.
 
-\>{P1,P2,f}=circleCircleIntersections(c1,c2);
 
-\>l=lineThrough(P1,P2);
+\>tcomparedata(normal(1,10),normal(1,10))
 
-\>setPlotRange(5); plotCircle(c1); plotCircle(c2);
 
-\>plotPoint(A); plotPoint(B); plotSegment(A,B); plotLine(l):
+    0.38722000942
 
-\>A &= [a1,a2]; B &= [b1,b2];
+Jika kita menambahkan bias pada satu distribusi, kita akan mendapatkan
+lebih banyak penolakan. Ulangi simulasi ini beberapa kali untuk
+melihat efeknya.
 
-\>c1 &= circleWithCenter(A,distance(A,B));
 
-\>c2 &= circleWithCenter(B,distance(A,B));
+\>tcomparedata(normal(1,10),normal(1,10)+2)
 
-\>P &= circleCircleIntersections(c1,c2); P1 &= P[1]; P2 &= P[2];
 
-\>g &= getLineEquation(lineThrough(P1,P2),x,y);
+    5.60009101758e-07
 
-\>$solve(g,y)
+Pada contoh berikut, kita membuat 20 lemparan dadu secara acak
+sebanyak 100 kali dan menghitung jumlah dadu yang muncul. Rata-rata
+harus ada 20/6 = 3,3 mata dadu.
 
-\>$solve(getLineEquation(middlePerpendicular(A,B),x,y),y)
 
-\>h &=getLineEquation(lineThrough(A,B),x,y);
+\>R=random(100,20); R=sum(R\*6<=1)'; mean(R)
 
-\>$solve(h,y)
 
+    3.28
 
-## Garis Euler dan Parabola
+Sekarang kita bandingkan jumlah satu dengan distribusi binomial.
+Pertama, kita memplot distribusi angka satu.
 
-\>A &:=[-1.5,-1.5]; B &:=[3,0]; C &:=[1.5,3];
 
-\>setPlotRange(3); plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C");
+\>plot2d(R,distribution=max(R)+1,even=1,style="\\/"):
 
+\>t=count(R,21);
 
-\>plotSegment(A,B,""); plotSegment(B,C,""); plotSegment(C,A,""):
 
-\>$areaTriangle(A,B,C)
+Kemudian kami menghitung nilai yang diharapkan.
 
 
-\>c &= lineThrough(A,B)
+\>n=0:20; b=bin(20,n)\*(1/6)^n\*(5/6)^(20-n)\*100;
 
 
-    
-                                   3  9    9
-                                [- -, -, - -]
-                                   2  2    2
-    
+Kami harus mengumpulkan beberapa angka untuk mendapatkan kategori yang
+cukup besar.
 
-\>$getLineEquation(c,x,y)
 
-\>$getHesseForm(c,x,y,C), $at(%,[x=C[1],y=C[2]])
+\>t1=sum(t[1:2])|t[3:7]|sum(t[8:21]); ...  
+\>   b1=sum(b[1:2])|b[3:7]|sum(b[8:21]);
 
 
-\>LL &= circleThrough(A,B,C); $getCircleEquation(LL,x,y)
+Uji chi-square menolak hipotesis bahwa distribusi kita adalah
+distribusi binomial, jika hasilnya &lt;0,05.
 
-\>O &= getCircleCenter(LL); $O
 
-\>plotCircle(LL()); plotPoint(O(),"O"):
+\>chitest(t1,b1)
 
-\>H &= lineIntersection(perpendicular(A,lineThrough(C,B)),...  
-\>     perpendicular(B,lineThrough(A,C))); $H
 
+    0.53921579764
 
-\>el &= lineThrough(H,O); $getLineEquation(el,x,y)
+Contoh berikut ini berisi hasil dari dua kelompok orang (laki-laki dan
+perempuan, katakanlah) yang memberikan suara untuk satu dari enam
+partai.
 
 
-\>plotPoint(H(),"H"); plotLine(el(),"Garis Euler"):
+\>A=[23,37,43,52,64,74;27,39,41,49,63,76];  ...  
+\>     writetable(A,wc=6,labr=["m","f"],labc=1:6)
 
 
-\>M &= (A+B+C)/3; $getLineEquation(el,x,y) with [x=M[1],y=M[2]]
+               1     2     3     4     5     6
+         m    23    37    43    52    64    74
+         f    27    39    41    49    63    76
 
-\>plotPoint(M(),"M"): // titik berat
+Kami ingin menguji independensi suara dari jenis kelamin. Uji tabel
+chi^2 melakukan hal ini. Hasilnya terlalu besar untuk menolak
+independensi. Jadi kita tidak dapat mengatakan, jika pemungutan suara
+tergantung pada jenis kelamin dari data ini.
 
-\>$distance(M,H)/distance(M,O)|radcan
 
+\>tabletest(A)
 
-\>$computeAngle(A,C,B), degprint(%())
 
+    0.990701632326
 
-    60°15'18.43''
+Berikut ini adalah tabel yang diharapkan, jika kita mengasumsikan
+frekuensi pemungutan suara yang diamati.
 
-\>Q &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A))|radcan; $Q
 
-\>r &= distance(Q,projectToLine(Q,lineThrough(A,B)))|ratsimp; $r
+\>writetable(expectedtable(A),wc=6,dc=1,labr=["m","f"],labc=1:6)
 
-\>LD &=  circleWithCenter(Q,r); // Lingkaran dalam
 
+               1     2     3     4     5     6
+         m  24.9  37.9  41.9  50.3  63.3  74.7
+         f  25.1  38.1  42.1  50.7  63.7  75.3
 
-\>color(5); plotCircle(LD()):
+Kita dapat menghitung koefisien kontingensi yang telah dikoreksi.
+Karena koefisien ini sangat dekat dengan 0, kami menyimpulkan bahwa
+pemungutan suara tidak bergantung pada jenis kelamin.
 
 
-## contoh lain dari materi trigonometri rasional
+\>contingency(A)
 
-\>A &:=[2,3]; B &:=[5,4]; C &:=[0,5]; ...  
-\>   setPlotRange(-1,5,1,7); ...  
-\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
-\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
-\>   insimg;
 
-\>$distance(A,B)
+    0.0427225484717
 
-\>c &= quad(A,B); $c, b &= quad(A,C); $b, a &= quad(B,C); $a,
+# Beberapa Tes Lainnya
 
+Selanjutnya kita menggunakan analisis varians (uji F) untuk menguji
+tiga sampel data yang terdistribusi secara normal dengan nilai
+rata-rata yang sama. Metode ini disebut ANOVA (analisis varians).
+Dalam Euler, fungsi varanalysis() digunakan.
 
-\>wb &= computeAngle(A,B,C); $wb, $(wb/pi\*180)()
 
+\>x1=[109,111,98,119,91,118,109,99,115,109,94]; mean(x1),
 
-    29.7448812969
 
-\>$crosslaw(a,b,c,x), $solve(%,x), //(b+c-a)^=4b.c(1-x)
+    106.545454545
 
-\>sb &= spread(b,a,c); $sb
+\>x2=[120,124,115,139,114,110,113,120,117]; mean(x2),
 
-\>$sin(computeAngle(A,B,C))^2
 
-\>ha &= c\*sb; $ha
+    119.111111111
 
-\>$sqrt(ha)
+\>x3=[120,112,115,110,105,134,105,130,121,111]; mean(x3)
 
-\>$sqrt(ha)\*sqrt(a)/2
 
+    116.3
 
-\>$areaTriangle(B,A,C)
+\>varanalysis(x1,x2,x3)
 
 
-## Aturan penyebaran 3 kali lipat
+    0.0138048221371
 
-\>setPlotRange(1); ...  
-\>   color(1); plotCircle(circleWithCenter([0,0],1)); ...  
-\>   A:=[cos(1),sin(1)]; B:=[cos(2),sin(2)]; C:=[cos(6),sin(6)]; ...  
-\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
-\>   color(3); plotSegment(A,B,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
-\>   color(1); O:=[0,0];  plotPoint(O,"0"); ...  
-\>   plotSegment(A,O); plotSegment(B,O); plotSegment(C,O,"r"); ...  
-\>   insimg;
+Ini berarti, kami menolak hipotesis nilai rata-rata yang sama. Kami
+melakukan ini dengan probabilitas kesalahan sebesar 1,3%.
 
-\>&remvalue(a,b,c,r); // hapus nilai-nilai sebelumnya untuk perhitungan baru
 
-\>rabc &= rhs(solve(triplespread(spread(b,r,r),spread(a,r,r),spread(c,r,r)),r)[4]); $rabc
+Ada juga uji median, yang menolak sampel data dengan distribusi
+rata-rata yang berbeda dengan menguji median dari sampel gabungan.
 
 
-\>function periradius(a,b,c) &= rabc;
+\>a=[56,66,68,49,61,53,45,58,54];
 
+\>b=[72,81,51,73,69,78,59,67,65,71,68,71];
 
-\>a:=quadrance(B,C); b:=quadrance(A,C); c:=quadrance(A,B);
+\>mediantest(a,b)
 
 
-\>periradius(a,b,c)
+    0.0241724220052
 
+Uji lain tentang kesetaraan adalah uji peringkat. Uji ini jauh lebih
+tajam daripada uji median.
 
-    1
 
-\>$spread(b,a,c)\*rabc | ratsimp
+\>ranktest(a,b)
 
-\>$doublespread(b/(4\*r))-spread(b,r,r) | ratsimp
 
+    0.00199969612469
 
-## Contoh 6: Jarak Minimal pada Bidang
-
-## Catatan awal
-
-Fungsi yang, ke titik M di bidang, menetapkan jarak AM antara titik
-tetap A dan M, memiliki garis level yang agak sederhana: lingkaran
-berpusat di A.
-
-
-\>&remvalue();
-
-\>A=[-2,-2];
-
-\>function d1(x,y):=sqrt((x-A[1])^2+(y-A[2])^2)
-
-\>fcontour("d1",xmin=-2,xmax=0,ymin=-2,ymax=0,hue=1, ...  
-\>   title="If you see ellipses, please set your window square"):
-
-
-dan grafiknya juga agak sederhana: bagian atas kerucut:
-
-
-\>plot3d("d1",xmin=-2,xmax=0,ymin=-2,ymax=0):
-
-
-Ternyata setelah mencoba yang bisa hanya dengan memasukkan angka 1,
-karena ketika memakai angka 2, plot tidak membentuk kerucut diatas.
-
-
-## Dua poin
-
-\>B=[2,-2];
-
-\>function d2(x,y):=d1(x,y)+sqrt((x-B[1])^2+(y-B[2])^2)
-
-\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
-
-
-Grafiknya lebih menarik:
-
-
-\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
-
-
-Pembatasan garis (AB) lebih terkenal:
-
-
-\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
-
-
-## Tiga poin
-
-
-
-Contoh:
-
-
-\>C=[-3,2];
-
-\>function d3(x,y):=d2(x,y)+sqrt((x-C[1])^2+(y-C[2])^2)
-
-\>plot3d("d3",xmin=-5,xmax=3,ymin=-4,ymax=4);
-
-\>insimg;
-
-\>fcontour("d3",xmin=-4,xmax=1,ymin=-2,ymax=2,hue=1,title="The minimum is on A");
-
-\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
-
-\>insimg;
-
-
-Tetapi jika semua sudut segitiga ABC kurang dari 120 °, minimumnya
-adalah pada titik F di bagian dalam segitiga, yang merupakan
-satu-satunya titik yang melihat sisi-sisi ABC dengan sudut yang sama
-(maka masing-masing 120 ° ):
-
-
-\>C=[-1,2];
-
-\>plot3d("d3",xmin=-2,xmax=2,ymin=-2,ymax=2):
-
-\>fcontour("d3",xmin=-2,xmax=2,ymin=-2,ymax=2,hue=1,title="The Fermat point");
-
-\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
-
-\>insimg;
-
-
-## Empat poin
-
-Langkah selanjutnya adalah menambahkan 4 titik D dan mencoba
-meminimalkan MA+MB+MC+MD; katakan bahwa Anda adalah operator TV kabel
-dan ingin mencari di bidang mana Anda harus meletakkan antena sehingga
-Anda dapat memberi makan empat desa dan menggunakan panjang kabel
-sesedikit mungkin!
-
-
-\>D=[2,21];
-
-\>function d4(x,y):=d3(x,y)+sqrt((x-D[1])^2+(y-D[2])^2)
-
-\>plot3d("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5):
-
-\>fcontour("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5,hue=1);
-
-\>P=(A\_B\_C\_D)'; plot2d(P[1],P[2],points=1,add=1,color=12);
-
-\>insimg;
-
-
-## Contoh 7: Bola Dandelin dengan Povray
-
-\>load geometry;
-
-
-Pertama dua garis yang membentuk kerucut.
-
-
-\>g1 &= lineThrough([0,0],[2,a])
-
-
-    
-                                 [- a, 2, 0]
-    
-
-\>g2 &= lineThrough([0,0],[-2,a])
-
-
-    
-                                [- a, - 2, 0]
-    
-
-\>g &= lineThrough([-2,0],[2,2])
-
-
-    
-                                 [- 2, 4, 4]
-    
-
-\>setPlotRange(-2,2,0,3);
-
-\>color(black); plotLine(g(),"")
-
-\>a:=2; color(blue); plotLine(g1(),""), plotLine(g2(),""):
-
-
-Sekarang kita ambil titik umum pada sumbu y.
-
-
-\>P &= [0,u]
-
-
-    
-                                    [0, u]
-    
-
-Hitung jarak ke g1.
-
-
-\>d1 &= distance(P,projectToLine(P,g1)); $d1
-
-
-Hitung jarak ke g.
-
-
-\>d &= distance(P,projectToLine(P,g)); $d
-
-
-Dan temukan pusat kedua lingkaran yang jaraknya sama.
-
-
-\>sol &= solve(d1^2=d^2,u); $sol
-
-
-Ada dua solusi.
-
-
-\>u := sol()
-
-
-    [0.558482,  4.77485]
-
-\>dd := d()
-
-
-    [0.394906,  3.37633]
-
-Plot lingkaran ke dalam gambar.
-
-
-\>color(red);
-
-\>plotCircle(circleWithCenter([0,u[1]],dd[1]),"");
-
-\>plotCircle(circleWithCenter([0,u[2]],dd[2]),"");
-
-\>insimg;
-
-
-## Latihan
-
-1. Gambarlah segi-n beraturan jika diketahui titik pusat O, n, dan
-jarak titik pusat ke titik-titik sudut segi-n tersebut (jari-jari
-lingkaran luar segi-n), r.
-
-
-Petunjuk:
-
-
-* 
-Besar sudut pusat yang menghadap masing-masing sisi segi-n adalah
-* (360/n).
-
-* 
-Titik-titik sudut segi-n merupakan perpotongan lingkaran luar segi-n
-* dan garis-garis yang melalui pusat dan saling membentuk sudut sebesar
-* kelipatan (360/n).
-
-* 
-Untuk n ganjil, pilih salah satu titik sudut adalah di atas.
-
-* 
-Untuk n genap, pilih 2 titik di kanan dan kiri lurus dengan titik
-* pusat.
-
-* 
-Anda dapat menggambar segi-3, 4, 5, 6, 7, dst beraturan.
-
-
-Penyelesaian :
-
-
-\>load geometry
-
-
-    Numerical and symbolic geometry.
-
-\>setPlotRange(-3.5,3.5,-3.5,3.5);
-
-\>A=[-2,-2]; plotPoint(A,"A");
-
-\>B=[2,-2]; plotPoint(B,"B");
-
-\>C=[0,3]; plotPoint(C,"C");
-
-\>plotSegment(A,B,"c");
-
-\>plotSegment(B,C,"a");
-
-\>plotSegment(A,C,"b");
-
-\>aspect(1):
-
-\>c=circleThrough(A,B,C);
-
-\>R=getCircleRadius(c);
-
-\>O=getCircleCenter(c);
-
-\>plotPoint(O,"O");
-
-\>l=angleBisector(A,C,B);
-
-\>color(2); plotLine(l); color(1);
-
-\>plotCircle(c,"Lingkaran luar segitiga ABC"):
-
-
-2. Gambarlah suatu parabola yang melalui 3 titik yang diketahui.
-
-
-Petunjuk:
-
-
-- Misalkan persamaan parabolanya y= ax^2+bx+c.
-
-
-- Substitusikan koordinat titik-titik yang diketahui ke persamaan
-tersebut.
-
-
-- Selesaikan SPL yang terbentuk untuk mendapatkan nilai-nilai a, b, c.
-
-
-Penyelesaian :
-
-
-\>load geometry;
-
-\>setPlotRange(5); P=[2,0]; Q=[4,0]; R=[0,-4];
-
-\>plotPoint(P,"P"); plotPoint(Q,"Q"); plotPoint(R,"R"):
-
-\>sol &= solve([a+b=-c,16\*a+4\*b=-c,c=-4],[a,b,c])
-
-
-    
-                         [[a = - 1, b = 5, c = - 4]]
-    
-
-Sehingga didapatkan nilai a = -1, b = 5 dan c = -4
-
-
-\>function y&=-x^2+5\*x-4
-
-
-    
-                                   2
-                                - x  + 5 x - 4
-    
-
-\>plot2d("-x^2+5\*x-4",-5,5,-5,5):
-
-
-3. Gambarlah suatu segi-4 yang diketahui keempat titik sudutnya,
-misalnya A, B, C, D.
-
-
-   - Tentukan apakah segi-4 tersebut merupakan segi-4 garis singgung
-(sisinya-sisintya merupakan garis singgung lingkaran yang sama yakni
-lingkaran dalam segi-4 tersebut).
-
-
-   - Suatu segi-4 merupakan segi-4 garis singgung apabila keempat
-garis bagi sudutnya bertemu di satu titik.
-
-
-   - Jika segi-4 tersebut merupakan segi-4 garis singgung, gambar
-lingkaran dalamnya.
-
-
-   - Tunjukkan bahwa syarat suatu segi-4 merupakan segi-4 garis
-singgung apabila hasil kali panjang sisi-sisi yang berhadapan sama.
-
-
-Penyelesaian :
-
-
-\>load geometry
-
-
-    Numerical and symbolic geometry.
-
-\>setPlotRange(-4.5,4.5,-4.5,4.5);
-
-\>A=[-3,-3]; plotPoint(A,"A");
-
-\>B=[3,-3]; plotPoint(B,"B");
-
-\>C=[3,3]; plotPoint(C,"C");
-
-\>D=[-3,3]; plotPoint(D,"D");
-
-\>plotSegment(A,B,"");
-
-\>plotSegment(B,C,"");
-
-\>plotSegment(C,D,"");
-
-\>plotSegment(A,D,"");
-
-\>aspect(1):
-
-\>l=angleBisector(A,B,C);
-
-\>m=angleBisector(B,C,D);
-
-\>P=lineIntersection(l,m);
-
-\>color(5); plotLine(l); plotLine(m); color(1);
-
-\>plotPoint(P,"P"):
-
-
-Dari gambar diatas terlihat bahwa keempat garis bagi sudutnya bertemu
-di satu titik yaitu titik P.
-
-
-\>r=norm(P-projectToLine(P,lineThrough(A,B)));
-
-\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segiempat ABCD"):
-
-
-Dari gambar diatas, terlihat bahwa sisi-sisinya merupakan garis
-singgung lingkaran yang sama yaitu lingkaran dalam segiempat.
-
-
-Akan ditunjukkan bahwa hasil kali panjang sisi-sisi yang berhadapan
+Dalam contoh berikut ini, kedua distribusi memiliki rata-rata yang
 sama.
 
 
-\>AB=norm(A-B) //panjang sisi AB
+\>ranktest(random(1,100),random(1,50)\*3-1)
 
 
-    6
+    0.129608141484
 
-\>CD=norm(C-D) //panjang sisi CD
-
-
-    6
-
-\>AD=norm(A-D) //panjang sisi AD
+Sekarang mari kita coba mensimulasikan dua perawatan a dan b yang
+diterapkan pada orang yang berbeda.
 
 
-    6
+\>a=[8.0,7.4,5.9,9.4,8.6,8.2,7.6,8.1,6.2,8.9];
 
-\>BC=norm(B-C) //panjang sisi BC
-
-
-    6
-
-\>AB.CD
+\>b=[6.8,7.1,6.8,8.3,7.9,7.2,7.4,6.8,6.8,8.1];
 
 
-    36
-
-\>AD.BC
+Uji signum memutuskan, apakah a lebih baik daripada b.
 
 
-    36
-
-Terbukti bahwa hasil kali panjang sisi-sisi yang berhadapan sama yaitu
-36. Jadi dapat dipastikan bahwa segiempat tersebut merupakan segiempat
-garis singgung.
+\>signtest(a,b)
 
 
-4. Gambarlah suatu ellips jika diketahui kedua titik fokusnya,
-misalnya P dan Q. Ingat ellips dengan fokus P dan Q adalah tempat
-kedudukan titik-titik yang jumlah jarak ke P dan ke Q selalu sama
-(konstan).
+    0.0546875
+
+This is too much of an error. We cannot reject that a is as good as b.
 
 
-Penyelesaian :
+The Wilcoxon test is sharper than this test, but relies on the quantitative value of the
+differences.
 
 
-Diketahui kedua titik fokus P = [-1,-1] dan Q = [1,-1]
+\>wilcoxon(a,b)
 
 
-\>P=[-1,-1]; Q=[1,-1];
+    0.0296680599405
 
-\>function d1(x,y):=sqrt((x-P[1])^2+(y-P[2])^2)
-
-\>Q=[1,-1]; function d2(x,y):=sqrt((x-P[1])^2+(y-P[2])^2)+sqrt((x-Q[1])^2+(y-Q[2])^2)
-
-\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
+Mari kita coba dua pengujian lagi dengan menggunakan rangkaian yang
+dihasilkan.
 
 
-Grafik yang lebih menarik
+\>wilcoxon(normal(1,20),normal(1,20)-1)
 
 
-\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
+    0.0068706451766
+
+\>wilcoxon(normal(1,20),normal(1,20))
 
 
-Batasan ke garis PQ
+    0.275145971064
+
+# Bilangan Acak
+
+Berikut ini adalah tes untuk generator bilangan acak. Euler
+menggunakan generator yang sangat bagus, jadi kita tidak perlu
+mengharapkan adanya masalah.
 
 
-\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
+Pertama, kita akan membangkitkan sepuluh juta bilangan acak dalam
+[0,1].
 
 
-5. Gambarlah suatu hiperbola jika diketahui kedua titik fokusnya,
-misalnya P dan Q. Ingat ellips dengan fokus P dan Q adalah tempat
-kedudukan titik-titik yang selisih jarak ke P dan ke Q selalu sama
-(konstan).
+\>n:=10000000; r:=random(1,n);
 
 
-Penyelesaian :
+Selanjutnya, kami menghitung jarak antara dua angka yang kurang dari
+0,05.
 
 
-\>P=[-1,-1]; Q=[1,-1];
-
-\>function d1(x,y):=sqrt((x-p[1])^2+(y-p[2])^2)
-
-\>Q=[1,-1]; function d2(x,y):=sqrt((x-P[1])^2+(y-P[2])^2)+sqrt((x+Q[1])^2+(y+Q[2])^2)
-
-\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
+\>a:=0.05; d:=differences(nonzeros(r<a));
 
 
-Grafik yang lebih menarik
+Terakhir, kami memplot berapa kali, setiap jarak yang terjadi, dan
+membandingkannya dengan nilai yang diharapkan.
 
 
-\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
+\>m=getmultiplicities(1:100,d); plot2d(m); ...  
+\>     plot2d("n\*(1-a)^(x-1)\*a^2",color=red,\>add):
 
-\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
 
+Menghapus data.
+
+
+\>remvalue n;
+
+
+# Pengantar untuk Pengguna Proyek R
+
+Jelas, EMT tidak bersaing dengan R sebagai sebuah paket statistik.
+Namun, ada banyak prosedur dan fungsi statistik yang tersedia di EMT
+juga. Jadi EMT dapat memenuhi kebutuhan dasar. Bagaimanapun, EMT hadir
+dengan paket numerik dan sistem aljabar komputer.
+
+
+Buku ini diperuntukkan bagi Anda yang sudah terbiasa dengan R, tetapi
+perlu mengetahui perbedaan sintaks EMT dan R. Kami mencoba memberikan
+gambaran umum mengenai hal-hal yang jelas dan kurang jelas yang perlu
+Anda ketahui.
+
+
+Selain itu, kami juga membahas cara-cara untuk bertukar data di antara
+kedua sistem tersebut.
+
+
+Perhatikan bahwa ini adalah pekerjaan yang sedang berlangsung.
+
+
+# Sintaks Dasar
+
+Hal pertama yang Anda pelajari dalam R adalah membuat sebuah vektor.
+Dalam EMT, perbedaan utamanya adalah bahwa operator : dapat mengambil
+ukuran langkah. Selain itu, operator ini memiliki daya ikat yang
+rendah.
+
+
+\>n=10; 0:n/20:n-1
+
+
+    [0,  0.5,  1,  1.5,  2,  2.5,  3,  3.5,  4,  4.5,  5,  5.5,  6,  6.5,
+    7,  7.5,  8,  8.5,  9]
+
+Fungsi c() tidak ada. Anda dapat menggunakan vektor untuk
+menggabungkan beberapa hal.
+
+
+Contoh berikut ini, seperti banyak contoh lainnya, berasal dari
+“Interoduksi ke R” yang disertakan dengan proyek R. Jika Anda membaca
+PDF ini, Anda akan menemukan bahwa saya mengikuti alurnya dalam
+tutorial ini.
+
+
+\>x=[10.4, 5.6, 3.1, 6.4, 21.7]; [x,0,x]
+
+
+    [10.4,  5.6,  3.1,  6.4,  21.7,  0,  10.4,  5.6,  3.1,  6.4,  21.7]
+
+Operator titik dua dengan ukuran langkah EMT digantikan oleh fungsi
+seq() dalam R. Kita dapat menulis fungsi ini dalam EMT.
+
+
+\>function seq(a,b,c) := a:b:c; ...  
+\>   seq(0,-0.1,-1)
+
+
+    [0,  -0.1,  -0.2,  -0.3,  -0.4,  -0.5,  -0.6,  -0.7,  -0.8,  -0.9,  -1]
+
+Fungsi rep() dari R tidak ada dalam EMT. Untuk input vektor, dapat
+dituliskan sebagai berikut.
+
+
+\>function rep(x:vector,n:index) := flatten(dup(x,n)); ...  
+\>   rep(x,2)
+
+
+    [10.4,  5.6,  3.1,  6.4,  21.7,  10.4,  5.6,  3.1,  6.4,  21.7]
+
+Perhatikan bahwa “=” atau “:=” digunakan untuk penugasan. Operator
+“-&gt;” digunakan untuk unit dalam EMT.
+
+
+\>125km -\> " miles"
+
+
+    77.6713990297 miles
+
+Operator “&lt;-” untuk penugasan menyesatkan, dan bukan ide yang baik
+untuk R. Berikut ini akan membandingkan a dan -4 dalam EMT.
+
+
+\>a=2; a<-4
+
+
+    0
+
+Dalam R, “a&lt;-4&lt;3” bisa digunakan, tetapi “a&lt;-4&lt;-3” tidak. Saya juga
+mengalami ambiguitas yang sama di EMT, tetapi saya mencoba untuk
+menghilangkannya.
+
+
+EMT dan R memiliki vektor dengan tipe boolean. Tetapi dalam EMT, angka
+0 dan 1 digunakan untuk merepresentasikan salah dan benar. Dalam R,
+nilai benar dan salah tetap dapat digunakan dalam aritmatika biasa
+seperti dalam EMT.
+
+
+\>x<5, %\*x
+
+
+    [0,  0,  1,  0,  0]
+    [0,  0,  3.1,  0,  0]
+
+EMT melempar kesalahan atau menghasilkan NAN tergantung pada flag
+“kesalahan”.
+
+
+\>errors off; 0/0, isNAN(sqrt(-1)), errors on;
+
+
+    NAN
+    1
+
+String sama saja dalam R dan EMT. Keduanya berada di lokal saat ini,
+bukan di Unicode.
+
+
+Dalam R ada paket-paket untuk Unicode. Dalam EMT, sebuah string dapat
+berupa string Unicode. Sebuah string Unicode dapat diterjemahkan ke
+pengkodean lokal dan sebaliknya. Selain itu, u“...” dapat berisi
+entitas HTML.
+
+
+\>u"&#169; Ren&eacut; Grothmann"
+
+
+    © René Grothmann
+
+Berikut ini mungkin atau mungkin tidak ditampilkan dengan benar pada
+sistem Anda sebagai A dengan titik dan tanda hubung di atasnya. Hal
+ini tergantung pada jenis huruf yang Anda gunakan.
+
+
+\>chartoutf([480])
+
+
+    Ǡ
+
+Penggabungan string dilakukan dengan “+” atau “|”. Ini dapat
+menyertakan angka, yang akan dicetak dalam format saat ini.
+
+
+\>"pi = "+pi
+
+
+    pi = 3.14159265359
+
+# Pengindeksan
+
+Sebagian besar waktu, ini akan bekerja seperti pada R.
+
+
+Tetapi EMT akan menginterpretasikan indeks negatif dari bagian
+belakang vektor, sementara R menginterpretasikan x[n] sebagai x tanpa
+elemen ke-n.
+
+
+\>x, x[1:3], x[-2]
+
+
+    [10.4,  5.6,  3.1,  6.4,  21.7]
+    [10.4,  5.6,  3.1]
+    6.4
+
+Perilaku R dapat dicapai dalam EMT dengan drop().
+
+
+\>drop(x,2)
+
+
+    [10.4,  3.1,  6.4,  21.7]
+
+Vektor logika tidak diperlakukan secara berbeda dengan indeks di EMT,
+berbeda dengan R. Anda harus mengekstrak elemen-elemen yang bukan nol
+terlebih dahulu di EMT.
+
+
+\>x, x\>5, x[nonzeros(x\>5)]
+
+
+    [10.4,  5.6,  3.1,  6.4,  21.7]
+    [1,  1,  0,  1,  1]
+    [10.4,  5.6,  6.4,  21.7]
+
+Sama seperti di R, vektor indeks dapat berisi pengulangan.
+
+
+\>x[[1,2,2,1]]
+
+
+    [10.4,  5.6,  5.6,  10.4]
+
+Namun pemberian nama untuk indeks tidak dimungkinkan dalam EMT. Untuk
+paket statistik, hal ini mungkin sering diperlukan untuk memudahkan
+akses ke elemen-elemen vektor.
+
+
+Untuk meniru perilaku ini, kita dapat mendefinisikan sebuah fungsi
+sebagai berikut.
+
+
+\>function sel (v,i,s) := v[indexof(s,i)]; ...  
+\>   s=["first","second","third","fourth"]; sel(x,["first","third"],s)
+
+
+    
+    Trying to overwrite protected function sel!
+    Error in:
+    function sel (v,i,s) := v[indexof(s,i)]; ... ...
+                 ^
+    
+    Trying to overwrite protected function sel!
+    Error in:
+    function sel (v,i,s) := v[indexof(s,i)]; ... ...
+                 ^
+    
+    Trying to overwrite protected function sel!
+    Error in:
+    function sel (v,i,s) := v[indexof(s,i)]; ... ...
+                 ^
+    [10.4,  3.1]
+
+# Tipe Data
+
+EMT memiliki lebih banyak tipe data yang tetap dibandingkan R. Jelas,
+dalam R terdapat vektor yang berkembang. Anda bisa mengatur sebuah
+vektor numerik kosong v dan memberikan sebuah nilai pada elemen v[17].
+Hal ini tidak mungkin dilakukan dalam EMT.
+
+
+Hal berikut ini sedikit tidak efisien.
+
+
+\>v=[]; for i=1 to 10000; v=v|i; end;
+
+
+EMT sekarang akan membuat vektor dengan v dan i yang ditambahkan pada
+tumpukan dan menyalin vektor tersebut kembali ke variabel global v.
+
+
+Semakin efisien mendefinisikan vektor.
+
+
+\>v=zeros(10000); for i=1 to 10000; v[i]=i; end;
+
+
+Untuk mengubah jenis tanggal di EMT, Anda dapat menggunakan fungsi
+seperti complex().
+
+
+\>complex(1:4)
+
+
+    [ 1+0i ,  2+0i ,  3+0i ,  4+0i  ]
+
+Konversi ke string hanya dapat dilakukan untuk tipe data dasar. Format
+saat ini digunakan untuk penggabungan string sederhana. Tetapi ada
+fungsi-fungsi seperti print() atau frac().
+
+
+Untuk vektor, Anda dapat dengan mudah menulis fungsi Anda sendiri.
+
+
+\>function tostr (v) ...
+
+
+    s="[";
+    loop 1 to length(v);
+       s=s+print(v[#],2,0);
+       if #<length(v) then s=s+","; endif;
+    end;
+    return s+"]";
+    endfunction
+</pre>
+\>tostr(linspace(0,1,10))
+
+
+    [0.00,0.10,0.20,0.30,0.40,0.50,0.60,0.70,0.80,0.90,1.00]
+
+Untuk komunikasi dengan Maxima, ada sebuah fungsi convertmxm(), yang
+juga dapat digunakan untuk memformat vektor untuk output.
+
+
+\>convertmxm(1:10)
+
+
+    [1,2,3,4,5,6,7,8,9,10]
+
+Untuk Latex, perintah tex dapat digunakan untuk mendapatkan perintah
+Latex.
+
+
+\>tex(&[1,2,3])
+
+
+    \left[ 1 , 2 , 3 \right] 
+
+# Faktor dan Tabel
+
+Pada pengantar R terdapat sebuah contoh dengan apa yang disebut
+faktor.
+
+
+Berikut ini adalah daftar wilayah dari 30 negara bagian.
+
+
+\>austates = ["tas", "sa", "qld", "nsw", "nsw", "nt", "wa", "wa", ...  
+\>   "qld", "vic", "nsw", "vic", "qld", "qld", "sa", "tas", ...  
+\>   "sa", "nt", "wa", "vic", "qld", "nsw", "nsw", "wa", ...  
+\>   "sa", "act", "nsw", "vic", "vic", "act"];
+
+
+Asumsikan, kita memiliki pendapatan yang sesuai di setiap negara
+bagian.
+
+
+\>incomes = [60, 49, 40, 61, 64, 60, 59, 54, 62, 69, 70, 42, 56, ...  
+\>   61, 61, 61, 58, 51, 48, 65, 49, 49, 41, 48, 52, 46, ...  
+\>   59, 46, 58, 43];
+
+
+Sekarang, kita ingin menghitung rata-rata pendapatan di wilayah
+tersebut. Sebagai sebuah program statistik, R memiliki fungsi factor()
+dan tappy() untuk hal ini.
+
+
+EMT dapat melakukan hal ini dengan mencari indeks dari wilayah-wilayah
+di dalam daftar unik dari wilayah-wilayah tersebut.
+
+
+\>auterr=sort(unique(austates)); f=indexofsorted(auterr,austates)
+
+
+    [6,  5,  4,  2,  2,  3,  8,  8,  4,  7,  2,  7,  4,  4,  5,  6,  5,  3,
+    8,  7,  4,  2,  2,  8,  5,  1,  2,  7,  7,  1]
+
+Pada titik ini, kita dapat menulis fungsi perulangan kita sendiri
+untuk melakukan berbagai hal untuk satu faktor saja.
+
+
+Atau kita dapat meniru fungsi tapply() dengan cara berikut.
+
+
+\>function map tappl (i; f$:call, cat, x) ...
+
+
+    u=sort(unique(cat));
+    f=indexof(u,cat);
+    return f$(x[nonzeros(f==indexof(u,i))]);
+    endfunction
+</pre>
+Ini sedikit tidak efisien, karena menghitung wilayah unik untuk setiap
+i, tetapi berfungsi.
+
+
+\>tappl(auterr,"mean",austates,incomes)
+
+
+    [44.5,  57.3333333333,  55.5,  53.6,  55,  60.5,  56,  52.25]
+
+Perhatikan bahwa ini bekerja untuk setiap vektor wilayah.
+
+
+\>tappl(["act","nsw"],"mean",austates,incomes)
+
+
+    [44.5,  57.3333333333]
+
+Sekarang, paket statistik EMT mendefinisikan tabel seperti halnya di
+R. Fungsi readtable() dan writetable() dapat digunakan untuk input dan
+output.
+
+
+Jadi kita dapat mencetak rata-rata pendapatan negara di wilayah dengan
+cara yang ramah.
+
+
+\>writetable(tappl(auterr,"mean",austates,incomes),labc=auterr,wc=7)
+
+
+        act    nsw     nt    qld     sa    tas    vic     wa
+       44.5  57.33   55.5   53.6     55   60.5     56  52.25
+
+Kita juga dapat mencoba meniru perilaku R sepenuhnya.
+
+
+Faktor-faktor tersebut harus disimpan dengan jelas dalam sebuah
+koleksi dengan jenis dan kategorinya (negara bagian dan wilayah dalam
+contoh kita). Untuk EMT, kita menambahkan indeks yang telah dihitung
+sebelumnya.
+
+
+\>function makef (t) ...
+
+
+    ## Factor data
+    ## Returns a collection with data t, unique data, indices.
+    ## See: tapply
+    u=sort(unique(t));
+    return {{t,u,indexofsorted(u,t)}};
+    endfunction
+</pre>
+\>statef=makef(austates);
+
+
+Sekarang elemen ketiga dari koleksi ini akan berisi indeks.
+
+
+\>statef[3]
+
+
+    [6,  5,  4,  2,  2,  3,  8,  8,  4,  7,  2,  7,  4,  4,  5,  6,  5,  3,
+    8,  7,  4,  2,  2,  8,  5,  1,  2,  7,  7,  1]
+
+Sekarang kita dapat meniru tapply() dengan cara berikut. Ini akan
+mengembalikan sebuah tabel sebagai kumpulan data tabel dan judul
+kolom.
+
+
+\>function tapply (t:vector,tf,f$:call) ...
+
+
+    ## Makes a table of data and factors
+    ## tf : output of makef()
+    ## See: makef
+    uf=tf[2]; f=tf[3]; x=zeros(length(uf));
+    for i=1 to length(uf);
+       ind=nonzeros(f==i);
+       if length(ind)==0 then x[i]=NAN;
+       else x[i]=f$(t[ind]);
+       endif;
+    end;
+    return {{x,uf}};
+    endfunction
+</pre>
+We did not add much type checking here. The only precaution concerns categories (factors) with
+no data. But one should check for the correct length of t and for the correctness of the
+collection tf.
+
+
+This table can be printed as a table with writetable().
+
+
+\>writetable(tapply(incomes,statef,"mean"),wc=7)
+
+
+        act    nsw     nt    qld     sa    tas    vic     wa
+       44.5  57.33   55.5   53.6     55   60.5     56  52.25
+
+# Larik
+
+EMT hanya memiliki dua dimensi untuk array. Tipe datanya disebut
+matriks. Akan lebih mudah untuk menulis fungsi untuk dimensi yang
+lebih tinggi atau pustaka C untuk ini.
+
+
+R memiliki lebih dari dua dimensi. Dalam R, larik adalah sebuah vektor
+dengan sebuah bidang dimensi.
+
+
+Dalam EMT, sebuah vektor adalah sebuah matriks dengan satu baris. Ini
+bisa dibuat menjadi sebuah matriks dengan redim().
+
+
+\>shortformat; X=redim(1:20,4,5)
+
+
+            1         2         3         4         5 
+            6         7         8         9        10 
+           11        12        13        14        15 
+           16        17        18        19        20 
+
+Ekstraksi baris dan kolom, atau sub-matriks, sama seperti di R.
+
+
+\>X[,2:3]
+
+
+            2         3 
+            7         8 
+           12        13 
+           17        18 
+
+Namun, dalam R dimungkinkan untuk mengatur daftar indeks tertentu dari
+vektor ke suatu nilai. Hal yang sama juga dapat dilakukan dalam EMT
+hanya dengan sebuah perulangan.
+
+
+\>function setmatrixvalue (M, i, j, v) ...
+
+
+    loop 1 to max(length(i),length(j),length(v))
+       M[i{#},j{#}] = v{#};
+    end;
+    endfunction
+</pre>
+Kami mendemonstrasikan hal ini untuk menunjukkan bahwa matriks
+dilewatkan dengan referensi di EMT. Jika Anda tidak ingin mengubah
+matriks asli M, Anda perlu menyalinnya dalam fungsi.
+
+
+\>setmatrixvalue(X,1:3,3:-1:1,0); X,
+
+
+            1         2         0         4         5 
+            6         0         8         9        10 
+            0        12        13        14        15 
+           16        17        18        19        20 
+
+Hasil kali luar dalam EMT hanya dapat dilakukan di antara vektor. Hal
+ini otomatis karena bahasa matriks. Satu vektor harus berupa vektor
+kolom dan vektor baris.
+
+
+\>(1:5)\*(1:5)'
+
+
+            1         2         3         4         5 
+            2         4         6         8        10 
+            3         6         9        12        15 
+            4         8        12        16        20 
+            5        10        15        20        25 
+
+Dalam pengantar PDF untuk R ada sebuah contoh, yang menghitung
+distribusi ab-cd untuk a, b, c, d yang dipilih dari 0 sampai n secara
+acak. Solusinya dalam R adalah membentuk sebuah matriks 4 dimensi dan
+menjalankan table() di atasnya.
+
+
+Tentu saja, ini bisa dicapai dengan sebuah perulangan. Tetapi
+perulangan tidak efektif dalam EMT atau R. Dalam EMT, kita bisa
+menulis perulangan dalam C dan itu adalah solusi tercepat.
+
+
+Tetapi kita ingin meniru perilaku R. Untuk ini, kita perlu meratakan
+perkalian ab dan membuat sebuah matriks ab-cd.
+
+
+\>a=0:6; b=a'; p=flatten(a\*b); q=flatten(p-p'); ...  
+\>   u=sort(unique(q)); f=getmultiplicities(u,q); ...  
+\>   statplot(u,f,"h"):
+
+
+Selain kelipatan yang tepat, EMT dapat menghitung frekuensi dalam
+vektor.
+
+
+\>getfrequencies(q,-50:10:50)
+
+
+    [0,  23,  132,  316,  602,  801,  333,  141,  53,  0]
+
+Cara yang paling mudah untuk memplot ini sebagai distribusi adalah
+sebagai berikut.
+
+
+\>plot2d(q,distribution=11):
+
+
+Tetapi juga memungkinkan untuk menghitung jumlah dalam interval yang
+dipilih sebelumnya. Tentu saja, berikut ini menggunakan
+getfrequencies() secara internal.
+
+
+Karena fungsi histo() mengembalikan frekuensi, kita perlu
+menskalakannya sehingga integral di bawah grafik batang adalah 1.
+
+
+\>{x,y}=histo(q,v=-55:10:55); y=y/sum(y)/differences(x); ...  
+\>   plot2d(x,y,\>bar,style="/"):
+
+
+# Daftar
+
+EMT memiliki dua jenis daftar. Yang pertama adalah daftar global yang
+dapat diubah, dan yang kedua adalah jenis daftar yang tidak dapat
+diubah. Kita tidak peduli dengan daftar global di sini.
+
+
+Tipe daftar yang tidak dapat diubah disebut koleksi dalam EMT. Ia
+berperilaku seperti struktur dalam C, tetapi elemen-elemennya hanya
+diberi nomor dan tidak diberi nama.
+
+
+\>L={{"Fred","Flintstone",40,[1990,1992]}}
+
+
+    Fred
+    Flintstone
+    40
+    [1990,  1992]
+
+Saat ini elemen-elemen tersebut tidak memiliki nama, meskipun nama
+dapat ditetapkan untuk tujuan khusus. Elemen-elemen tersebut diakses
+dengan angka.
+
+
+\>(L[4])[2]
+
+
+    1992
+
+# Input dan Output File (Membaca dan Menulis Data)
+
+Anda mungkin sering ingin mengimpor matriks data dari sumber lain ke
+EMT. Tutorial ini akan menjelaskan kepada Anda tentang berbagai cara
+untuk melakukan hal tersebut. Fungsi yang sederhana adalah
+writematrix() dan readmatrix().
+
+
+Mari kita tunjukkan bagaimana cara membaca dan menulis sebuah vektor
+real ke sebuah file.
+
+
+\>a=random(1,100); mean(a), dev(a),
+
+
+    0.49815
+    0.28037
+
+Untuk menulis data ke sebuah berkas, kita menggunakan fungsi
+writematrix().
+
+
+Karena pengenalan ini kemungkinan besar berada di sebuah direktori, di
+mana pengguna tidak memiliki akses tulis, kita menulis data ke
+direktori home pengguna. Untuk notebook sendiri, hal ini tidak
+diperlukan, karena file data akan ditulis ke dalam direktori yang
+sama.
+
+
+\>filename="test.dat";
+
+
+Sekarang kita tuliskan vektor kolom a' ke dalam file. Hal ini akan
+menghasilkan satu angka pada setiap baris file.
+
+
+\>writematrix(a',filename);
+
+
+Untuk membaca data, kita menggunakan readmatrix().
+
+
+\>a=readmatrix(filename)';
+
+
+Dan hapus file tersebut.
+
+
+\>fileremove(filename);
+
+\>mean(a), dev(a),
+
+
+    0.49815
+    0.28037
+
+Fungsi writematrix() atau writetable() dapat dikonfigurasi untuk
+bahasa lain.
+
+
+Sebagai contoh, jika Anda memiliki sistem bahasa Indonesia (titik
+desimal dengan koma), Excel Anda membutuhkan nilai dengan koma desimal
+yang dipisahkan oleh titik koma dalam file csv (defaultnya adalah
+nilai yang dipisahkan dengan koma). File “test.csv” berikut ini akan
+muncul di folder cuurent Anda.
+
+
+\>filename="test.csv"; ...  
+\>   writematrix(random(5,3),file=filename,separator=",");
+
+
+Anda sekarang dapat membuka file ini dengan Excel Indonesia secara
+langsung.
+
+
+\>fileremove(filename);
+
+
+Terkadang kita memiliki string dengan token seperti berikut ini.
+
+
+\>s1:="f m m f m m m f f f m m f";  ...  
+\>   s2:="f f f m m f f";
+
+
+Untuk menandai ini, kita mendefinisikan vektor token.
+
+
+\>tok:=["f","m"]
+
+
+    f
+    m
+
+Kemudian kita dapat menghitung berapa kali setiap token muncul dalam
+string, dan memasukkan hasilnya ke dalam tabel.
+
+
+\>M:=getmultiplicities(tok,strtokens(s1))\_ ...  
+\>     getmultiplicities(tok,strtokens(s2));
+
+
+Tulis tabel dengan tajuk token.
+
+
+\>writetable(M,labc=tok,labr=1:2,wc=8)
+
+
+                   f       m
+           1       6       7
+           2       5       2
+
+Untuk statika, EMT dapat membaca dan menulis tabel.
+
+
+\>file="test.dat"; open(file,"w"); ...  
+\>   writeln("A,B,C"); writematrix(random(3,3)); ...  
+\>   close();
+
+
+File terlihat seperti ini.
+
+
+\>printfile(file)
+
+
+    A,B,C
+    0.7003664386138074,0.1875530821001213,0.3262339279660414
+    0.5926249243193858,0.1522927283984059,0.368140583062521
+    0.8065535209872989,0.7265910840408142,0.7332619844597152
+    
+
+Fungsi readtable() dalam bentuknya yang paling sederhana dapat membaca
+ini dan mengembalikan sebuah koleksi nilai dan baris judul.
+
+
+\>L=readtable(file,\>list);
+
+
+Koleksi ini dapat dicetak dengan writetable() ke buku catatan, atau ke
+sebuah file.
+
+
+\>writetable(L,wc=10,dc=5)
+
+
+             A         B         C
+       0.70037   0.18755   0.32623
+       0.59262   0.15229   0.36814
+       0.80655   0.72659   0.73326
+
+Matriks nilai adalah elemen pertama dari L. Perhatikan bahwa mean()
+dalam EMT menghitung nilai rata-rata dari baris-baris matriks.
+
+
+\>mean(L[1])
+
+
+      0.40472 
+      0.37102 
+      0.75547 
+
+# File CSV
+
+Pertama, mari kita tulis sebuah matriks ke dalam sebuah file. Untuk
+keluarannya, kami membuat file di direktori kerja saat ini.
+
+
+\>file="test.csv";  ...  
+\>   M=random(3,3); writematrix(M,file);
+
+
+Berikut ini adalah isi file ini.
+
+
+\>printfile(file)
+
+
+    0.8221197733097619,0.821531098722547,0.7771240608094004
+    0.8482947121863489,0.3237767724883862,0.6501422353377985
+    0.1482301827518109,0.3297459716109594,0.6261901074210923
+    
+
+CVS ini dapat dibuka di sistem bahasa Inggris ke Excel dengan klik dua
+kali. Jika Anda mendapatkan file seperti itu pada sistem Jerman, Anda
+perlu mengimpor data ke Excel dengan memperhatikan titik desimal.
+
+
+Namun, titik desimal juga merupakan format default untuk EMT. Anda
+dapat membaca sebuah matriks dari sebuah file dengan readmatrix().
+
+
+\>readmatrix(file)
+
+
+      0.82212   0.82153   0.77712 
+      0.84829   0.32378   0.65014 
+      0.14823   0.32975   0.62619 
+
+Dimungkinkan untuk menulis beberapa matriks ke dalam satu file.
+Perintah open() dapat membuka file untuk menulis dengan parameter “w”.
+Standarnya adalah “r” untuk membaca.
+
+
+\>open(file,"w"); writematrix(M); writematrix(M'); close();
+
+
+Matriks-matriks tersebut dipisahkan oleh sebuah baris kosong. Untuk
+membaca matriks, buka file dan panggil readmatrix() beberapa kali.
+
+
+\>open(file); A=readmatrix(); B=readmatrix(); A==B, close();
+
+
+            1         0         0 
+            0         1         0 
+            0         0         1 
+
+Di Excel atau spreadsheet serupa, Anda dapat mengekspor matriks
+sebagai CSV (nilai yang dipisahkan dengan koma). Pada Excel 2007,
+gunakan “save as” dan “format lain”, lalu pilih “CSV”. Pastikan, tabel
+saat ini hanya berisi data yang ingin Anda ekspor.
+
+
+Berikut ini adalah contohnya.
+
+
+\>printfile("excel-data.csv")
+
+
+    Could not open the file
+    excel-data.csv
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    printfile:
+        open(filename,"r");
+
+Seperti yang Anda lihat, sistem Jerman saya menggunakan titik koma
+sebagai pemisah dan koma desimal. Anda dapat mengubahnya di pengaturan
+sistem atau di Excel, tetapi tidak perlu untuk membaca matriks ke
+dalam EMT.
+
+
+Cara termudah untuk membaca ini ke dalam Euler adalah readmatrix().
+Semua koma digantikan oleh titik dengan parameter &gt;comma. Untuk CSV
+bahasa Inggris, hilangkan saja parameter ini.
+
+
+\>M=readmatrix("excel-data.csv",\>comma)
+
+
+    Could not open the file
+    excel-data.csv
+    for reading!
+    Try "trace errors" to inspect local variables after errors.
+    readmatrix:
+        if filename&lt;&gt;"" then open(filename,"r"); endif;
+
+Mari kita plot ini.
+
+
+\>plot2d(M'[1],M'[2:3],\>points,color=[red,green]'):
+
+
+Ada beberapa cara yang lebih mendasar untuk membaca data dari file.
+Anda dapat membuka file dan membaca angka baris demi baris. Fungsi
+getvectorline() akan membaca angka dari sebuah baris data. Secara
+default, fungsi ini mengharapkan sebuah titik desimal. Tetapi fungsi
+ini juga dapat menggunakan koma desimal, jika Anda memanggil
+setdecimaldot(“,”) sebelum menggunakan fungsi ini.
+
+
+Fungsi berikut ini adalah contohnya. Fungsi ini akan berhenti pada
+akhir file atau baris kosong.
+
+
+\>function myload (file) ...
+
+
+    open(file);
+    M=[];
+    repeat
+       until eof();
+       v=getvectorline(3);
+       if length(v)>0 then M=M_v; else break; endif;
+    end;
+    return M;
+    close(file);
+    endfunction
+</pre>
+\>myload(file)
+
+
+      0.82212         0   0.82153         0   0.77712 
+      0.84829         0   0.32378         0   0.65014 
+      0.14823         0   0.32975         0   0.62619 
+
+Anda juga dapat membaca semua angka dalam file tersebut dengan
+getvector().
+
+
+\>open(file); v=getvector(10000); close(); redim(v[1:9],3,3)
+
+
+      0.82212         0   0.82153 
+            0   0.77712   0.84829 
+            0   0.32378         0 
+
+Dengan demikian, sangat mudah untuk menyimpan vektor nilai, satu nilai
+di setiap baris dan membaca kembali vektor ini.
+
+
+\>v=random(1000); mean(v)
+
+
+    0.50303
+
+\>writematrix(v',file); mean(readmatrix(file)')
+
+
+    0.50303
+
+# Menggunakan Tabel
+
+Tabel dapat digunakan untuk membaca atau menulis data numerik. Sebagai
+contoh, kita menulis tabel dengan judul baris dan kolom ke file.
+
+
+\>file="test.tab"; M=random(3,3);  ...  
+\>   open(file,"w");  ...  
+\>   writetable(M,separator=",",labc=["one","two","three"]);  ...  
+\>   close(); ...  
+\>   printfile(file)
+
+
+    one,two,three
+          0.09,      0.39,      0.86
+          0.39,      0.86,      0.71
+           0.2,      0.02,      0.83
+
+File ini dapat diimpor ke Excel.
+
+
+Untuk membaca file di EMT, kita menggunakan readtable().
+
+
+\>{M,headings}=readtable(file,\>clabs); ...  
+\>   writetable(M,labc=headings)
+
+
+           one       two     three
+          0.09      0.39      0.86
+          0.39      0.86      0.71
+           0.2      0.02      0.83
+
+# Menganalisis Garis
+
+Anda bahkan dapat mengevaluasi setiap baris dengan tangan. Misalkan,
+kita memiliki baris dengan format berikut.
+
+
+\>line="2020-11-03,Tue,1'114.05"
+
+
+    2020-11-03,Tue,1'114.05
+
+Pertama, kita dapat memberi tanda pada garis tersebut.
+
+
+\>vt=strtokens(line)
+
+
+    2020-11-03
+    Tue
+    1'114.05
+
+Kemudian, kita dapat mengevaluasi setiap elemen garis dengan
+menggunakan evaluasi yang sesuai.
+
+
+\>day(vt[1]),  ...  
+\>   indexof(["mon","tue","wed","thu","fri","sat","sun"],tolower(vt[2])),  ...  
+\>   strrepl(vt[3],"'","")()
+
+
+    7.3816e+05
+    2
+    1114
+
+Dengan menggunakan ekspresi reguler, Anda dapat mengekstrak hampir
+semua informasi dari sebuah baris data.
+
+
+Anggaplah kita memiliki baris dokumen HTML berikut ini.
+
+
+\>line="<tr\><td\>1145.45</td\><td\>5.6</td\><td\>-4.5</td\><tr\>"
+
+
+    &lt;tr&gt;&lt;td&gt;1145.45&lt;/td&gt;&lt;td&gt;5.6&lt;/td&gt;&lt;td&gt;-4.5&lt;/td&gt;&lt;tr&gt;
+
+Untuk mengekstrak ini, kita menggunakan ekspresi reguler, yang mencari
+
+
+ - tanda kurung tutup &gt;,  
+ - setiap string yang tidak mengandung tanda kurung dengan  
+
+sub-pencocokan “(...)”,
+
+
+ - kurung pembuka dan kurung penutup menggunakan solusi terpendek,
+
+
+ - sekali lagi, semua string yang tidak mengandung tanda kurung,
+
+
+ - dan sebuah kurung pembuka &lt;.
+
+
+Ekspresi reguler agak sulit untuk dipelajari tetapi sangat kuat.
+
+
+\>{pos,s,vt}=strxfind(line,"\>([^<\>]+)<.+?\>([^<\>]+)<");
+
+
+Hasilnya adalah posisi kecocokan, string yang cocok, dan vektor string
+untuk sub-cocokan.
+
+
+\>for k=1:length(vt); vt[k](), end;
+
+
+    1145.5
+    5.6
+
+Berikut ini adalah fungsi yang membaca semua item numerik antara &lt;td&gt;
+dan &lt;/td&gt;.
+
+
+\>function readtd (line) ...
+
+
+    v=[]; cp=0;
+    repeat
+       {pos,s,vt}=strxfind(line,"<td.*?>(.+?)</td>",cp);
+       until pos==0;
+       if length(vt)>0 then v=v|vt[1]; endif;
+       cp=pos+strlen(s);
+    end;
+    return v;
+    endfunction
+</pre>
+\>readtd(line+"<td\>non-numerical</td\>")
+
+
+    1145.45
+    5.6
+    -4.5
+    non-numerical
+
+# Membaca dari Web
+
+Situs web atau file dengan URL dapat dibuka di EMT dan dapat dibaca
+baris demi baris.
+
+
+Dalam contoh, kita membaca versi saat ini dari situs EMT. Kami
+menggunakan ekspresi reguler untuk memindai “Versi ...” dalam judul.
+
+
+\>function readversion () ...
+
+
+    urlopen("http://www.euler-math-toolbox.de/Programs/Changes.html");
+    repeat
+      until urleof();
+      s=urlgetline();
+      k=strfind(s,"Version ",1);
+      if k>0 then substring(s,k,strfind(s,"<",k)-1), break; endif;
+    end;
+    urlclose();
+    endfunction
+</pre>
+\>readversion
+
+
+    Version 2024-01-12
+
+# Masukan dan Keluaran Variabel
+
+Anda dapat menulis variabel dalam bentuk definisi Euler ke file atau
+ke baris perintah.
+
+
+\>writevar(pi,"mypi");
+
+
+    mypi = 3.141592653589793;
+
+Untuk pengujian, kami membuat file Euler di direktori kerja EMT.
+
+
+\>file="test.e"; ...  
+\>   writevar(random(2,2),"M",file); ...  
+\>   printfile(file,3)
+
+
+    M = [ ..
+    0.5991820585590205, 0.7960280262224293;
+    0.5167243983231363, 0.2996684599070898];
+
+Sekarang kita dapat memuat file tersebut. Ini akan mendefinisikan
+matriks M.
+
+
+\>load(file); show M,
+
+
+    M = 
+      0.59918   0.79603 
+      0.51672   0.29967 
+
+Sebagai catatan, jika writevar() digunakan pada sebuah variabel, maka
+ia akan mencetak definisi variabel dengan nama variabel tersebut.
+
+
+\>writevar(M); writevar(inch$)
+
+
+    M = [ ..
+    0.5991820585590205, 0.7960280262224293;
+    0.5167243983231363, 0.2996684599070898];
+    inch$ = 0.0254;
+
+Kita juga dapat membuka file baru atau menambahkan ke file yang sudah
+ada. Dalam contoh ini, kami menambahkan ke file yang telah dibuat
+sebelumnya.
+
+
+\>open(file,"a"); ...  
+\>   writevar(random(2,2),"M1"); ...  
+\>   writevar(random(3,1),"M2"); ...  
+\>   close();
+
+\>load(file); show M1; show M2;
+
+
+    M1 = 
+      0.30287   0.15372 
+       0.7504   0.75401 
+    M2 = 
+      0.27213 
+     0.053211 
+      0.70249 
+
+Untuk menghapus file, gunakan fileremove().
+
+
+\>fileremove(file);
+
+
+Sebuah vektor baris dalam sebuah file tidak membutuhkan koma, jika
+setiap angka berada dalam baris baru. Mari kita buat file seperti itu,
+dengan menulis setiap baris satu per satu dengan writeln().
+
+
+\>open(file,"w"); writeln("M = ["); ...  
+\>   for i=1 to 5; writeln(""+random()); end; ...  
+\>   writeln("];"); close(); ...  
+\>   printfile(file)
+
+
+    M = [
+    0.344851384551
+    0.0807510017715
+    0.876519562911
+    0.754157709472
+    0.688392638934
+    ];
+
+\>load(file); M
+
+
+    [0.34485,  0.080751,  0.87652,  0.75416,  0.68839]
+
+# Latihan
+
+1. misalkan punya vektor x=[2,4,6,8,10]
+
+
+a. buatkan vektor yang menggabungkan vektor x, angka 0 dan vektor x
+lagi
+
+
+b. tentukan apakah setiap elemen vektor x lebih besar dari 5 (hasil
+logika 1 untuk benar dan 0 untuk salah)
+
+
+\>x:=[2,4,6,8,10]; [x,0,x]
+
+
+    [2,  4,  6,  8,  10,  0,  2,  4,  6,  8,  10]
+
+\>x\>5, %\*x
+
+
+    [0,  0,  1,  1,  1]
+    [0,  0,  6,  8,  10]
+
+2. tentukan matriks x dengan elemen-elemen yang berurutan dari 1
+hingga 20 dan susunlah elemen tersebut menjadi matriks berukurn 5x4. 
+
+
+\>shortformat; X=redim(1:20,5,4)
+
+
+            1         2         3         4 
+            5         6         7         8 
+            9        10        11        12 
+           13        14        15        16 
+           17        18        19        20 
+
+3. seorang analis memiliki data penjualan harian selama 5 hari
+(150,200,250,300,350) yang disimpan dalam bentuk vektor sebagai
+berikut:
+
+
+a. mean
+
+
+b. deviasi standar
+
+
+\>a=[150,200,250,300,350]
+
+
+    [150,  200,  250,  300,  350]
+
+\>mean(a)
+
+
+    250
+
+\>dev(a)
+
+
+    79.057
+
+4. Hitung rata-rata, median, dan modus dari data berikut:
+
+
+data = [72, 65, 85, 78, 92, 83, 75, 88, 70, 82]
+
+
+tentukan:
+
+
+a. mean
+
+
+b. deviasi standar
+
+
+c. box plot
+
+
+\>data=[72,65,85,78,92,83,75,88,70,82]
+
+
+    [72,  65,  85,  78,  92,  83,  75,  88,  70,  82]
+
+\>mean(data)
+
+
+    79
+
+\>dev(data)
+
+
+    8.5245
+
+\>boxplot(data)
+
+
+5. Diketahui data nilai ujian siswa: [75, 80, 85, 90, 92, 88, 82, 78].
+Buat grafik distribusi normal untuk data tersebut.
+
+
+tentukan:
+
+
+a. median
+
+
+b. mean
+
+
+c. deviasi standar
+
+
+\>nilai = [75, 80, 85, 90, 92, 88, 82, 78];
+
+\>median(nilai)
+
+
+    83.5
+
+\>mean(nilai)
+
+
+    83.75
+
+\>dev(nilai)
+
+
+    6.0178
+
+6. Hitung kuartil pertama (Q1) dan kuartil ketiga (Q3) dari data
+berikut: [6, 3, 9, 5, 8, 2, 7]
+
+
+\>quantile([6, 3, 9, 5, 8, 2, 7], 0.25)
+
+
+    4
+
+\>quantile([6, 3, 9, 5, 8, 2, 7], 0.75)
+
+
+    7.5
+
+7. Hitung jangkauan dari data berikut: [18, 22, 15, 20, 19]
+
+
+\>max([18, 22, 15, 20, 19]) - min([18, 22, 15, 20, 19])
+
+
+    7
+
+8. Hitung kuartil pertama (Q1) dari data berikut: [7, 9, 6, 8, 10, 5]
+
+
+\>quantile([7,9,6,8,10,5],0.25)
+
+
+    6.25
+
+9. misalkan punya vektor x=[1,3,5,7,9,11,13]
+
+
+a. buatkan vektor yang menggabungkan vektor x, angka 0 dan vektor x
+lagi
+
+
+b. tentukan apakah setiap elemen vektor x lebih besar dari 5 (hasil
+logika 1 untuk benar dan 0 untuk salah)
+
+
+\>x:=[1,3,5,7,9,11]; [x,0,x]
+
+
+    [1,  3,  5,  7,  9,  11,  0,  1,  3,  5,  7,  9,  11]
+
+\>x\>5, %\*x
+
+
+    [0,  0,  0,  1,  1,  1]
+    [0,  0,  0,  7,  9,  11]
+
+10. tentukan matriks x dengan elemen-elemen yang berurutan dari 1
+hingga 36 dan susunlah elemen tersebut menjadi matriks berukurn 6x6.
+
+
+\>shortformat; X=redim(1:36,6,6)
+
+
+            1         2         3         4         5         6 
+            7         8         9        10        11        12 
+           13        14        15        16        17        18 
+           19        20        21        22        23        24 
+           25        26        27        28        29        30 
+           31        32        33        34        35        36 
