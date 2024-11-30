@@ -1,1223 +1,2902 @@
-# MATERI KALKULUS
-Nama : Elviana Eka Putri
+# MATERI GEOMETRI
+Nama  : Elviana Eka Putri
 
 
-NIM  : 23030630094
+NIM   : 23030630094
 
 
-Kelas: Matematika E 2023
+Kelas : Matematika E 2023
 
 
-# Kalkulus dengan EMT
+---
 
-Materi Kalkulus mencakup di antaranya:
+## Visualisasi dan Perhitungan Geometri dengan EMT
 
+Euler menyediakan beberapa fungsi untuk melakukan visualisasi dan
+perhitungan geometri, baik secara numerik maupun analitik (seperti
+biasanya tentunya, menggunakan Maxima). Fungsi-fungsi untuk
+visualisasi dan perhitungan geometeri tersebut disimpan di dalam file
+program "geometry.e", sehingga file tersebut harus dipanggil sebelum
+menggunakan fungsi-fungsi atau perintah-perintah untuk geometri.
 
-* 
-Fungsi (fungsi aljabar, trigonometri, eksponensial, logaritma,
-* komposisi fungsi)
 
-* 
-Limit Fungsi,
+\>load geometry
 
-* 
-Turunan Fungsi,
 
-* 
-Integral Tak Tentu,
+    Numerical and symbolic geometry.
 
-* 
-Integral Tentu dan Aplikasinya,
+## Fungsi-fungsi Geometri
 
-* 
-Barisan dan Deret (kekonvergenan barisan dan deret).
+Fungsi-fungsi untuk Menggambar Objek Geometri:
 
 
-EMT (bersama Maxima) dapat digunakan untuk melakukan semua perhitungan
-di dalam kalkulus, baik secara numerik maupun analitik (eksak).
+  defaultd:=textheight()*1.5: nilai asli untuk parameter d  
+  setPlotrange(x1,x2,y1,y2): menentukan rentang x dan y pada bidang  
 
+koordinat
 
-## Mendefinisikan Fungsi
 
-Terdapat beberapa cara mendefinisikan fungsi pada EMT, yakni:
+  setPlotRange(r): pusat bidang koordinat (0,0) dan batas-batas
+sumbu-x dan y adalah -r sd r
 
 
-* 
-Menggunakan format nama_fungsi := rumus fungsi (untuk fungsi
-* numerik),
+  plotPoint (P, "P"): menggambar titik P dan diberi label "P"
 
-* 
-Menggunakan format nama_fungsi &amp;= rumus fungsi (untuk fungsi
-* simbolik, namun dapat dihitung secara numerik),
 
-* 
-Menggunakan format nama_fungsi &amp;&amp;= rumus fungsi (untuk fungsi
-* simbolik murni, tidak dapat dihitung langsung),
+  plotSegment (A,B, "AB", d): menggambar ruas garis AB, diberi label
+"AB" sejauh d
 
-* 
-Fungsi sebagai program EMT.
 
+  plotLine (g, "g", d): menggambar garis g diberi label "g" sejauh d
 
-Setiap format harus diawali dengan perintah function (bukan sebagai
-ekspresi).
 
+  plotCircle (c,"c",v,d): Menggambar lingkaran c dan diberi label "c"
 
-Berikut adalah adalah beberapa contoh cara mendefinisikan fungsi.
 
+  plotLabel (label, P, V, d): menuliskan label pada posisi P
 
-\>function f(x) := 2\*x^2+exp(sin(x)) // fungsi numerik
 
-\>f(0), f(1), f(pi)
+Fungsi-fungsi Geometri Analitik (numerik maupun simbolik):
 
 
-    1
-    4.31977682472
-    20.7392088022
+  turn(v, phi): memutar vektor v sejauh phi  
+  turnLeft(v):   memutar vektor v ke kiri  
+  turnRight(v):  memutar vektor v ke kanan  
+  normalize(v): normal vektor v  
+  crossProduct(v, w): hasil kali silang vektorv dan w.  
+  lineThrough(A, B): garis melalui A dan B, hasilnya [a,b,c] sdh.  
 
-\>function g(x) := sqrt(x^2-3\*x)/(x+1)
+ax+by=c.
 
-\>g(3)
 
+  lineWithDirection(A,v): garis melalui A searah vektor v
 
-    0
 
-\>g(0)
+  getLineDirection(g): vektor arah (gradien) garis g
 
 
-    0
+  getNormal(g): vektor normal (tegak lurus) garis g
 
-\>g(5)
 
+  getPointOnLine(g):  titik pada garis g
 
-    0.527046276695
 
-\>f(g(5)) // komposisi fungsi
+  perpendicular(A, g):  garis melalui A tegak lurus garis g
 
 
-    2.20920171961
+  parallel (A, g):  garis melalui A sejajar garis g
 
-\>g(f(5))
 
+  lineIntersection(g, h):  titik potong garis g dan h
 
-    0.950898070639
 
-\>f(0:10) // nilai-nilai f(1), f(2), ..., f(10)
+  projectToLine(A, g):   proyeksi titik A pada garis g
 
 
-    [1,  4.31978,  10.4826,  19.1516,  32.4692,  50.3833,  72.7562,
-    99.929,  130.69,  163.51,  200.58]
+  distance(A, B):  jarak titik A dan B
 
-\>fmap(0:10) // sama dengan f(0:10), berlaku untuk semua fungsi
 
+  distanceSquared(A, B):  kuadrat jarak A dan B
 
-    [1,  4.31978,  10.4826,  19.1516,  32.4692,  50.3833,  72.7562,
-    99.929,  130.69,  163.51,  200.58]
 
-Misalkan kita akan mendefinisikan fungsi
+  quadrance(A, B): kuadrat jarak A dan B
 
 
-Fungsi tersebut tidak dapat didefinisikan sebagai fungsi numerik
-secara "inline" menggunakan format :=, melainkan didefinisikan sebagai
-program. Perhatikan, kata "map" digunakan agar fungsi dapat menerima
-vektor sebagai input, dan hasilnya berupa vektor. Jika tanpa kata
-"map" fungsinya hanya dapat menerima input satu nilai.
+  areaTriangle(A, B, C):  luas segitiga ABC
 
 
-\>function map f(x) ...
+  computeAngle(A, B, C):   besar sudut &lt;ABC
 
 
-      if x>0 then return x^3
-      else return x^2
-      endif;
-    endfunction
-</pre>
-\>f(1)
+  angleBisector(A, B, C): garis bagi sudut &lt;ABC
 
 
-    1
+  circleWithCenter (A, r): lingkaran dengan pusat A dan jari-jari r
 
-\>f(-2)
 
+  getCircleCenter(c):  pusat lingkaran c
 
-    4
 
-\>f(-5:5)
+  getCircleRadius(c):  jari-jari lingkaran c
 
 
-    [25,  16,  9,  4,  1,  0,  1,  8,  27,  64,  125]
+  circleThrough(A,B,C):  lingkaran melalui A, B, C
 
-\>aspect(1.5); plot2d("f(x)",-5,5):
 
-\>function f(x) &= 2\*E^x // fungsi simbolik
+  middlePerpendicular(A, B): titik tengah AB
+
+
+  lineCircleIntersections(g, c): titik potong garis g dan lingkran c
+
+
+  circleCircleIntersections (c1, c2):  titik potong lingkaran c1 dan
+c2
+
+
+  planeThrough(A, B, C):  bidang melalui titik A, B, C
+
+
+Fungsi-fungsi Khusus Untuk Geometri Simbolik:
+
+
+  getLineEquation (g,x,y): persamaan garis g dinyatakan dalam x dan y  
+  getHesseForm (g,x,y,A): bentuk Hesse garis g dinyatakan dalam x dan  
+
+y dengan titik A pada
+
+
+  sisi positif (kanan/atas) garis
+
+
+  quad(A,B): kuadrat jarak AB
+
+
+  spread(a,b,c): Spread segitiga dengan panjang sisi-sisi a,b,c, yakni
+sin(alpha)^2 dengan
+
+
+  alpha sudut yang menghadap sisi a.
+
+
+  crosslaw(a,b,c,sa): persamaan 3 quads dan 1 spread pada segitiga
+dengan panjang sisi a, b, c.
+
+
+  triplespread(sa,sb,sc): persamaan 3 spread sa,sb,sc yang memebntuk
+suatu segitiga
+
+
+  doublespread(sa): Spread sudut rangkap Spread 2*phi, dengan
+sa=sin(phi)^2 spread a.
+
+
+## Contoh 1: Luas, Lingkaran Luar, Lingkaran Dalam Segitiga
+
+Untuk menggambar objek-objek geometri, langkah pertama adalah
+menentukan rentang sumbu-sumbu koordinat. Semua objek geometri akan
+digambar pada satu bidang koordinat, sampai didefinisikan bidang
+koordinat yang baru.
+
+
+\>setPlotRange(-0.5,2.5,-0.5,2.5): // mendefinisikan bidang koordinat baru 
+
+
+Sekarang tetapkan tiga poin dan plot mereka.
+
+
+\>A=[1,0]; plotPoint(A,"A"); // definisi dan gambar tiga titik
+
+\>B=[0,1]; plotPoint(B,"B");
+
+\>C=[2,2]; plotPoint(C,"C");
+
+
+Kemudian tiga segmen.
+
+
+\>plotSegment(A,B,"c"); // c=AB
+
+\>plotSegment(B,C,"a"); // a=BC
+
+\>plotSegment(A,C,"b"); // b=AC
+
+
+Fungsi geometri meliputi fungsi untuk membuat garis dan lingkaran.
+Format garis adalah [a,b,c], yang mewakili garis dengan persamaan
+ax+by=c.
+
+
+\>lineThrough(B,C) // garis yang melalui B dan C
+
+
+    [-1,  2,  2]
+
+Hitunglah garis tegak lurus yang melalui A pada BC.
+
+
+\>h=perpendicular(A,lineThrough(B,C)); // garis h tegak lurus BC melalui A
+
+
+Dan persimpangannya dengan BC.
+
+
+\>D=lineIntersection(h,lineThrough(B,C)); // D adalah titik potong h dan BC
+
+
+Plot itu.
+
+
+\>plotPoint(D,value=1); // koordinat D ditampilkan
+
+\>aspect(1); plotSegment(A,D): // tampilkan semua gambar hasil plot...()
+
+
+Hitung luas ABC:
+
+
+\>norm(A-D)\*norm(B-C)/2 // AD=norm(A-D), BC=norm(B-C)
+
+
+    1.5
+
+Bandingkan dengan rumus determinan.
+
+
+\>areaTriangle(A,B,C) // hitung luas segitiga langusng dengan fungsi
+
+
+    1.5
+
+Cara lain menghitung luas segitigas ABC:
+
+
+\>distance(A,D)\*distance(B,C)/2
+
+
+    1.5
+
+Sudut di C
+
+
+\>degprint(computeAngle(B,C,A))
+
+
+    36°52'11.63''
+
+Sekarang lingkaran luar segitiga.
+
+
+\>c=circleThrough(A,B,C); // lingkaran luar segitiga ABC
+
+\>R=getCircleRadius(c); // jari2 lingkaran luar 
+
+\>O=getCircleCenter(c); // titik pusat lingkaran c 
+
+\>plotPoint(O,"O"); // gambar titik "O"
+
+\>plotCircle(c,"Lingkaran luar segitiga ABC"):
+
+
+Tampilkan koordinat titik pusat dan jari-jari lingkaran luar.
+
+
+\>O, R
+
+
+    [1.16667,  1.16667]
+    1.17851130198
+
+Sekarang akan digambar lingkaran dalam segitiga ABC. Titik pusat lingkaran dalam adalah
+titik potong garis-garis bagi sudut.
+
+
+\>l=angleBisector(A,C,B); // garis bagi <ACB
+
+\>g=angleBisector(C,A,B); // garis bagi <CAB
+
+\>P=lineIntersection(l,g) // titik potong kedua garis bagi sudut
+
+
+    [0.86038,  0.86038]
+
+Tambahkan semuanya ke plot.
+
+
+\>color(5); plotLine(l); plotLine(g); color(1); // gambar kedua garis bagi sudut
+
+\>plotPoint(P,"P"); // gambar titik potongnya
+
+\>r=norm(P-projectToLine(P,lineThrough(A,B))) // jari-jari lingkaran dalam
+
+
+    0.509653732104
+
+\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segitiga ABC"): // gambar lingkaran dalam
+
+
+## Latihan
+
+1. Tentukan ketiga titik singgung lingkaran dalam dengan sisi-sisi
+segitiga ABC.
+
+
+\>setPlotRange(-2.5,4.5,-2.5,4.5);
+
+\>A=[-2,1]; plotPoint(A,"A");
+
+\>B=[1,-2]; plotPoint(B,"B");
+
+\>C=[4,4]; plotPoint(C,"C");
+
+\>aspect(1):
+
+
+2. Gambar segitiga dengan titik-titik sudut ketiga titik singgung
+tersebut.
+
+
+\>plotSegment(A,B,"c")
+
+\>plotSegment(B,C,"a")
+
+\>plotSegment(A,C,"b")
+
+\>aspect(1):
+
+
+4. Tunjukkan bahwa garis bagi sudut yang ke tiga juga melalui titik
+pusat lingkaran dalam.
+
+
+\>l=angleBisector(A,C,B);
+
+\>g=angleBisector(C,A,B);
+
+\>P=lineIntersection(l,g)
+
+
+    [0.581139,  0.581139]
+
+\>color(5); plotLine(l); plotLine(g); color(1);
+
+\>plotPoint(P,"P");
+
+\>r=norm(P-projectToLine(P,lineThrough(A,B)))
+
+
+    1.52896119631
+
+\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segitiga ABC"):
+
+
+Jadi, terbukti bahwa garis bagi sudut yang ketiga juga melalui titik
+pusat lingkaran dalam.
+
+
+5. Gambar jari-jari lingkaran dalam.
+
+
+\>r=norm(P-projectToLine(P,lineThrough(A,B)))
+
+
+    1.52896119631
+
+\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segitiga ABC"):
+
+
+## Contoh 2: Geometri Simbolik
+
+Kita dapat menghitung geometri eksak dan simbolik menggunakan Maxima.
+
+
+File geometri.e menyediakan fungsi yang sama (dan lebih banyak lagi)
+di Maxima. Namun, kita dapat menggunakan perhitungan simbolis
+sekarang.
+
+
+\>A &= [1,0]; B &= [0,1]; C &= [2,2]; // menentukan tiga titik A, B, C
+
+
+Fungsi untuk garis dan lingkaran bekerja seperti fungsi Euler, tetapi
+memberikan perhitungan simbolis.
+
+
+\>c &= lineThrough(B,C) // c=BC
 
 
     
-                                        x
-                                     2 E
+                                 [- 1, 2, 2]
     
 
-\>function g(x) &= 3\*x+1
+Kita bisa mendapatkan persamaan garis dengan mudah.
 
 
-    
-                                   3 x + 1
-    
+\>$getLineEquation(c,x,y), $solve(%,y) | expand // persamaan garis c
 
-\>function h(x) &= f(g(x)) // komposisi fungsi
+\>$getLineEquation(lineThrough(A,[x1,y1]),x,y) // persamaan garis melalui A dan (x1, y1)
 
-
-    
-                                     3 x + 1
-                                  2 E
-    
-
-# Latihan
-
-Bukalah buku Kalkulus. Cari dan pilih beberapa (paling sedikit 5
-fungsi berbeda tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian
-definisikan di EMT pada baris-baris perintah berikut (jika perlu
-tambahkan lagi). Untuk setiap fungsi, hitung beberapa nilainya, baik
-untuk satu nilai maupun vektor. Gambar grafik tersebut.
-
-
-Juga, carilah fungsi beberapa (dua) variabel. Lakukan hal sama seperti
-di atas.
-
-
-Jawab:
-
-
-1. Fungsi 1
-
-
-\>function k(x) := x\*(x^5+3)^3
-
-\>k(3), k(5), k(7)
-
-
-    44660808
-    153027765760
-    3.3250729687e+13
-
-\>kmap(-3:3)
-
-
-    [4.1472e+07,  48778,  -8,  0,  64,  85750,  4.46608e+07]
-
-\>plot2d("k(x)"):
-
-
-2. Fungsi 2
-
-
-\>function m(x) := (x)^4/(3-x^2) 
-
-\>m(2), m(-2), m(1)
-
-
-    -16
-    -16
-    0.5
-
-\>mmap(-5:-5)
-
-
-    -28.4090909091
-
-\>plot2d("m(x)"):
-
-
-3. Fungsi 3
-
-
-\>function n(x) := 3\*x/(x+5)+2
-
-\>n(2), n(-1), n(-3), n(4)
-
-
-    2.85714285714
-    1.25
-    -2.5
-    3.33333333333
-
-\>nmap(2:5)
-
-
-    [2.85714,  3.125,  3.33333,  3.5]
-
-\>plot2d("n(x)"):
-
-
-4. Fungsi 4
-
-
-\>function l(x) := 3\*x^3/(x^4-3)
-
-\>l(5), l(4), l(3)
-
-
-    0.602893890675
-    0.758893280632
-    1.03846153846
-
-\>lmap(5:8)
-
-
-    [0.602894,  0.50116,  0.429108,  0.375275]
-
-\>plot2d("l(x)",-3,3,-600,600):
-
-
-5. Fungsi 5
-
-
-\>function j(x) := (cos(x))\*sin(2\*x)
-
-\>j(pi), j(0), j(pi/3)
-
-
-    0
-    0
-    0.433012701892
-
-\>jmap(0:3pi)
-
-
-    [0,  0.491295,  0.314941,  0.276619,  -0.646688,  -0.154318,
-    -0.515201,  0.746821,  0.0418899,  0.684247]
-
-\>plot2d("j(x)"):
-
-
-6. Fungsi 6
-
-
-\>function o(x) := x\*sqrt(x+2)
-
-\>o(3), o(5), o(7)
-
-
-    6.7082039325
-    13.2287565553
-    21
-
-\>omap(3:12)
-
-
-    [6.7082,  9.79796,  13.2288,  16.9706,  21,  25.2982,  29.8496,
-    34.641,  39.6611,  44.8999]
-
-\>plot2d("o(x)"):
-
-
-1. Fungsi 1
-
-
-\>function a(x,y) ...
-
-
-    return x^2+y^2-24
-    endfunction
-</pre>
-\>a(2,1), a(5,4), a(2,4)
-
-
-    -19
-    17
-    -4
-
-\>amap(-2:2,3:3)
-
-
-    [-11,  -14,  -15,  -14,  -11]
-
-\>aspect=1.5; plot3d("a(x,y)",a=-100,b=100,c=-80,d=80,angle=35°,height=30°,r=pi,n=100):
-
-
-2. Fungsi 2
-
-
-\>function q(x,y) ...
-
-
-    return y^2/(x^2/3)
-    endfunction
-</pre>
-\>q(4,2), q(2,3), q(4,3)
-
-
-    0.75
-    6.75
-    1.6875
-
-\>qmap(2:2,-2:2)
-
-
-    [3,  0.75,  0,  0.75,  3]
-
-\>aspect=1.5; plot3d("q(x,y)",a=-100,b=100,c=-80,d=80,angle=35°,height=30°,r=pi,n=100):
-
-
-# Menghitung Limit
-
-Perhitungan limit pada EMT dapat dilakukan dengan menggunakan fungsi
-Maxima, yakni "limit". Fungsi "limit" dapat digunakan untuk menghitung
-limit fungsi dalam bentuk ekspresi maupun fungsi yang sudah
-didefinisikan sebelumnya. Nilai limit dapat dihitung pada sebarang
-nilai atau pada tak hingga (-inf, minf, dan inf). Limit kiri dan limit
-kanan juga dapat dihitung, dengan cara memberi opsi "plus" atau
-"minus". Hasil limit dapat berupa nilai, "und' (tak definisi), "ind"
-(tak tentu namun terbatas), "infinity" (kompleks tak hingga).
-
-
-Perhatikan beberapa contoh berikut. Perhatikan cara menampilkan
-perhitungan secara lengkap, tidak hanya menampilkan hasilnya saja.
-
-
-\>$showev('limit(1/(2\*x-1),x,0))
-
-\>$showev('limit((x^2-3\*x-10)/(x-5),x,5))
-
-\>$showev('limit(sin(x)/x,x,0))
-
-\>plot2d("sin(x)/x",-pi,pi):
-
-\>$showev('limit(sin(x^3)/x,x,0))
-
-\>$showev('limit(log(x), x, minf))
-
-\>$showev('limit((-2)^x,x, inf))
-
-\>$showev('limit(t-sqrt(2-t),t,2,minus))
-
-\>$showev('limit(t-sqrt(2-t),t,5,plus)) // Perhatikan hasilnya
-
-\>plot2d("x-sqrt(2-x)",-2,5):
-
-\>$showev('limit((x^2-9)/(2\*x^2-5\*x-3),x,3))
-
-\>$showev('limit((1-cos(x))/x,x,0))
-
-\>$showev('limit((x^2+abs(x))/(x^2-abs(x)),x,0))
-
-\>$showev('limit((1+1/x)^x,x,inf))
-
-\>$showev('limit((1+k/x)^x,x,inf))
-
-\>$showev('limit((1+x)^(1/x),x,0))
-
-\>$showev('limit((x/(x+k))^x,x,inf))
-
-\>$showev('limit(sin(1/x),x,0))
-
-\>$showev('limit(sin(1/x),x,inf))
-
-\>plot2d("sin(1/x)",-5,5):
-
-
-# Latihan
-
-Bukalah buku Kalkulus. Cari dan pilih beberapa (paling sedikit 5
-fungsi berbeda tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian
-definisikan di EMT pada baris-baris perintah berikut (jika perlu
-tambahkan lagi). Untuk setiap fungsi, hitung nilai limit fungsi
-tersebut di beberapa nilai dan di tak hingga. Gambar grafik fungsi
-tersebut untuk mengkonfirmasi nilai-nilai limit tersebut.
-
-
-Jawab:
-
-
-1. Fungsi 1
-
-
-\>$showev('limit((3\*x-6)/(x+2),x,2))
-
-\>plot2d("(3\*x-6)/(x+2)",-2,3.5,-1,5):
-
-
-2. Fungsi 2
-
-
-\>$showev('limit(cos(2\*x)/(sin(x) - cos (x)),x,0))
-
-\>plot2d("cos(2\*x)/(sin(x) - cos (x))",-1,1):
-
-
-3. Fungsi 3
-
-
-\>$showev('limit(((2\*x^2-2\*x+5)/(3\*x^2+x-6)),x,3))
-
-\>plot2d("(2\*x^2-2\*x+5)/(3\*x^2+x-6)",-2,10,-10,5):
-
-
-4. Fungsi 4
-
-
-\>$showev('limit((4\*x^2-3),x,0))
-
-\>plot2d("(4\*x^2-3)"):
-
-
-5. Fungsi 5
-
-
-\>$showev('limit((x^(x^(x))),x,0,plus))
-
-\>plot2d("(x^(x^(x)))",-3,3,-1,7):
-
-
-6. Fungsi 6
-
-
-\>$showev('limit((3\*x\*tan(x))/(1-cos(4\*x)),x,0))
-
-\>plot2d("(3\*x\*tan(x))/(1-cos(4\*x))",-pi/2,2pi,0,2pi):
-
-
-# Turunan Fungsi
-
-Definisi turunan:
-
-
-Berikut adalah contoh-contoh menentukan turunan fungsi dengan
-menggunakan definisi turunan (limit).
-
-
-\>$showev('limit(((x+h)^2-x^2)/h,h,0)) // turunan x^2
-
-
-Mengapa hasilnya seperti itu? Tuliskan atau tunjukkan bahwa hasil
-limit tersebut benar, sehingga benar turunan fungsinya benar.  Tulis
-penjelasan Anda di komentar ini.
-
-
-Sebagai petunjuk, ekspansikan (x+h)^2 dengan menggunakan teorema
-binomial.
-
-
-Jawab:
-
-
-\>$showev('limit((-sin(x)+ sin(x+h))/h,h,0)) // turunan sin(x)
-
-
-Mengapa hasilnya seperti itu? Tuliskan atau tunjukkan bahwa hasil
-limit tersebut
-
-
-benar, sehingga benar turunan fungsinya benar.  Tulis penjelasan Anda
-di komentar ini.
-
-
-Sebagai petunjuk, ekspansikan sin(x+h) dengan menggunakan rumus jumlah
-dua sudut.
-
-
-Jawab:
-
-
-\>$showev('limit((log(x+h)-log(x))/h,h,0)) // turunan log(x)
-
-
-Mengapa hasilnya seperti itu? Tuliskan atau tunjukkan bahwa hasil
-limit tersebut
-
-
-benar, sehingga benar turunan fungsinya benar.  Tulis penjelasan Anda
-di komentar ini.
-
-
-Sebagai petunjuk, gunakan sifat-sifat logaritma dan hasil limit pada
-bagian sebelumnya di atas.
-
-
-Jawab:
-
-
-Bukti:
-
-
-\>$showev('limit((1/(x+h)-1/x)/h,h,0)) // turunan 1/x
-
-\>$showev('limit((e^(x+h)-e^x)/h,h,0)) // turunan f(x)=e^x
-
-
-    Answering "Is x an integer?" with "integer"
-    Answering "Is x an integer?" with "integer"
-    Answering "Is x an integer?" with "integer"
-    Answering "Is x an integer?" with "integer"
-    Answering "Is x an integer?" with "integer"
-    Maxima is asking
-    Acceptable answers are: yes, y, Y, no, n, N, unknown, uk
-    Is x an integer?
-    
-    Use assume!
-    Error in:
-     $showev('limit((e^(x+h)-e^x)/h,h,0)) // turunan f(x)=e^x ...
-                                         ^
-
-Maxima bermasalah dengan limit:
-
-
-Oleh karena itu diperlukan trik khusus agar hasilnya benar.
-
-
-\>$showev('limit((E^h-1)/h,h,0))
-
-\>$factor(E^(x+h)-E^x)
-
-\>$showev('limit(factor((E^(x+h)-E^x)/h),h,0)) // turunan f(x)=e^x
-
-\>function f(x) &= x^x
+\>h &= perpendicular(A,lineThrough(B,C)) // h melalui A tegak lurus BC
 
 
     
-                                       x
-                                      x
+                                  [2, 1, 2]
     
 
-\>$showev('limit((f(x+h)-f(x))/h,h,0)) // turunan f(x)=x^x
-
-
-Di sini Maxima juga bermasalah terkait limit:
-
-
-Dalam hal ini diperlukan asumsi nilai x.
-
-
-\>&assume(x\>0); $showev('limit((f(x+h)-f(x))/h,h,0)) // turunan f(x)=x^x
-
-\>&forget(x\>0) // jangan lupa, lupakan asumsi untuk kembali ke semula
+\>Q &= lineIntersection(c,h) // Q titik potong garis c=BC dan h
 
 
     
-                                   [x &gt; 0]
+                                     2  6
+                                    [-, -]
+                                     5  5
     
 
-\>&forget(x<0)
+\>$projectToLine(A,lineThrough(B,C)) // proyeksi A pada BC
+
+\>$distance(A,Q) // jarak AQ
+
+\>cc &= circleThrough(A,B,C); $cc // (titik pusat dan jari-jari) lingkaran melalui A, B, C
+
+\>r&=getCircleRadius(cc); $r , $float(r) // tampilkan nilai jari-jari
+
+\>$computeAngle(A,C,B) // nilai <ACB
+
+\>$solve(getLineEquation(angleBisector(A,C,B),x,y),y)[1] // persamaan garis bagi <ACB
+
+\>P &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A)); $P // titik potong 2 garis bagi sudut
+
+\>P() // hasilnya sama dengan perhitungan sebelumnya
+
+
+    [0.86038,  0.86038]
+
+## Garis dan Lingkaran yang Berpotongan
+
+Tentu saja, kita juga dapat memotong garis dengan lingkaran, dan
+lingkaran dengan lingkaran.
+
+
+\>A &:= [1,0]; c=circleWithCenter(A,4);
+
+\>B &:= [1,2]; C &:= [2,1]; l=lineThrough(B,C);
+
+\>setPlotRange(5); plotCircle(c); plotLine(l);
+
+
+Perpotongan garis dengan lingkaran menghasilkan dua titik dan jumlah
+titik potong.
+
+
+\>{P1,P2,f}=lineCircleIntersections(l,c);
+
+\>P1, P2,
+
+
+    [4.64575,  -1.64575]
+    [-0.645751,  3.64575]
+
+\>plotPoint(P1); plotPoint(P2):
+
+
+Begitu pula di Maxima.
+
+
+\>c &= circleWithCenter(A,4) // lingkaran dengan pusat A jari-jari 4
 
 
     
-                                   [x &lt; 0]
+                                  [1, 0, 4]
     
 
-\>&facts()
-
-
-    
-                                      []
-    
-
-\>$showev('limit((asin(x+h)-asin(x))/h,h,0)) // turunan arcsin(x)
-
-\>$showev('limit((tan(x+h)-tan(x))/h,h,0)) // turunan tan(x)
-
-\>function f(x) &= sinh(x) // definisikan f(x)=sinh(x)
+\>l &= lineThrough(B,C) // garis l melalui B dan C
 
 
     
-                                   sinh(x)
+                                  [1, 1, 3]
     
 
-\>function df(x) &= limit((f(x+h)-f(x))/h,h,0); $df(x) // df(x) = f'(x)
-
-\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]):
+\>$lineCircleIntersections(l,c) | radcan, // titik potong lingkaran c dan garis l
 
 
-# Latihan
+Akan ditunjukkan bahwa sudut-sudut yang menghadap bsuusr yang sama adalah sama besar.
 
-Bukalah buku Kalkulus. Cari dan pilih beberapa (paling sedikit 5
-fungsi berbeda tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian
-definisikan di EMT pada baris-baris perintah berikut (jika perlu
-tambahkan lagi). Untuk setiap fungsi, tentukan turunannya dengan
-menggunakan definisi turunan (limit), seperti contoh-contoh tersebut.
-Gambar grafik fungsi asli dan fungsi turunannya pada sumbu koordinat
+
+\>C=A+normalize([-2,-3])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
+
+\>degprint(computeAngle(P1,C,P2))
+
+
+    69°17'42.68''
+
+\>C=A+normalize([-4,-3])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
+
+\>degprint(computeAngle(P1,C,P2))
+
+
+    69°17'42.68''
+
+\>insimg;
+
+
+## Garis Sumbu
+
+Berikut adalah langkah-langkah menggambar garis sumbu ruas garis AB:
+
+
+1. Gambar lingkaran dengan pusat A melalui B.
+
+
+2. Gambar lingkaran dengan pusat B melalui A.
+
+
+3. Tarik garis melallui kedua titik potong kedua lingkaran tersebut. Garis ini merupakan
+garis sumbu (melalui titik tengah dan tegak lurus) AB.
+
+
+\>A=[2,2]; B=[-1,-2];
+
+\>c1=circleWithCenter(A,distance(A,B));
+
+\>c2=circleWithCenter(B,distance(A,B));
+
+\>{P1,P2,f}=circleCircleIntersections(c1,c2);
+
+\>l=lineThrough(P1,P2);
+
+\>setPlotRange(5); plotCircle(c1); plotCircle(c2);
+
+\>plotPoint(A); plotPoint(B); plotSegment(A,B); plotLine(l):
+
+
+Selanjutnya, kami melakukan hal yang sama di Maxima dengan koordinat
+umum.
+
+
+\>A &= [a1,a2]; B &= [b1,b2];
+
+\>c1 &= circleWithCenter(A,distance(A,B));
+
+\>c2 &= circleWithCenter(B,distance(A,B));
+
+\>P &= circleCircleIntersections(c1,c2); P1 &= P[1]; P2 &= P[2];
+
+
+Persamaan untuk persimpangan cukup terlibat. Tetapi kita dapat
+menyederhanakannya, jika kita memecahkan y.
+
+
+\>g &= getLineEquation(lineThrough(P1,P2),x,y);
+
+\>$solve(g,y)
+
+
+Ini memang sama dengan tegak lurus tengah, yang dihitung dengan cara
+yang sama sekali berbeda.
+
+
+\>$solve(getLineEquation(middlePerpendicular(A,B),x,y),y)
+
+\>h &=getLineEquation(lineThrough(A,B),x,y);
+
+\>$solve(h,y)
+
+
+Perhatikan hasil kali gradien garis g dan h adalah:
+
+
+Artinya kedua garis tegak lurus.
+
+
+## Contoh 3: Rumus Heron
+
+Rumus Heron menyatakan bahwa luas segitiga dengan panjang sisi-sisi a,
+b dan c adalah:
+
+
+Untuk membuktikan hal ini kita misalkan C(0,0), B(a,0) dan A(x,y),
+b=AC, c=AB. Luas segitiga ABC adalah
+
+
+Nilai y didapat dengan menyelesaikan sistem persamaan:
+
+
+\>sol &= solve([x^2+y^2 = b^2,(x-a)^2+y^2=c^2],[x,y]):
+
+\>setPlotRange(-1,10,-1,8); plotPoint([0,0], "C(0,0)"); plotPoint([5.5,0], "B(a,0)");  ...  
+\>   plotPoint([7.5,6], "A(x,y)");
+
+\>plotSegment([0,0],[5.5,0], "a",25); plotSegment([5.5,0],[7.5,6],"c",15);  ...  
+\>   plotSegment([0,0],[7.5,6],"b",25); 
+
+\>plotSegment([7.5,6],[7.5,0],"t=y",25):
+
+\>sol &= solve([x^2+y^2=b^2,(x-a)^2+y^2=c^2],[x,y]):
+
+
+Ekstrak solusi y.
+
+
+\>ysol &= y with sol[2][2] $ysol:
+
+
+Kami mendapatkan rumus Heron.
+
+
+\>function H(a,b,c) &= sqrt(factor((ysol\*a/2)^2)); $'H(a,b,c)=H(a,b,c)
+
+\>$'Luas=H(3,4,5) // luas segitiga dengan panjang sisi-sisi 3, 4, 5
+
+
+Dan buat fungsi ini.
+
+
+\>function fx(a,c,d) &= rhs(s1[1]); $fx(a,c,d), function fy(a,c,d) &= rhs(s1[2]); $fy(a,c,d)
+
+
+Sekarang kita bisa menggambar setnya. Sisi b bervariasi dari 1 hingga
+4. Diketahui bahwa kita mendapatkan elips.
+
+
+\>aspect(1); plot2d(&fx(3,x,5),&fy(3,x,5),xmin=1,xmax=4,square=1):
+
+
+Kita dapat memeriksa persamaan umum untuk elips ini, yaitu.
+
+
+di mana (xm,ym) adalah pusat, dan u dan v adalah setengah sumbu.
+
+
+\>$ratsimp((fx(a,c,d)-a/2)^2/u^2+fy(a,c,d)^2/v^2 with [u=d/2,v=sqrt(d^2-a^2)/2])
+
+
+Kita lihat bahwa tinggi dan luas segitiga adalah maksimal untuk x=0.
+Jadi luas segitiga dengan a+b+c=d maksimal jika segitiga sama sisi.
+Kami ingin menurunkan ini secara analitis.
+
+
+\>eqns &= [diff(H(a,b,d-(a+b))^2,a)=0,diff(H(a,b,d-(a+b))^2,b)=0]; $eqns
+
+
+Kami mendapatkan beberapa minima, yang termasuk dalam segitiga dengan
+satu sisi 0, dan solusinya a=b=c=d/3.
+
+
+\>$solve(eqns,[a,b])
+
+
+\>B &= [0,0]; $B, C &= [a,0]; $C
+
+
+Hitung tegak lurus tengah di Maxima.
+
+
+\>h &= middlePerpendicular(A,B); g &= middlePerpendicular(B,C);
+
+
+Dan pusat lingkaran.
+
+
+\>U &= lineIntersection(h,g);
+
+
+Kami mendapatkan rumus untuk jari-jari lingkaran.
+
+
+\>&assume(a\>0,b\>0,c\>0); $distance(U,B) | radcan
+
+
+Menggunakan geometri, kami memperoleh rumus sederhana
+
+
+untuk radiusnya. Kami dapat memeriksa, apakah ini benar dengan Maxima.
+Maxima akan memfaktorkan ini hanya jika kita kuadratkan.
+
+
+\>$c^2/sin(computeAngle(A,B,C))^2  | factor
+
+
+## Contoh 4: Garis Euler dan Parabola
+
+Garis Euler adalah garis yang ditentukan dari sembarang segitiga yang
+tidak sama sisi. Ini adalah garis tengah segitiga, dan melewati
+beberapa titik penting yang ditentukan dari segitiga, termasuk
+orthocenter, circumcenter, centroid, titik Exeter dan pusat lingkaran
+sembilan titik segitiga.
+
+
+Untuk demonstrasi, kami menghitung dan memplot garis Euler dalam
+sebuah segitiga.
+
+
+Pertama, kita mendefinisikan sudut-sudut segitiga di Euler. Kami
+menggunakan definisi, yang terlihat dalam ekspresi simbolis.
+
+
+\>A::=[-1,-1]; B::=[2,0]; C::=[1,2];
+
+
+Untuk memplot objek geometris, kami menyiapkan area plot, dan
+menambahkan titik ke sana. Semua plot objek geometris ditambahkan ke
+plot saat ini.
+
+
+\>setPlotRange(3); plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C");
+
+
+Kita juga bisa menambahkan sisi segitiga.
+
+
+\>plotSegment(A,B,""); plotSegment(B,C,""); plotSegment(C,A,""):
+
+
+Berikut adalah luas segitiga, menggunakan rumus determinan. Tentu
+saja, kita harus mengambil nilai absolut dari hasil ini.
+
+
+\>$areaTriangle(A,B,C)
+
+
+Kita dapat menghitung koefisien sisi c.
+
+
+\>c &= lineThrough(A,B)
+
+
+    
+                                [- 1, 3, - 2]
+    
+
+Dan juga dapatkan rumus untuk baris ini.
+
+
+\>$getLineEquation(c,x,y)
+
+
+Untuk bentuk Hesse, kita perlu menentukan sebuah titik, sehingga titik
+tersebut berada di sisi positif dari bentuk Hesse. Memasukkan titik
+menghasilkan jarak positif ke garis.
+
+
+\>$getHesseForm(c,x,y,C), $at(%,[x=C[1],y=C[2]])
+
+
+Sekarang kita hitung lingkaran luar ABC.
+
+
+\>LL &= circleThrough(A,B,C); $getCircleEquation(LL,x,y)
+
+\>O &= getCircleCenter(LL); $O
+
+
+Gambarkan lingkaran dan pusatnya. Cu dan U adalah simbolis. Kami
+mengevaluasi ekspresi ini untuk Euler.
+
+
+\>plotCircle(LL()); plotPoint(O(),"O"):
+
+
+Kita dapat menghitung perpotongan ketinggian di ABC (orthocenter)
+secara numerik dengan perintah berikut.
+
+
+\>H &= lineIntersection(perpendicular(A,lineThrough(C,B)),...  
+\>     perpendicular(B,lineThrough(A,C))); $H
+
+
+Sekarang kita dapat menghitung garis Euler dari segitiga.
+
+
+\>el &= lineThrough(H,O); $getLineEquation(el,x,y)
+
+
+Tambahkan ke plot kami.
+
+
+\>plotPoint(H(),"H"); plotLine(el(),"Garis Euler"):
+
+
+Pusat gravitasi harus berada di garis ini.
+
+
+\>M &= (A+B+C)/3; $getLineEquation(el,x,y) with [x=M[1],y=M[2]]
+
+\>plotPoint(M(),"M"): // titik berat
+
+
+Teorinya memberitahu kita MH=2*MO. Kita perlu menyederhanakan dengan
+radcan untuk mencapai ini.
+
+
+\>$distance(M,H)/distance(M,O)|radcan
+
+
+Fungsi termasuk fungsi untuk sudut juga.
+
+
+\>$computeAngle(A,C,B), degprint(%())
+
+
+    60°15'18.43''
+
+Persamaan untuk pusat incircle tidak terlalu bagus.
+
+
+\>Q &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A))|radcan; $Q
+
+
+Mari kita hitung juga ekspresi untuk jari-jari lingkaran yang
+tertulis.
+
+
+\>r &= distance(Q,projectToLine(Q,lineThrough(A,B)))|ratsimp; $r
+
+\>LD &=  circleWithCenter(Q,r); // Lingkaran dalam
+
+
+Mari kita tambahkan ini ke plot.
+
+
+\>color(5); plotCircle(LD()):
+
+
+## Parabola
+
+Selanjutnya akan dicari persamaan tempat kedudukan titik-titik yang berjarak sama ke titik C
+dan ke garis AB.
+
+
+\>p &= getHesseForm(lineThrough(A,B),x,y,C)-distance([x,y],C); $p='0
+
+
+Persamaan tersebut dapat digambar menjadi satu dengan gambar sebelumnya.
+
+
+\>plot2d(p,level=0,add=1,contourcolor=6):
+
+
+Ini seharusnya menjadi beberapa fungsi, tetapi pemecah default Maxima
+hanya dapat menemukan solusinya, jika kita kuadratkan persamaannya.
+Akibatnya, kami mendapatkan solusi palsu.
+
+
+\>akar &= solve(getHesseForm(lineThrough(A,B),x,y,C)^2-distance([x,y],C)^2,y)
+
+
+    
+            [y = - 3 x - sqrt(70) sqrt(9 - 2 x) + 26, 
+                                  y = - 3 x + sqrt(70) sqrt(9 - 2 x) + 26]
+    
+
+Solusi pertama adalah
+
+
+maxima: akar[1]
+
+
+Menambahkan solusi pertama ke plot menunjukkan, bahwa itu memang jalan
+yang kita cari. Teorinya memberi tahu kita bahwa itu adalah parabola
+yang diputar.
+
+
+\>plot2d(&rhs(akar[1]),add=1):
+
+\>function g(x) &= rhs(akar[1]); $'g(x)= g(x)// fungsi yang mendefinisikan kurva di atas
+
+\>T &=[-1, g(-1)]; // ambil sebarang titik pada kurva tersebut
+
+\>dTC &= distance(T,C); $fullratsimp(dTC), $float(%) // jarak T ke C
+
+\>U &= projectToLine(T,lineThrough(A,B)); $U // proyeksi T pada garis AB 
+
+\>dU2AB &= distance(T,U); $fullratsimp(dU2AB), $float(%) // jatak T ke AB
+
+
+Ternyata jarak T ke C sama dengan jarak T ke AB. Coba Anda pilih titik T yang lain dan
+ulangi perhitungan-perhitungan di atas untuk menunjukkan bahwa hasilnya juga sama.
+
+
+## Contoh 5: Trigonometri Rasional
+
+Ini terinspirasi dari ceramah N.J.Wildberger. Dalam bukunya "Divine
+Proportions", Wildberger mengusulkan untuk mengganti pengertian klasik
+tentang jarak dan sudut dengan kuadrat dan penyebaran. Dengan
+menggunakan ini, memang mungkin untuk menghindari fungsi trigonometri
+dalam banyak contoh, dan tetap "rasional".
+
+
+Berikut ini, saya memperkenalkan konsep, dan memecahkan beberapa
+masalah. Saya menggunakan perhitungan simbolik Maxima di sini, yang
+menyembunyikan keuntungan utama dari trigonometri rasional bahwa
+perhitungan hanya dapat dilakukan dengan kertas dan pensil. Anda
+diundang untuk memeriksa hasil tanpa komputer.
+
+
+Intinya adalah bahwa perhitungan rasional simbolis sering kali
+menghasilkan hasil yang sederhana. Sebaliknya, trigonometri klasik
+menghasilkan hasil trigonometri yang rumit, yang hanya mengevaluasi
+perkiraan numerik.
+
+
+\>load geometry;
+
+
+Untuk pengenalan pertama, kami menggunakan segitiga persegi panjang
+dengan proporsi Mesir terkenal 3, 4 dan 5. Perintah berikut adalah
+perintah Euler untuk merencanakan geometri bidang yang terdapat dalam
+file Euler "geometry.e".
+
+
+\>C&:=[0,0]; A&:=[4,0]; B&:=[0,3]; ...  
+\>   setPlotRange(-1,5,-1,5); ...  
+\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
+\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
+\>   insimg(30);
+
+
+Tentu saja,
+
+
+di mana wa adalah sudut di A. Cara yang biasa untuk menghitung sudut
+ini, adalah dengan mengambil invers dari fungsi sinus. Hasilnya adalah
+sudut yang tidak dapat dicerna, yang hanya dapat dicetak kira-kira.
+
+
+\>wa := arcsin(3/5); degprint(wa)
+
+
+    36°52'11.63''
+
+Trigonometri rasional mencoba menghindari hal ini.
+
+
+Gagasan pertama trigonometri rasional adalah kuadran, yang
+menggantikan jarak. Sebenarnya, itu hanya jarak kuadrat. Berikut ini,
+a, b, dan c menunjukkan kuadrat dari sisi-sisinya.
+
+
+Teorema Pythogoras menjadi a+b=c.
+
+
+\>a &= 3^2; b &= 4^2; c &= 5^2; &a+b=c
+
+
+    
+                                   25 = 25
+    
+
+Pengertian kedua dari trigonometri rasional adalah penyebaran. Spread
+mengukur pembukaan antar baris. Ini adalah 0, jika garis-garisnya
+sejajar, dan 1, jika garis-garisnya persegi panjang. Ini adalah
+kuadrat sinus sudut antara dua garis.
+
+
+Penyebaran garis AB dan AC pada gambar di atas didefinisikan sebagai:
+
+
+di mana a dan c adalah kuadrat dari sembarang segitiga siku-siku
+dengan salah satu sudut di A.
+
+
+\>sa &= a/c; $sa
+
+
+Ini lebih mudah dihitung daripada sudut, tentu saja. Tetapi Anda
+kehilangan properti bahwa sudut dapat ditambahkan dengan mudah.
+
+
+Tentu saja, kita dapat mengonversi nilai perkiraan untuk sudut wa
+menjadi sprad, dan mencetaknya sebagai pecahan.
+
+
+\>fracprint(sin(wa)^2)
+
+
+    9/25
+
+Hukum kosinus trgonometri klasik diterjemahkan menjadi "hukum silang"
+berikut.
+
+
+Di sini a, b, dan c adalah kuadrat dari sisi-sisi segitiga, dan sa
+adalah penyebaran sudut A. Sisi a, seperti biasa, berhadapan dengan
+sudut A.
+
+
+Hukum ini diimplementasikan dalam file geometri.e yang kami muat ke
+Euler.
+
+
+\>$crosslaw(aa,bb,cc,saa)
+
+
+Dalam kasus kami, kami mendapatkan
+
+
+\>$crosslaw(a,b,c,sa)
+
+
+Mari kita gunakan crosslaw ini untuk mencari spread di A. Untuk
+melakukan ini, kita buat crosslaw untuk kuadran a, b, dan c, dan
+selesaikan untuk spread yang tidak diketahui sa.
+
+
+Anda dapat melakukannya dengan tangan dengan mudah, tetapi saya
+menggunakan Maxima. Tentu saja, kami mendapatkan hasilnya, kami sudah
+memilikinya.
+
+
+\>$crosslaw(a,b,c,x), $solve(%,x)
+
+
+Kita sudah tahu ini. Definisi spread adalah kasus khusus dari
+crosslaw.
+
+
+Kita juga dapat menyelesaikan ini untuk umum a,b,c. Hasilnya adalah
+rumus yang menghitung penyebaran sudut segitiga yang diberikan kuadrat
+dari ketiga sisinya.
+
+
+\>$solve(crosslaw(aa,bb,cc,x),x)
+
+
+Kita bisa membuat fungsi dari hasilnya. Fungsi seperti itu sudah
+didefinisikan dalam file geometri.e dari Euler.
+
+
+\>$spread(a,b,c)
+
+
+Sebagai contoh, kita dapat menggunakannya untuk menghitung sudut
+segitiga dengan sisi
+
+
+Hasilnya rasional, yang tidak begitu mudah didapat jika kita
+menggunakan trigonometri klasik.
+
+
+\>$spread(a,a,4\*a/7)
+
+
+Ini adalah sudut dalam derajat.
+
+
+\>degprint(arcsin(sqrt(6/7)))
+
+
+    67°47'32.44''
+
+## Contoh lain
+
+Sekarang, mari kita coba contoh yang lebih maju.
+
+
+Kami mengatur tiga sudut segitiga sebagai berikut.
+
+
+\>A&:=[1,2]; B&:=[4,3]; C&:=[0,4]; ...  
+\>   setPlotRange(-1,5,1,7); ...  
+\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
+\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
+\>   insimg;
+
+
+Menggunakan Pythogoras, mudah untuk menghitung jarak antara dua titik.
+Saya pertama kali menggunakan jarak fungsi file Euler untuk geometri.
+Jarak fungsi menggunakan geometri klasik.
+
+
+\>$distance(A,B)
+
+
+Euler juga mengandung fungsi untuk kuadran antara dua titik.
+
+
+Dalam contoh berikut, karena c+b bukan a, maka segitiga itu bukan
+persegi panjang.
+
+
+\>c &= quad(A,B); $c, b &= quad(A,C); $b, a &= quad(B,C); $a,
+
+
+Pertama, mari kita hitung sudut tradisional. Fungsi computeAngle
+menggunakan metode biasa berdasarkan hasil kali titik dua vektor.
+Hasilnya adalah beberapa pendekatan floating point.
+
+
+\>wb &= computeAngle(A,B,C); $wb, $(wb/pi\*180)()
+
+
+    32.4711922908
+
+Dengan menggunakan pensil dan kertas, kita dapat melakukan hal yang
+sama dengan hukum silang. Kami memasukkan kuadran a, b, dan c ke dalam
+hukum silang dan menyelesaikan x.
+
+
+\>$crosslaw(a,b,c,x), $solve(%,x), //(b+c-a)^=4b.c(1-x)
+
+
+Yaitu, apa yang dilakukan oleh penyebaran fungsi yang didefinisikan
+dalam "geometry.e".
+
+
+\>sb &= spread(b,a,c); $sb
+
+
+Maxima mendapatkan hasil yang sama menggunakan trigonometri biasa,
+jika kita memaksanya. Itu menyelesaikan istilah sin(arccos(...))
+menjadi hasil pecahan. Sebagian besar siswa tidak dapat melakukan ini.
+
+
+\>$sin(computeAngle(A,B,C))^2
+
+
+Setelah kita memiliki spread di B, kita dapat menghitung tinggi ha di
+sisi a. Ingat bahwa
+
+
+Menurut definisi.
+
+
+\>ha &= c\*sb; $ha
+
+
+Menurut definisi, panjang ha adalah akar kuadrat dari kuadratnya.
+
+
+\>$sqrt(ha)
+
+
+Sekarang kita dapat menghitung luas segitiga. Jangan lupa, bahwa kita
+berhadapan dengan kuadrat!
+
+
+\>$sqrt(ha)\*sqrt(a)/2
+
+
+Rumus determinan biasa menghasilkan hasil yang sama.
+
+
+\>$areaTriangle(B,A,C)
+
+
+## Rumus Bangau
+
+Sekarang, mari kita selesaikan masalah ini secara umum!
+
+
+\>&remvalue(a,b,c,sb,ha);
+
+
+Pertama kita hitung spread di B untuk segitiga dengan sisi a, b, dan
+c. Kemudian kita menghitung luas kuadrat ("quadrea"?), faktorkan
+dengan Maxima, dan kita mendapatkan rumus Heron yang terkenal.
+
+
+Memang, ini sulit dilakukan dengan pensil dan kertas.
+
+
+\>$spread(b^2,c^2,a^2), $factor(%\*c^2\*a^2/4)
+
+
+## Aturan Triple Spread
+
+Kerugian dari spread adalah mereka tidak lagi hanya menambahkan sudut
 yang sama.
 
 
-Jawab:
+Namun, tiga spread dari sebuah segitiga memenuhi aturan "triple
+spread" berikut.
 
 
-1. Fungsi 1
+\>&remvalue(sa,sb,sc); $triplespread(sa,sb,sc)
 
 
-\>function f(x) := x^2
+Aturan ini berlaku untuk setiap tiga sudut yang menambah 180 °.
 
-\>$showev('limit((((x+h)^2-x^2)/h),h,0)) // turunan x^2
 
-\>function df(x) &= limit((((x+h)^2-x^2)/h),h,0);  $df(x)// df(x) = f'(x)
+Sejak menyebar
 
-\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",2,0.6), label("df(x)",2,0.17):
 
+sama, aturan triple spread juga benar, jika
 
-2. Fungsi 2
 
+Karena penyebaran sudut negatif adalah sama, aturan penyebaran rangkap
+tiga juga berlaku, jika
 
-\>function f(x) := sin(x)\*cos(x)
 
-\>$showev('limit(((sin(x+h)\*cos(x+h))-sin(x)\*cos(x))/h,h,0)) // turunan sin(x)\*cos(x)
+Misalnya, kita dapat menghitung penyebaran sudut 60°. Ini 3/4.
+Persamaan memiliki solusi kedua, bagaimanapun, di mana semua spread
+adalah 0.
 
-\>function df(x) &= limit(((sin(x+h)\*cos(x+h))-sin(x)\*cos(x))/h,h,0);  $df(x)// df(x) = f'(x)
 
-\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",1,0), label("df(x)",2.3,1.2):
+\>$solve(triplespread(x,x,x),x)
 
 
-3. Fungsi 3
+Sebaran 90° jelas 1. Jika dua sudut dijumlahkan menjadi 90°,
+sebarannya menyelesaikan persamaan sebaran rangkap tiga dengan a,b,1.
+Dengan perhitungan berikut kita mendapatkan a+b=1.
 
 
-\>function f(x) := sqrt(x)\*4
+\>$triplespread(x,y,1), $solve(%,x)
 
-\>$showev('limit((sqrt(x+h)\*4-sqrt(x)\*4)/h,h,0)) // turunan sqrt(x)\*4
 
-\>function df(x) &= limit((sqrt(x+h)\*4-sqrt(x)\*4)/h,h,0);  $df(x)// df(x) = f'(x)
+Karena sebaran 180°-t sama dengan sebaran t, rumus sebaran rangkap
+tiga juga berlaku, jika satu sudut adalah jumlah atau selisih dua
+sudut lainnya.
 
-\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",-2,11), label("df(x)",-2,-10):
 
+Jadi kita dapat menemukan penyebaran sudut berlipat ganda. Perhatikan
+bahwa ada dua solusi lagi. Kami membuat ini fungsi.
 
-4. Fungsi 4
 
+\>$solve(triplespread(a,a,x),x), function doublespread(a) &= factor(rhs(%[1]))
 
-\>function f(x) := cos(1/x)
 
-\>$showev('limit((cos(1/(x+h))-cos(1/x))/h,h,0)) // turunan cos(1/x)
+    
+                                - 4 (a - 1) a
+    
 
-\>function df(x) &= limit((cos(1/(x+h))-cos(1/x))/h,h,0);  $df(x)// df(x) = f'(x)
+## Pembagi Sudut
 
-\>plot2d(["f(x)","df(x)"],-pi,pi,color=[blue,red]), label("f(x)",2,0.4), label("df(x)",1,-0.5):
+Ini situasinya, kita sudah tahu.
 
 
-5. Fungsi 5
+\>C&:=[0,0]; A&:=[4,0]; B&:=[0,3]; ...  
+\>   setPlotRange(-1,5,-1,5); ...  
+\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
+\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
+\>   insimg;
 
 
-\>function f(x) := (log(x))^5
+Mari kita hitung panjang garis bagi sudut di A. Tetapi kita ingin
+menyelesaikannya untuk umum a,b,c.
 
-\>$showev('limit(((log(x+h))^5-(log(x))^5)/h,h,0)) // turunan (log(x))^5
 
-\>function df(x) &= limit(((log(x+h))^5-(log(x))^5)/h,h,0);  $df(x)// df(x) = f'(x)
+\>&remvalue(a,b,c);
 
-\>plot2d(["f(x)","df(x)"],-50,100,-10,50,color=[blue,red]), label("f(x)",25,35), label("df(x)",50,1):
 
+Jadi pertama-tama kita hitung penyebaran sudut yang dibagi dua di A,
+dengan menggunakan rumus sebaran rangkap tiga.
 
-6. Fungsi 6
 
+Masalah dengan rumus ini muncul lagi. Ini memiliki dua solusi. Kita
+harus memilih yang benar. Solusi lainnya mengacu pada sudut terbelah
+180 °-wa.
 
-\>function f(x) := sqrt(tan(x))
 
-\>$showev('limit((sqrt(tan(x+h))-sqrt(tan(x)))/h,h,0)) // turunan exp(x)\*cos(x)
+\>$triplespread(x,x,a/(a+b)), $solve(%,x), sa2 &= rhs(%[1]); $sa2
 
-\>function df(x) &= limit((sqrt(tan(x+h))-sqrt(tan(x)))/h,h,0);  $df(x)// df(x) = f'(x)
 
-\>plot2d(["f(x)","df(x)"],-10,10,-10,10,color=[blue,red]), label("f(x)",4.5,0), label("df(x)",5.5,5):
+Mari kita periksa persegi panjang Mesir.
 
 
-# Integral
+\>$sa2 with [a=3^2,b=4^2]
 
-EMT dapat digunakan untuk menghitung integral, baik integral tak tentu
-maupun integral tentu. Untuk integral tak tentu (simbolik) sudah tentu
-EMT menggunakan Maxima, sedangkan untuk perhitungan integral tentu EMT
-sudah menyediakan beberapa fungsi yang mengimplementasikan algoritma
-kuadratur (perhitungan integral tentu menggunakan metode numerik).
 
+Kami dapat mencetak sudut dalam Euler, setelah mentransfer penyebaran
+ke radian.
 
-Pada notebook ini akan ditunjukkan perhitungan integral tentu dengan
-menggunakan Teorema Dasar Kalkulus:
 
+\>wa2 := arcsin(sqrt(1/10)); degprint(wa2)
 
-Fungsi untuk menentukan integral adalah integrate. Fungsi ini dapat
-digunakan untuk menentukan, baik integral tentu maupun tak tentu (jika
-fungsinya memiliki antiderivatif). Untuk perhitungan integral tentu
-fungsi integrate menggunakan metode numerik (kecuali fungsinya tidak
-integrabel, kita tidak akan menggunakan metode ini).
 
+    18°26'5.82''
 
-\>$showev('integrate(x^n,x))
+Titik P adalah perpotongan garis bagi sudut dengan sumbu y.
 
 
-    Answering "Is n equal to -1?" with "no"
+\>P := [0,tan(wa2)\*4]
 
-\>$showev('integrate(1/(1+x),x))
 
-\>$showev('integrate(1/(1+x^2),x))
+    [0,  1.33333]
 
-\>$showev('integrate(1/sqrt(1-x^2),x))
+\>plotPoint(P,"P"); plotSegment(A,P):
 
-\>$showev('integrate(sin(x),x,0,pi))
 
-\>$showev('integrate(sin(x),x,a,b))
+Mari kita periksa sudut dalam contoh spesifik kita.
 
-\>$showev('integrate(x^n,x,a,b))
 
+\>computeAngle(C,A,P), computeAngle(P,A,B)
 
-    Answering "Is n positive, negative or zero?" with "positive"
 
-\>$showev('integrate(x^2\*sqrt(2\*x+1),x))
+    0.321750554397
+    0.321750554397
 
-\>$showev('integrate(x^2\*sqrt(2\*x+1),x,0,2))
+Sekarang kita hitung panjang garis bagi AP.
 
-\>$ratsimp(%)
 
-\>$showev('integrate((sin(sqrt(x)+a)\*E^sqrt(x))/sqrt(x),x,0,pi^2))
+Kami menggunakan teorema sinus dalam segitiga APC. Teorema ini
+menyatakan bahwa
 
-\>$factor(%)
 
-\>function map f(x) &= E^(-x^2); $f(x)
+berlaku dalam segitiga apa pun. Kuadratkan, itu diterjemahkan ke dalam
+apa yang disebut "hukum penyebaran"
 
-\>$showev('integrate(f(x),x))
 
+di mana a,b,c menunjukkan qudrances.
 
-Fungsi f tidak memiliki antiturunan, integralnya masih memuat integral
-lain.
 
+Karena spread CPA adalah 1-sa2, kita dapatkan darinya bisa/1=b/(1-sa2)
+dan dapat menghitung bisa (kuadran dari garis-bagi sudut).
 
-Kita tidak dapat menggunakan teorema Dasar kalkulus untuk menghitung
-integral tentu fungsi tersebut jika semua batasnya berhingga. Dalam
-hal ini dapat digunakan metode numerik (rumus kuadratur).
 
+\>&factor(ratsimp(b/(1-sa2))); bisa &= %; $bisa
 
-Misalkan kita akan menghitung:
 
+Mari kita periksa rumus ini untuk nilai-nilai Mesir kita.
 
-maxima: 'integrate(f(x),x,0,pi)
 
+\>sqrt(mxmeval("at(bisa,[a=3^2,b=4^2])")), distance(A,P)
 
-\>x=0:0.1:pi-0.1; plot2d(x,f(x+0.1),\>bar); plot2d("f(x)",0,pi,\>add):
 
+    4.21637021356
+    4.21637021356
 
-Integral tentu
+Kita juga dapat menghitung P menggunakan rumus spread.
 
 
-maxima: 'integrate(f(x),x,0,pi)
+\>py&=factor(ratsimp(sa2\*bisa)); $py
 
 
-dapat dihampiri dengan jumlah luas persegi-persegi panjang di bawah
-kurva y=f(x) tersebut. Langkah-langkahnya adalah sebagai berikut.
+Nilainya sama dengan yang kita dapatkan dengan rumus trigonometri.
 
 
-\>t &= makelist(a,a,0,pi-0.1,0.1); // t sebagai list untuk menyimpan nilai-nilai x
+\>sqrt(mxmeval("at(py,[a=3^2,b=4^2])"))
 
-\>fx &= makelist(f(t[i]+0.1),i,1,length(t)); // simpan nilai-nilai f(x)
 
-\>// jangan menggunakan x sebagai list, kecuali Anda pakar Maxima!
+    1.33333333333
 
+## Sudut Akord
 
-Hasilnya adalah:
+Perhatikan situasi berikut.
 
 
-maxima: 'integrate(f(x),x,0,pi) = 0.1*sum(fx[i],i,1,length(fx))
+\>setPlotRange(1.2); ...  
+\>   color(1); plotCircle(circleWithCenter([0,0],1)); ...  
+\>   A:=[cos(1),sin(1)]; B:=[cos(2),sin(2)]; C:=[cos(6),sin(6)]; ...  
+\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
+\>   color(3); plotSegment(A,B,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
+\>   color(1); O:=[0,0];  plotPoint(O,"0"); ...  
+\>   plotSegment(A,O); plotSegment(B,O); plotSegment(C,O,"r"); ...  
+\>   insimg;
 
 
-Jumlah tersebut diperoleh dari hasil kali lebar sub-subinterval (=0.1)
-dan jumlah nilai-nilai f(x) untuk x = 0.1, 0.2, 0.3, ..., 3.2.
+Kita dapat menggunakan Maxima untuk menyelesaikan rumus penyebaran
+rangkap tiga untuk sudut-sudut di pusat O untuk r. Jadi kita
+mendapatkan rumus untuk jari-jari kuadrat dari pericircle dalam hal
+kuadrat dari sisi.
 
 
-\>0.1\*sum(f(x+0.1)) // cek langsung dengan perhitungan numerik EMT
+Kali ini, Maxima menghasilkan beberapa nol kompleks, yang kita
+abaikan.
 
 
-    0.836219610253
+\>&remvalue(a,b,c,r); // hapus nilai-nilai sebelumnya untuk perhitungan baru
 
-Untuk mendapatkan nilai integral tentu yang mendekati nilai sebenarnya, lebar
-sub-intervalnya dapat diperkecil lagi, sehingga daerah di bawah kurva tertutup
-semuanya, misalnya dapat digunakan lebar subinterval 0.001. (Silakan dicoba!)
+\>rabc &= rhs(solve(triplespread(spread(b,r,r),spread(a,r,r),spread(c,r,r)),r)[4]); $rabc
 
 
-Meskipun Maxima tidak dapat menghitung integral tentu fungsi tersebut untuk
-batas-batas yang berhingga, namun integral tersebut dapat dihitung secara eksak jika
-batas-batasnya tak hingga. Ini adalah salah satu keajaiban di dalam matematika, yang
-terbatas tidak dapat dihitung secara eksak, namun yang tak hingga malah dapat
-dihitung secara eksak.
+Kita dapat menjadikannya sebagai fungsi Euler.
 
 
-\>$showev('integrate(f(x),x,0,inf))
+\>function periradius(a,b,c) &= rabc;
 
 
-Berikut adalah contoh lain fungsi yang tidak memiliki antiderivatif, sehingga
-integral tentunya hanya dapat dihitung dengan metode numerik.
+Mari kita periksa hasilnya untuk poin A,B,C.
 
 
-\>function f(x) &= x^x; $f(x)
+\>a:=quadrance(B,C); b:=quadrance(A,C); c:=quadrance(A,B);
 
-\>$showev('integrate(f(x),x,0,1))
 
-\>x=0:0.1:1-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,1,\>add):
+Jari-jarinya memang 1.
 
 
-Maxima gagal menghitung integral tentu tersebut secara langsung menggunakan perintah
-integrate. Berikut kita lakukan seperti contoh sebelumnya untuk mendapat hasil atau
-pendekatan nilai integral tentu tersebut.
+\>periradius(a,b,c)
 
 
-\>t &= makelist(a,a,0,1-0.01,0.01);
+    1
 
-\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
+Faktanya, spread CBA hanya bergantung pada b dan c. Ini adalah teorema
+sudut chord.
 
 
-# Latihan
+\>$spread(b,a,c)\*rabc | ratsimp
+
+
+Sebenarnya spreadnya adalah b/(4r), dan kita melihat bahwa sudut chord
+dari chord b adalah setengah dari sudut pusat.
+
+
+\>$doublespread(b/(4\*r))-spread(b,r,r) | ratsimp
+
+
+## Contoh 6: Jarak Minimal pada Bidang
+
+## Catatan awal
+
+Fungsi yang, ke titik M di bidang, menetapkan jarak AM antara titik
+tetap A dan M, memiliki garis level yang agak sederhana: lingkaran
+berpusat di A.
+
+
+\>&remvalue();
+
+\>A=[-1,-1];
+
+\>function d1(x,y):=sqrt((x-A[1])^2+(y-A[2])^2)
+
+\>fcontour("d1",xmin=-2,xmax=0,ymin=-2,ymax=0,hue=1, ...  
+\>   title="If you see ellipses, please set your window square"):
+
+
+dan grafiknya juga agak sederhana: bagian atas kerucut:
+
+
+\>plot3d("d1",xmin=-2,xmax=0,ymin=-2,ymax=0):
+
+
+Tentu saja minimal 0 dicapai di A.
+
+
+## Dua poin
+
+Sekarang kita lihat fungsi MA+MB dimana A dan B adalah dua titik
+(tetap). Ini adalah "fakta yang diketahui" bahwa kurva level adalah
+elips, titik fokusnya adalah A dan B; kecuali untuk AB minimum yang
+konstan pada segmen [AB]:
+
+
+\>B=[1,-1];
+
+\>function d2(x,y):=d1(x,y)+sqrt((x-B[1])^2+(y-B[2])^2)
+
+\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
+
+
+Grafiknya lebih menarik:
+
+
+\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
+
+
+Pembatasan garis (AB) lebih terkenal:
+
+
+\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
+
+
+## Tiga poin
+
+Sekarang hal-hal yang kurang sederhana: Ini sedikit kurang terkenal
+bahwa MA+MB+MC mencapai minimum pada satu titik pesawat tetapi untuk
+menentukan itu kurang sederhana:
+
+
+1) Jika salah satu sudut segitiga ABC lebih dari 120° (katakanlah di
+A), maka minimum dicapai pada titik ini (misalnya AB+AC).
+
+
+Contoh:
+
+
+\>C=[-4,1];
+
+\>function d3(x,y):=d2(x,y)+sqrt((x-C[1])^2+(y-C[2])^2)
+
+\>plot3d("d3",xmin=-5,xmax=3,ymin=-4,ymax=4);
+
+\>insimg;
+
+\>fcontour("d3",xmin=-4,xmax=1,ymin=-2,ymax=2,hue=1,title="The minimum is on A");
+
+\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
+
+\>insimg;
+
+
+2) Tetapi jika semua sudut segitiga ABC kurang dari 120 °, minimumnya
+adalah pada titik F di bagian dalam segitiga, yang merupakan
+satu-satunya titik yang melihat sisi-sisi ABC dengan sudut yang sama
+(maka masing-masing 120 ° ):
+
+
+\>C=[-0.5,1];
+
+\>plot3d("d3",xmin=-2,xmax=2,ymin=-2,ymax=2):
+
+\>fcontour("d3",xmin=-2,xmax=2,ymin=-2,ymax=2,hue=1,title="The Fermat point");
+
+\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
+
+\>insimg;
+
+
+Merupakan kegiatan yang menarik untuk mewujudkan gambar di atas dengan
+perangkat lunak geometri; misalnya, saya tahu soft yang ditulis di
+Jawa yang memiliki instruksi "garis kontur" ...
+
+
+Semua ini di atas telah ditemukan oleh seorang hakim Perancis bernama
+Pierre de Fermat; dia menulis surat kepada dilettants lain seperti
+pendeta Marin Mersenne dan Blaise Pascal yang bekerja di pajak
+penghasilan. Jadi titik unik F sedemikian rupa sehingga FA+FB+FC
+minimal, disebut titik Fermat segitiga. Tetapi tampaknya beberapa
+tahun sebelumnya, Torriccelli Italia telah menemukan titik ini sebelum
+Fermat melakukannya! Bagaimanapun tradisinya adalah mencatat poin ini
+F...
+
+
+## Empat poin
+
+Langkah selanjutnya adalah menambahkan 4 titik D dan mencoba
+meminimalkan MA+MB+MC+MD; katakan bahwa Anda adalah operator TV kabel
+dan ingin mencari di bidang mana Anda harus meletakkan antena sehingga
+Anda dapat memberi makan empat desa dan menggunakan panjang kabel
+sesedikit mungkin!
+
+
+\>D=[1,1];
+
+\>function d4(x,y):=d3(x,y)+sqrt((x-D[1])^2+(y-D[2])^2)
+
+\>plot3d("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5):
+
+\>fcontour("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5,hue=1);
+
+\>P=(A\_B\_C\_D)'; plot2d(P[1],P[2],points=1,add=1,color=12);
+
+\>insimg;
+
+
+Masih ada minimum dan tidak tercapai di salah satu simpul A, B, C atau
+D:
+
+
+\>function f(x):=d4(x[1],x[2])
+
+\>neldermin("f",[0.2,0.2])
+
+
+    [0.142858,  0.142857]
+
+Tampaknya dalam kasus ini, koordinat titik optimal adalah rasional
+atau mendekati rasional...
+
+
+Sekarang ABCD adalah persegi, kami berharap bahwa titik optimal akan
+menjadi pusat ABCD:
+
+
+\>C=[-1,1];
+
+\>plot3d("d4",xmin=-1,xmax=1,ymin=-1,ymax=1):
+
+\>fcontour("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5,hue=1);
+
+\>P=(A\_B\_C\_D)'; plot2d(P[1],P[2],add=1,color=12,points=1);
+
+\>insimg;
+
+
+## Contoh 7: Bola Dandelin dengan Povray
+
+Anda dapat menjalankan demonstrasi ini, jika Anda telah menginstal
+Povray, dan pvengine.exe di jalur program.
+
+
+Pertama kita hitung jari-jari bola.
+
+
+Jika Anda melihat gambar di bawah, Anda melihat bahwa kita membutuhkan
+dua lingkaran yang menyentuh dua garis yang membentuk kerucut, dan
+satu garis yang membentuk bidang yang memotong kerucut.
+
+
+Kami menggunakan file geometri.e dari Euler untuk ini.
+
+
+\>load geometry;
+
+
+Pertama dua garis yang membentuk kerucut.
+
+
+\>g1 &= lineThrough([0,0],[1,a])
+
+
+    
+                                 [- a, 1, 0]
+    
+
+\>g2 &= lineThrough([0,0],[-1,a])
+
+
+    
+                                [- a, - 1, 0]
+    
+
+Kemudian saya baris ketiga.
+
+
+\>g &= lineThrough([-1,0],[1,1])
+
+
+    
+                                 [- 1, 2, 1]
+    
+
+Kami merencanakan semuanya sejauh ini.
+
+
+\>setPlotRange(-1,1,0,2);
+
+\>color(black); plotLine(g(),"")
+
+\>a:=2; color(blue); plotLine(g1(),""), plotLine(g2(),""):
+
+
+Sekarang kita ambil titik umum pada sumbu y.
+
+
+\>P &= [0,u]
+
+
+    
+                                    [0, u]
+    
+
+Hitung jarak ke g1.
+
+
+\>d1 &= distance(P,projectToLine(P,g1)); $d1
+
+
+Hitung jarak ke g.
+
+
+\>d &= distance(P,projectToLine(P,g)); $d
+
+
+Dan temukan pusat kedua lingkaran yang jaraknya sama.
+
+
+\>sol &= solve(d1^2=d^2,u); $sol
+
+
+Ada dua solusi.
+
+
+Kami mengevaluasi solusi simbolis, dan menemukan kedua pusat, dan
+kedua jarak.
+
+
+\>u := sol()
+
+
+    [0.333333,  1]
+
+\>dd := d()
+
+
+    [0.149071,  0.447214]
+
+Plot lingkaran ke dalam gambar.
+
+
+\>color(red);
+
+\>plotCircle(circleWithCenter([0,u[1]],dd[1]),"");
+
+\>plotCircle(circleWithCenter([0,u[2]],dd[2]),"");
+
+\>insimg;
+
+
+## Plot dengan Povray
+
+Selanjutnya kami merencanakan semuanya dengan Povray. Perhatikan bahwa
+Anda mengubah perintah apa pun dalam urutan perintah Povray berikut,
+dan menjalankan kembali semua perintah dengan Shift-Return.
+
+
+Pertama kita memuat fungsi povray.
+
+
+\>load povray;
+
+\>defaultpovray="C:\\Program Files\\POV-Ray\\v3.7\\bin\\pvengine.exe"
+
+
+    C:\Program Files\POV-Ray\v3.7\bin\pvengine.exe
+
+Kami mengatur adegan dengan tepat.
+
+
+\>povstart(zoom=11,center=[0,0,0.5],height=10°,angle=140°);
+
+
+Selanjutnya kita menulis dua bidang ke file Povray.
+
+
+\>writeln(povsphere([0,0,u[1]],dd[1],povlook(red)));
+
+\>writeln(povsphere([0,0,u[2]],dd[2],povlook(red)));
+
+
+Dan kerucutnya, transparan.
+
+
+\>writeln(povcone([0,0,0],0,[0,0,a],1,povlook(lightgray,1)));
+
+
+Kami menghasilkan bidang terbatas pada kerucut.
+
+
+\>gp=g();
+
+\>pc=povcone([0,0,0],0,[0,0,a],1,"");
+
+\>vp=[gp[1],0,gp[2]]; dp=gp[3];
+
+\>writeln(povplane(vp,dp,povlook(blue,0.5),pc));
+
+
+Sekarang kita menghasilkan dua titik pada lingkaran, di mana bola
+menyentuh kerucut.
+
+
+\>function turnz(v) := return [-v[2],v[1],v[3]]
+
+\>P1=projectToLine([0,u[1]],g1()); P1=turnz([P1[1],0,P1[2]]);
+
+\>writeln(povpoint(P1,povlook(yellow)));
+
+\>P2=projectToLine([0,u[2]],g1()); P2=turnz([P2[1],0,P2[2]]);
+
+\>writeln(povpoint(P2,povlook(yellow)));
+
+
+Kemudian kami menghasilkan dua titik di mana bola menyentuh bidang.
+Ini adalah fokus dari elips.
+
+
+\>P3=projectToLine([0,u[1]],g()); P3=[P3[1],0,P3[2]];
+
+\>writeln(povpoint(P3,povlook(yellow)));
+
+\>P4=projectToLine([0,u[2]],g()); P4=[P4[1],0,P4[2]];
+
+\>writeln(povpoint(P4,povlook(yellow)));
+
+
+Selanjutnya kita hitung perpotongan P1P2 dengan bidang.
+
+
+\>t1=scalp(vp,P1)-dp; t2=scalp(vp,P2)-dp; P5=P1+t1/(t1-t2)\*(P2-P1);
+
+\>writeln(povpoint(P5,povlook(yellow)));
+
+
+Kami menghubungkan titik-titik dengan segmen garis.
+
+
+\>writeln(povsegment(P1,P2,povlook(yellow)));
+
+\>writeln(povsegment(P5,P3,povlook(yellow)));
+
+\>writeln(povsegment(P5,P4,povlook(yellow)));
+
+
+Sekarang kita menghasilkan pita abu-abu, di mana bola menyentuh
+kerucut.
+
+
+\>pcw=povcone([0,0,0],0,[0,0,a],1.01);
+
+\>pc1=povcylinder([0,0,P1[3]-defaultpointsize/2],[0,0,P1[3]+defaultpointsize/2],1);
+
+\>writeln(povintersection([pcw,pc1],povlook(gray)));
+
+\>pc2=povcylinder([0,0,P2[3]-defaultpointsize/2],[0,0,P2[3]+defaultpointsize/2],1);
+
+\>writeln(povintersection([pcw,pc2],povlook(gray)));
+
+
+Mulai program Povray.
+
+
+\>povend();
+
+
+Untuk mendapatkan Anaglyph ini kita perlu memasukkan semuanya ke dalam
+fungsi scene. Fungsi ini akan digunakan dua kali kemudian.
+
+
+\>function scene () ...
+
+
+    global a,u,dd,g,g1,defaultpointsize;
+    writeln(povsphere([0,0,u[1]],dd[1],povlook(red)));
+    writeln(povsphere([0,0,u[2]],dd[2],povlook(red)));
+    writeln(povcone([0,0,0],0,[0,0,a],1,povlook(lightgray,1)));
+    gp=g();
+    pc=povcone([0,0,0],0,[0,0,a],1,"");
+    vp=[gp[1],0,gp[2]]; dp=gp[3];
+    writeln(povplane(vp,dp,povlook(blue,0.5),pc));
+    P1=projectToLine([0,u[1]],g1()); P1=turnz([P1[1],0,P1[2]]);
+    writeln(povpoint(P1,povlook(yellow)));
+    P2=projectToLine([0,u[2]],g1()); P2=turnz([P2[1],0,P2[2]]);
+    writeln(povpoint(P2,povlook(yellow)));
+    P3=projectToLine([0,u[1]],g()); P3=[P3[1],0,P3[2]];
+    writeln(povpoint(P3,povlook(yellow)));
+    P4=projectToLine([0,u[2]],g()); P4=[P4[1],0,P4[2]];
+    writeln(povpoint(P4,povlook(yellow)));
+    t1=scalp(vp,P1)-dp; t2=scalp(vp,P2)-dp; P5=P1+t1/(t1-t2)*(P2-P1);
+    writeln(povpoint(P5,povlook(yellow)));
+    writeln(povsegment(P1,P2,povlook(yellow)));
+    writeln(povsegment(P5,P3,povlook(yellow)));
+    writeln(povsegment(P5,P4,povlook(yellow)));
+    pcw=povcone([0,0,0],0,[0,0,a],1.01);
+    pc1=povcylinder([0,0,P1[3]-defaultpointsize/2],[0,0,P1[3]+defaultpointsize/2],1);
+    writeln(povintersection([pcw,pc1],povlook(gray)));
+    pc2=povcylinder([0,0,P2[3]-defaultpointsize/2],[0,0,P2[3]+defaultpointsize/2],1);
+    writeln(povintersection([pcw,pc2],povlook(gray)));
+    endfunction
+</pre>
+Anda membutuhkan kacamata merah/sian untuk menghargai efek berikut.
+
+
+\>povanaglyph("scene",zoom=11,center=[0,0,0.5],height=10°,angle=140°);
+
+
+## Contoh 8: Geometri Bumi
+
+Dalam buku catatan ini, kami ingin melakukan beberapa perhitungan
+sferis. Fungsi-fungsi tersebut terdapat dalam file "spherical.e" di
+folder contoh. Kita perlu memuat file itu terlebih dahulu.
+
+
+\>load "spherical.e";
+
+
+Untuk memasukkan posisi geografis, kami menggunakan vektor dengan dua
+koordinat dalam radian (utara dan timur, nilai negatif untuk selatan
+dan barat). Berikut koordinat Kampus FMIPA UNY.
+
+
+\>FMIPA=[rad(-7,-46.467),rad(110,23.05)]
+
+
+    [-0.13569,  1.92657]
+
+Anda dapat mencetak posisi ini dengan sposprint (cetak posisi
+spherical).
+
+
+\>sposprint(FMIPA) // posisi garis lintang dan garis bujur FMIPA UNY
+
+
+    S 7°46.467' E 110°23.050'
+
+Mari kita tambahkan dua kota lagi, Solo dan Semarang.
+
+
+\>Solo=[rad(-7,-34.333),rad(110,49.683)]; Semarang=[rad(-6,-59.05),rad(110,24.533)];
+
+\>sposprint(Solo), sposprint(Semarang),
+
+
+    S 7°34.333' E 110°49.683'
+    S 6°59.050' E 110°24.533'
+
+Pertama kita menghitung vektor dari satu ke yang lain pada bola ideal.
+Vektor ini [pos,jarak] dalam radian. Untuk menghitung jarak di bumi,
+kita kalikan dengan jari-jari bumi pada garis lintang 7°.
+
+
+\>br=svector(FMIPA,Solo); degprint(br[1]), br[2]\*rearth(7°)-\>km // perkiraan jarak FMIPA-Solo
+
+
+    65°20'26.60''
+    53.8945384608
+
+Ini adalah perkiraan yang baik. Rutinitas berikut menggunakan
+perkiraan yang lebih baik. Pada jarak yang begitu pendek hasilnya
+hampir sama.
+
+
+\>esdist(FMIPA,Semarang)-\>" km", // perkiraan jarak FMIPA-Semarang
+
+
+    88.0114026318 km
+
+Ada fungsi untuk heading, dengan mempertimbangkan bentuk elips bumi.
+Sekali lagi, kami mencetak dengan cara yang canggih.
+
+
+\>sdegprint(esdir(FMIPA,Solo))
+
+
+         65.34°
+
+Sudut segitiga melebihi 180° pada bola.
+
+
+\>asum=sangle(Solo,FMIPA,Semarang)+sangle(FMIPA,Solo,Semarang)+sangle(FMIPA,Semarang,Solo); degprint(asum)
+
+
+    180°0'10.77''
+
+Ini dapat digunakan untuk menghitung luas segitiga. Catatan: Untuk
+segitiga kecil, ini tidak akurat karena kesalahan pengurangan dalam
+asum-pi.
+
+
+\>(asum-pi)\*rearth(48°)^2-\>" km^2", // perkiraan luas segitiga FMIPA-Solo-Semarang
+
+
+    2116.02948749 km^2
+
+Ada fungsi untuk ini, yang menggunakan garis lintang rata-rata
+segitiga untuk menghitung jari-jari bumi, dan menangani kesalahan
+pembulatan untuk segitiga yang sangat kecil.
+
+
+\>esarea(Solo,FMIPA,Semarang)-\>" km^2", //perkiraan yang sama dengan fungsi esarea()
+
+
+    2123.64310526 km^2
+
+Kita juga dapat menambahkan vektor ke posisi. Sebuah vektor berisi
+heading dan jarak, keduanya dalam radian. Untuk mendapatkan vektor,
+kami menggunakan vektor. Untuk menambahkan vektor ke posisi, kami
+menggunakan vektor sadd.
+
+
+\>v=svector(FMIPA,Solo); sposprint(saddvector(FMIPA,v)), sposprint(Solo),
+
+
+    S 7°34.333' E 110°49.683'
+    S 7°34.333' E 110°49.683'
+
+Fungsi-fungsi ini mengasumsikan bola yang ideal. Hal yang sama di
+bumi.
+
+
+\>sposprint(esadd(FMIPA,esdir(FMIPA,Solo),esdist(FMIPA,Solo))), sposprint(Solo),
+
+
+    S 7°34.333' E 110°49.683'
+    S 7°34.333' E 110°49.683'
+
+Mari kita beralih ke contoh yang lebih besar, Tugu Jogja dan Monas
+Jakarta (menggunakan Google Earth untuk mencari koordinatnya).
+
+
+\>Tugu=[-7.7833°,110.3661°]; Monas=[-6.175°,106.811944°];
+
+\>sposprint(Tugu), sposprint(Monas)
+
+
+    S 7°46.998' E 110°21.966'
+    S 6°10.500' E 106°48.717'
+
+Menurut Google Earth, jaraknya adalah 429,66 km. Kami mendapatkan
+pendekatan yang baik.
+
+
+\>esdist(Tugu,Monas)-\>" km", // perkiraan jarak Tugu Jogja - Monas Jakarta
+
+
+    431.565659488 km
+
+Judulnya sama dengan judul yang dihitung di Google Earth.
+
+
+\>degprint(esdir(Tugu,Monas))
+
+
+    294°17'2.85''
+
+Namun, kita tidak lagi mendapatkan posisi target yang tepat, jika kita
+menambahkan heading dan jarak ke posisi semula. Hal ini terjadi,
+karena kita tidak menghitung fungsi invers secara tepat, tetapi
+mengambil perkiraan jari-jari bumi di sepanjang jalan.
+
+
+\>sposprint(esadd(Tugu,esdir(Tugu,Monas),esdist(Tugu,Monas)))
+
+
+    S 6°10.500' E 106°48.717'
+
+Namun, kesalahannya tidak besar.
+
+
+\>sposprint(Monas),
+
+
+    S 6°10.500' E 106°48.717'
+
+Tentu kita tidak bisa berlayar dengan tujuan yang sama dari satu
+tujuan ke tujuan lainnya, jika kita ingin menempuh jalur terpendek.
+Bayangkan, Anda terbang NE mulai dari titik mana pun di bumi. Kemudian
+Anda akan berputar ke kutub utara. Lingkaran besar tidak mengikuti
+heading yang konstan!
+
+
+Perhitungan berikut menunjukkan bahwa kami jauh dari tujuan yang
+benar, jika kami menggunakan pos yang sama selama perjalanan kami.
+
+
+\>dist=esdist(Tugu,Monas); hd=esdir(Tugu,Monas);
+
+
+Sekarang kita tambahkan 10 kali sepersepuluh dari jarak, menggunakan
+pos ke Monas, kita sampai di Tugu.
+
+
+\>p=Tugu; loop 1 to 10; p=esadd(p,hd,dist/10); end;
+
+
+Hasilnya jauh.
+
+
+\>sposprint(p), skmprint(esdist(p,Monas))
+
+
+    S 6°11.250' E 106°48.372'
+         1.529km
+
+Sebagai contoh lain, mari kita ambil dua titik di bumi pada garis
+lintang yang sama.
+
+
+\>P1=[30°,10°]; P2=[30°,50°];
+
+
+Jalur terpendek dari P1 ke P2 bukanlah lingkaran garis lintang 30°,
+melainkan jalur terpendek yang dimulai 10° lebih jauh ke utara di P1.
+
+
+\>sdegprint(esdir(P1,P2))
+
+
+         79.69°
+
+Tapi, jika kita mengikuti pembacaan kompas ini, kita akan berputar ke
+kutub utara! Jadi kita harus menyesuaikan arah kita di sepanjang
+jalan. Untuk tujuan kasar, kami menyesuaikannya pada 1/10 dari total
+jarak.
+
+
+\>p=P1;  dist=esdist(P1,P2); ...  
+\>     loop 1 to 10; dir=esdir(p,P2); sdegprint(dir), p=esadd(p,dir,dist/10); end;
+
+
+         79.69°
+         81.67°
+         83.71°
+         85.78°
+         87.89°
+         90.00°
+         92.12°
+         94.22°
+         96.29°
+         98.33°
+
+Jaraknya tidak tepat, karena kita akan menambahkan sedikit kesalahan,
+jika kita mengikuti heading yang sama terlalu lama.
+
+
+\>skmprint(esdist(p,P2))
+
+
+         0.203km
+
+Kami mendapatkan perkiraan yang baik, jika kami menyesuaikan pos
+setelah setiap 1/100 dari total jarak dari Tugu ke Monas.
+
+
+\>p=Tugu; dist=esdist(Tugu,Monas); ...  
+\>     loop 1 to 100; p=esadd(p,esdir(p,Monas),dist/100); end;
+
+\>skmprint(esdist(p,Monas))
+
+
+         0.000km
+
+Untuk keperluan navigasi, kita bisa mendapatkan urutan posisi GPS di
+sepanjang lingkaran besar menuju Monas dengan fungsi navigasi.
+
+
+\>load spherical; v=navigate(Tugu,Monas,10); ...  
+\>     loop 1 to rows(v); sposprint(v[#]), end;
+
+
+    S 7°46.998' E 110°21.966'
+    S 7°37.422' E 110°0.573'
+    S 7°27.829' E 109°39.196'
+    S 7°18.219' E 109°17.834'
+    S 7°8.592' E 108°56.488'
+    S 6°58.948' E 108°35.157'
+    S 6°49.289' E 108°13.841'
+    S 6°39.614' E 107°52.539'
+    S 6°29.924' E 107°31.251'
+    S 6°20.219' E 107°9.977'
+    S 6°10.500' E 106°48.717'
+
+Kami menulis sebuah fungsi, yang memplot bumi, dua posisi, dan posisi
+di antaranya.
+
+
+\>function testplot ...
+
+
+    useglobal;
+    plotearth;
+    plotpos(Tugu,"Tugu Jogja"); plotpos(Monas,"Tugu Monas");
+    plotposline(v);
+    endfunction
+</pre>
+Sekarang rencanakan semuanya.
+
+
+\>plot3d("testplot",angle=25, height=6,\>own,\>user,zoom=4):
+
+
+Atau gunakan plot3d untuk mendapatkan tampilan anaglyph. Ini terlihat
+sangat bagus dengan kacamata merah/sian.
+
+
+\>plot3d("testplot",angle=25,height=6,distance=5,own=1,anaglyph=1,zoom=4):
+
+
+## MENCOBA RUMUS-RUMUS PADA MATERI DI ATAS
+
+## Geometri Simbolik
+
+\>A &:= [2,0]; B &:= [0,2]; C &:= [3,3]; // menentukan tiga titik A, B, C
+
+\>c &:= lineThrough(B,C) // c=BC
+
+
+    [-1,  3,  6]
+
+\>$getLineEquation(c,x,y), $solve(%,y) | expand // persamaan garis c
+
+\>h &= perpendicular(A,lineThrough(B,C)) // h melalui A tegak lurus BC
+
+
+    
+                                  [3, 1, 6]
+    
+
+\>Q &= lineIntersection(c,h) // Q titik potong garis c=BC dan h
+
+
+    
+                                    6  12
+                                   [-, --]
+                                    5  5
+    
+
+\>$projectToLine(A,lineThrough(B,C)) // proyeksi A pada BC
+
+\>$distance(A,Q) // jarak AQ
+
+\>cc &= circleThrough(A,B,C); $cc // (titik pusat dan jari-jari) lingkaran melalui A, B, C
+
+\>r&=getCircleRadius(cc); $r , $float(r) // tampilkan nilai jari-jari
+
+\>$computeAngle(A,C,B) // nilai <ACB
+
+\>$solve(getLineEquation(angleBisector(A,C,B),x,y),y)[1] // persamaan garis bagi <ACB
+
+\>P &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A)); $P // titik potong 2
+
+
+## Garis dan Lingkaran yang berpotongan
+
+\>A &:= [2,0]; c =circleWithCenter(A,4);
+
+\>B &:= [2,3]; C &:= [3,2]; l =lineThrough(B,C);
+
+\>setPlotRange(5); plotCircle(c); plotLine(l);
+
+\>{P1,P2,f}=lineCircleIntersections(l,c);
+
+\>P1, P2,
+
+
+    [5.89792,  -0.897916]
+    [1.10208,  3.89792]
+
+\>plotPoint(P1); plotPoint(P2):
+
+
+\>c &= circleWithCenter(A,4) // lingkaran dengan pusat A jari-jari 4
+
+
+    
+                                  [2, 0, 4]
+    
+
+\>l &= lineThrough(B,C) // garis l melalui B dan C
+
+
+    
+                                  [1, 1, 5]
+    
+
+\>$lineCircleIntersections(l,c) | radcan, // titik potong lingkaran c dan garis l
+
+
+\>C=A+normalize([-3,-4])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
+
+\>degprint(computeAngle(P1,C,P2))
+
+
+    57°58'20.06''
+
+\>C=A+normalize([-4,-5])\*4; plotPoint(C); plotSegment(P1,C); plotSegment(P2,C);
+
+\>degprint(computeAngle(P1,C,P2))
+
+
+    57°58'20.06''
+
+\>insimg;
+
+
+##  Garis Sumbu
+
+\>A &:=[3,3]; B &:=[-2,-3];
+
+\>c1=circleWithCenter(A,distance(A,B));
+
+\>c2=circleWithCenter(B,distance(A,B));
+
+\>{P1,P2,f}=circleCircleIntersections(c1,c2);
+
+\>l=lineThrough(P1,P2);
+
+\>setPlotRange(5); plotCircle(c1); plotCircle(c2);
+
+\>plotPoint(A); plotPoint(B); plotSegment(A,B); plotLine(l):
+
+\>A &= [a1,a2]; B &= [b1,b2];
+
+\>c1 &= circleWithCenter(A,distance(A,B));
+
+\>c2 &= circleWithCenter(B,distance(A,B));
+
+\>P &= circleCircleIntersections(c1,c2); P1 &= P[1]; P2 &= P[2];
+
+\>g &= getLineEquation(lineThrough(P1,P2),x,y);
+
+\>$solve(g,y)
+
+\>$solve(getLineEquation(middlePerpendicular(A,B),x,y),y)
+
+\>h &=getLineEquation(lineThrough(A,B),x,y);
+
+\>$solve(h,y)
+
+
+## Garis Euler dan Parabola
+
+\>A &:=[-1.5,-1.5]; B &:=[3,0]; C &:=[1.5,3];
+
+\>setPlotRange(3); plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C");
+
+
+\>plotSegment(A,B,""); plotSegment(B,C,""); plotSegment(C,A,""):
+
+\>$areaTriangle(A,B,C)
+
+
+\>c &= lineThrough(A,B)
+
+
+    
+                                   3  9    9
+                                [- -, -, - -]
+                                   2  2    2
+    
+
+\>$getLineEquation(c,x,y)
+
+\>$getHesseForm(c,x,y,C), $at(%,[x=C[1],y=C[2]])
+
+
+\>LL &= circleThrough(A,B,C); $getCircleEquation(LL,x,y)
+
+\>O &= getCircleCenter(LL); $O
+
+\>plotCircle(LL()); plotPoint(O(),"O"):
+
+\>H &= lineIntersection(perpendicular(A,lineThrough(C,B)),...  
+\>     perpendicular(B,lineThrough(A,C))); $H
+
+
+\>el &= lineThrough(H,O); $getLineEquation(el,x,y)
+
+
+\>plotPoint(H(),"H"); plotLine(el(),"Garis Euler"):
+
+
+\>M &= (A+B+C)/3; $getLineEquation(el,x,y) with [x=M[1],y=M[2]]
+
+\>plotPoint(M(),"M"): // titik berat
+
+\>$distance(M,H)/distance(M,O)|radcan
+
+
+\>$computeAngle(A,C,B), degprint(%())
+
+
+    60°15'18.43''
+
+\>Q &= lineIntersection(angleBisector(A,C,B),angleBisector(C,B,A))|radcan; $Q
+
+\>r &= distance(Q,projectToLine(Q,lineThrough(A,B)))|ratsimp; $r
+
+\>LD &=  circleWithCenter(Q,r); // Lingkaran dalam
+
+
+\>color(5); plotCircle(LD()):
+
+
+## contoh lain dari materi trigonometri rasional
+
+\>A &:=[2,3]; B &:=[5,4]; C &:=[0,5]; ...  
+\>   setPlotRange(-1,5,1,7); ...  
+\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
+\>   plotSegment(B,A,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
+\>   insimg;
+
+\>$distance(A,B)
+
+\>c &= quad(A,B); $c, b &= quad(A,C); $b, a &= quad(B,C); $a,
+
+
+\>wb &= computeAngle(A,B,C); $wb, $(wb/pi\*180)()
+
+
+    29.7448812969
+
+\>$crosslaw(a,b,c,x), $solve(%,x), //(b+c-a)^=4b.c(1-x)
+
+\>sb &= spread(b,a,c); $sb
+
+\>$sin(computeAngle(A,B,C))^2
+
+\>ha &= c\*sb; $ha
+
+\>$sqrt(ha)
+
+\>$sqrt(ha)\*sqrt(a)/2
+
+
+\>$areaTriangle(B,A,C)
+
+
+## Aturan penyebaran 3 kali lipat
+
+\>setPlotRange(1); ...  
+\>   color(1); plotCircle(circleWithCenter([0,0],1)); ...  
+\>   A:=[cos(1),sin(1)]; B:=[cos(2),sin(2)]; C:=[cos(6),sin(6)]; ...  
+\>   plotPoint(A,"A"); plotPoint(B,"B"); plotPoint(C,"C"); ...  
+\>   color(3); plotSegment(A,B,"c"); plotSegment(A,C,"b"); plotSegment(C,B,"a"); ...  
+\>   color(1); O:=[0,0];  plotPoint(O,"0"); ...  
+\>   plotSegment(A,O); plotSegment(B,O); plotSegment(C,O,"r"); ...  
+\>   insimg;
+
+\>&remvalue(a,b,c,r); // hapus nilai-nilai sebelumnya untuk perhitungan baru
+
+\>rabc &= rhs(solve(triplespread(spread(b,r,r),spread(a,r,r),spread(c,r,r)),r)[4]); $rabc
+
+
+\>function periradius(a,b,c) &= rabc;
+
+
+\>a:=quadrance(B,C); b:=quadrance(A,C); c:=quadrance(A,B);
+
+
+\>periradius(a,b,c)
+
+
+    1
+
+\>$spread(b,a,c)\*rabc | ratsimp
+
+\>$doublespread(b/(4\*r))-spread(b,r,r) | ratsimp
+
+
+## Contoh 6: Jarak Minimal pada Bidang
+
+## Catatan awal
+
+Fungsi yang, ke titik M di bidang, menetapkan jarak AM antara titik
+tetap A dan M, memiliki garis level yang agak sederhana: lingkaran
+berpusat di A.
+
+
+\>&remvalue();
+
+\>A=[-2,-2];
+
+\>function d1(x,y):=sqrt((x-A[1])^2+(y-A[2])^2)
+
+\>fcontour("d1",xmin=-2,xmax=0,ymin=-2,ymax=0,hue=1, ...  
+\>   title="If you see ellipses, please set your window square"):
+
+
+dan grafiknya juga agak sederhana: bagian atas kerucut:
+
+
+\>plot3d("d1",xmin=-2,xmax=0,ymin=-2,ymax=0):
+
+
+Ternyata setelah mencoba yang bisa hanya dengan memasukkan angka 1,
+karena ketika memakai angka 2, plot tidak membentuk kerucut diatas.
+
+
+## Dua poin
+
+\>B=[2,-2];
+
+\>function d2(x,y):=d1(x,y)+sqrt((x-B[1])^2+(y-B[2])^2)
+
+\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
+
+
+Grafiknya lebih menarik:
+
+
+\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
+
+
+Pembatasan garis (AB) lebih terkenal:
+
+
+\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
+
+
+## Tiga poin
+
+
+
+Contoh:
+
+
+\>C=[-3,2];
+
+\>function d3(x,y):=d2(x,y)+sqrt((x-C[1])^2+(y-C[2])^2)
+
+\>plot3d("d3",xmin=-5,xmax=3,ymin=-4,ymax=4);
+
+\>insimg;
+
+\>fcontour("d3",xmin=-4,xmax=1,ymin=-2,ymax=2,hue=1,title="The minimum is on A");
+
+\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
+
+\>insimg;
+
+
+Tetapi jika semua sudut segitiga ABC kurang dari 120 °, minimumnya
+adalah pada titik F di bagian dalam segitiga, yang merupakan
+satu-satunya titik yang melihat sisi-sisi ABC dengan sudut yang sama
+(maka masing-masing 120 ° ):
+
+
+\>C=[-1,2];
+
+\>plot3d("d3",xmin=-2,xmax=2,ymin=-2,ymax=2):
+
+\>fcontour("d3",xmin=-2,xmax=2,ymin=-2,ymax=2,hue=1,title="The Fermat point");
+
+\>P=(A\_B\_C\_A)'; plot2d(P[1],P[2],add=1,color=12);
+
+\>insimg;
+
+
+## Empat poin
+
+Langkah selanjutnya adalah menambahkan 4 titik D dan mencoba
+meminimalkan MA+MB+MC+MD; katakan bahwa Anda adalah operator TV kabel
+dan ingin mencari di bidang mana Anda harus meletakkan antena sehingga
+Anda dapat memberi makan empat desa dan menggunakan panjang kabel
+sesedikit mungkin!
+
+
+\>D=[2,21];
+
+\>function d4(x,y):=d3(x,y)+sqrt((x-D[1])^2+(y-D[2])^2)
+
+\>plot3d("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5):
+
+\>fcontour("d4",xmin=-1.5,xmax=1.5,ymin=-1.5,ymax=1.5,hue=1);
+
+\>P=(A\_B\_C\_D)'; plot2d(P[1],P[2],points=1,add=1,color=12);
+
+\>insimg;
+
+
+## Contoh 7: Bola Dandelin dengan Povray
+
+\>load geometry;
+
+
+Pertama dua garis yang membentuk kerucut.
+
+
+\>g1 &= lineThrough([0,0],[2,a])
+
+
+    
+                                 [- a, 2, 0]
+    
+
+\>g2 &= lineThrough([0,0],[-2,a])
+
+
+    
+                                [- a, - 2, 0]
+    
+
+\>g &= lineThrough([-2,0],[2,2])
+
+
+    
+                                 [- 2, 4, 4]
+    
+
+\>setPlotRange(-2,2,0,3);
+
+\>color(black); plotLine(g(),"")
+
+\>a:=2; color(blue); plotLine(g1(),""), plotLine(g2(),""):
+
+
+Sekarang kita ambil titik umum pada sumbu y.
+
+
+\>P &= [0,u]
+
+
+    
+                                    [0, u]
+    
+
+Hitung jarak ke g1.
+
+
+\>d1 &= distance(P,projectToLine(P,g1)); $d1
+
+
+Hitung jarak ke g.
+
+
+\>d &= distance(P,projectToLine(P,g)); $d
+
+
+Dan temukan pusat kedua lingkaran yang jaraknya sama.
+
+
+\>sol &= solve(d1^2=d^2,u); $sol
+
+
+Ada dua solusi.
+
+
+\>u := sol()
+
+
+    [0.558482,  4.77485]
+
+\>dd := d()
+
+
+    [0.394906,  3.37633]
+
+Plot lingkaran ke dalam gambar.
+
+
+\>color(red);
+
+\>plotCircle(circleWithCenter([0,u[1]],dd[1]),"");
+
+\>plotCircle(circleWithCenter([0,u[2]],dd[2]),"");
+
+\>insimg;
+
+
+## Latihan
+
+1. Gambarlah segi-n beraturan jika diketahui titik pusat O, n, dan
+jarak titik pusat ke titik-titik sudut segi-n tersebut (jari-jari
+lingkaran luar segi-n), r.
+
+
+Petunjuk:
+
 
 * 
-Bukalah buku Kalkulus.
+Besar sudut pusat yang menghadap masing-masing sisi segi-n adalah
+* (360/n).
 
 * 
-Cari dan pilih beberapa (paling sedikit 5 fungsi berbeda
-* tipe/bentuk/jenis) fungsi dari buku tersebut, kemudian definisikan di
-* EMT pada baris-baris perintah berikut (jika perlu tambahkan lagi).
+Titik-titik sudut segi-n merupakan perpotongan lingkaran luar segi-n
+* dan garis-garis yang melalui pusat dan saling membentuk sudut sebesar
+* kelipatan (360/n).
 
 * 
-Untuk setiap fungsi, tentukan anti turunannya (jika ada), hitunglah
-* integral tentu dengan batas-batas yang menarik (Anda tentukan
-* sendiri), seperti contoh-contoh tersebut.
+Untuk n ganjil, pilih salah satu titik sudut adalah di atas.
 
 * 
-Lakukan hal yang sama untuk fungsi-fungsi yang tidak dapat
-* diintegralkan (cari sedikitnya 3 fungsi).
+Untuk n genap, pilih 2 titik di kanan dan kiri lurus dengan titik
+* pusat.
 
 * 
-Gambar grafik fungsi dan daerah integrasinya pada sumbu koordinat
-* yang sama.
+Anda dapat menggambar segi-3, 4, 5, 6, 7, dst beraturan.
 
-* 
-Gunakan integral tentu untuk mencari luas daerah yang dibatasi oleh
-* dua kurva yang berpotongan di dua titik. (Cari dan gambar kedua kurva
-* dan arsir (warnai) daerah yang dibatasi oleh keduanya.)
 
-* 
-Gunakan integral tentu untuk menghitung volume benda putar kurva y=
-* f(x) yang diputar mengelilingi sumbu x dari x=a sampai x=b, yakni
+Penyelesaian :
 
 
-(Pilih fungsinya dan gambar kurva dan benda putar yang dihasilkan.
-Anda dapat mencari contoh-contoh bagaimana cara menggambar benda hasil
-perputaran suatu kurva.)
+\>load geometry
 
 
-- Gunakan integral tentu untuk menghitung panjang kurva y=f(x) dari
-x=a sampai x=b dengan menggunakan rumus:
+    Numerical and symbolic geometry.
 
+\>setPlotRange(-3.5,3.5,-3.5,3.5);
 
-(Pilih fungsi dan gambar kurvanya.)
+\>A=[-2,-2]; plotPoint(A,"A");
 
+\>B=[2,-2]; plotPoint(B,"B");
 
-Jawab:
+\>C=[0,3]; plotPoint(C,"C");
 
+\>plotSegment(A,B,"c");
 
-1. Fungsi 1
+\>plotSegment(B,C,"a");
 
+\>plotSegment(A,C,"b");
 
-\>function f(x) &= 5\*x^2; $f(x)
+\>aspect(1):
 
-\>$showev('integrate(f(x),x))
+\>c=circleThrough(A,B,C);
 
-\>$showev('integrate(f(x),x,2,3))
+\>R=getCircleRadius(c);
 
-\>x=0.01:0.03:4; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",2,3,\>add):
+\>O=getCircleCenter(c);
 
+\>plotPoint(O,"O");
 
-2. Fungsi 2
+\>l=angleBisector(A,C,B);
 
+\>color(2); plotLine(l); color(1);
 
-\>function f(x) &= cos(2\*x+5); $f(x)
+\>plotCircle(c,"Lingkaran luar segitiga ABC"):
 
-\>$showev('integrate(f(x),x))
 
-\>$showev('integrate(f(x),x,pi,2\*pi))
+2. Gambarlah suatu parabola yang melalui 3 titik yang diketahui.
 
-\>x=0:0.05:pi-0.1; plot2d(x,f(x+0.03),\>bar); plot2d("f(x)",pi,2\*pi,\>add):
 
+Petunjuk:
 
-3. Fungsi 3
 
+- Misalkan persamaan parabolanya y= ax^2+bx+c.
 
-\>function f(x) &= (sin(x))\*(cos((x)))^2; $f(x)
 
-\>$showev('integrate(f(x),x))
+- Substitusikan koordinat titik-titik yang diketahui ke persamaan
+tersebut.
 
-\>$showev('integrate(f(x),x,0,pi))
 
-\>x=-pi:0.04:pi; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,pi,\>add):
+- Selesaikan SPL yang terbentuk untuk mendapatkan nilai-nilai a, b, c.
 
 
-4. Fungsi 4
+Penyelesaian :
 
 
-\>function f(x) &= (x^2\*(2-x^3)^(1/2)); $f(x)
+\>load geometry;
 
-\>$showev('integrate(f(x),x))
+\>setPlotRange(5); P=[2,0]; Q=[4,0]; R=[0,-4];
 
-\>$showev('integrate(f(x),x,0,1))
+\>plotPoint(P,"P"); plotPoint(Q,"Q"); plotPoint(R,"R"):
 
-\>x=-1:0.04:1; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,1,\>add):
+\>sol &= solve([a+b=-c,16\*a+4\*b=-c,c=-4],[a,b,c])
 
 
-5. Fungsi 5
+    
+                         [[a = - 1, b = 5, c = - 4]]
+    
 
+Sehingga didapatkan nilai a = -1, b = 5 dan c = -4
 
-\>function f(x) &= sqrt(24-x^2); $f(x)
 
-\>$showev('integrate(f(x),x))
+\>function y&=-x^2+5\*x-4
 
-\>$showev('integrate(f(x),x,1,2))
 
-\>x=-2:0.04:1; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",1,2,\>add):
+    
+                                   2
+                                - x  + 5 x - 4
+    
 
+\>plot2d("-x^2+5\*x-4",-5,5,-5,5):
 
-6. Fungsi 6
 
+3. Gambarlah suatu segi-4 yang diketahui keempat titik sudutnya,
+misalnya A, B, C, D.
 
-\>t &= makelist(a,a,0,1-0.01,0.01);
 
-\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
+   - Tentukan apakah segi-4 tersebut merupakan segi-4 garis singgung
+(sisinya-sisintya merupakan garis singgung lingkaran yang sama yakni
+lingkaran dalam segi-4 tersebut).
 
-\>function f(x) &= x^2+50; $f(x)
 
-\>x=0:0.1:pi-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,pi,\>add):
+   - Suatu segi-4 merupakan segi-4 garis singgung apabila keempat
+garis bagi sudutnya bertemu di satu titik.
 
-\>0.01\*sum(f(x+0.01))
 
+   - Jika segi-4 tersebut merupakan segi-4 garis singgung, gambar
+lingkaran dalamnya.
 
-    17.051552
 
-7. Fungsi 7
+   - Tunjukkan bahwa syarat suatu segi-4 merupakan segi-4 garis
+singgung apabila hasil kali panjang sisi-sisi yang berhadapan sama.
 
 
-\>t &= makelist(a,a,0,1-0.01,0.01);
+Penyelesaian :
 
-\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
 
-\>function f(x) &= cos(x)/x; $f(x)
+\>load geometry
 
-\>x=-pi:0.07:pi-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,pi,\>add):
 
-\>0.01\*sum(f(x+0.01))
+    Numerical and symbolic geometry.
 
+\>setPlotRange(-4.5,4.5,-4.5,4.5);
 
-    0.415163991256
+\>A=[-3,-3]; plotPoint(A,"A");
 
-8. Fungsi 8
+\>B=[3,-3]; plotPoint(B,"B");
 
+\>C=[3,3]; plotPoint(C,"C");
 
-\>t &= makelist(a,a,0,1-0.01,0.01);
+\>D=[-3,3]; plotPoint(D,"D");
 
-\>fx &= makelist(f(t[i]+0.01),i,1,length(t));
+\>plotSegment(A,B,"");
 
-\>function f(x) &= sqrt(x^2-1); $f(x)
+\>plotSegment(B,C,"");
 
-\>x=3:0.04:pi-0.01; plot2d(x,f(x+0.01),\>bar); plot2d("f(x)",0,2,\>add):
+\>plotSegment(C,D,"");
 
-\>0.01\*sum(f(x+0.01))
+\>plotSegment(A,D,"");
 
+\>aspect(1):
 
-    0.11610107668
+\>l=angleBisector(A,B,C);
 
-## Luas daerah dibatasi 2 kurva
+\>m=angleBisector(B,C,D);
 
-1). Fungsi 1
+\>P=lineIntersection(l,m);
 
+\>color(5); plotLine(l); plotLine(m); color(1);
 
-\>function f(x) &= x^3; $f(x)
+\>plotPoint(P,"P"):
 
-\>function g(x) &= x; $g(x)
 
-\>plot2d(["x^4","x^3"],-2,2,-1,2):
+Dari gambar diatas terlihat bahwa keempat garis bagi sudutnya bertemu
+di satu titik yaitu titik P.
 
-\>function h(x) &= f(x)-g(x); $h(x)
 
-\>$showev('integrate(h(x),x))
+\>r=norm(P-projectToLine(P,lineThrough(A,B)));
 
-\>$&solve(f(x)=g(x))
+\>plotCircle(circleWithCenter(P,r),"Lingkaran dalam segiempat ABCD"):
 
-\>$showev('integrate(h(x),x,0,1)) // menghitung luas daerah yang dibatasi 2 kurva
 
+Dari gambar diatas, terlihat bahwa sisi-sisinya merupakan garis
+singgung lingkaran yang sama yaitu lingkaran dalam segiempat.
 
-\>x=-1:0.01:1; plot2d(x,f(x),\>bar,\>filled,style="-",fillcolor=orange,\>grid); plot2d(x,g(x),\>bar,\>add,\>filled,style="-",fillcolor=white); label("f(x)",0,2.1); label("g(x)",0.5,0.3):
 
+Akan ditunjukkan bahwa hasil kali panjang sisi-sisi yang berhadapan
+sama.
 
-2). Fungsi 2
 
+\>AB=norm(A-B) //panjang sisi AB
 
-\>function f(x) &= x^3+1; $f(x)
 
-\>function g(x) &= x^2; $g(x)
+    6
 
-\>plot2d(["-x^2+2","x^2"],-2,2,-1,2):
+\>CD=norm(C-D) //panjang sisi CD
 
-\>function h(x) &= f(x)-g(x); $h(x)
 
-\>$&solve(f(x)=g(x))
+    6
 
-\>$showev('integrate(h(x),x,-1,1)) // menghitung luas daerah yang dibatasi 2 kurva
+\>AD=norm(A-D) //panjang sisi AD
 
 
-\>x=-1:0.01:1; plot2d(x,f(x),\>bar,\>filled,style="-",fillcolor=orange,\>grid); plot2d(x,g(x),\>bar,\>add,\>filled,style="-",fillcolor=white); label("f(x)",0,2.1); label("g(x)",0.5,0.3):
+    6
 
+\>BC=norm(B-C) //panjang sisi BC
 
-## Volume benda putar
 
-Menghitung volume hasil perputaran kurva
+    6
 
+\>AB.CD
 
 
+    36
 
-dari x=-1 sampai x=0. Diputar terhadap sumbu-x.
+\>AD.BC
 
 
-Jawab:
+    36
 
+Terbukti bahwa hasil kali panjang sisi-sisi yang berhadapan sama yaitu
+36. Jadi dapat dipastikan bahwa segiempat tersebut merupakan segiempat
+garis singgung.
 
-\>function m(x) &= x^4+3; $m(x)
 
-\>$showev('integrate(pi\*(m(x))^2,x,-1,0)) // Menghitung volume hasil perputaran m(x)
+4. Gambarlah suatu ellips jika diketahui kedua titik fokusnya,
+misalnya P dan Q. Ingat ellips dengan fokus P dan Q adalah tempat
+kedudukan titik-titik yang jumlah jarak ke P dan ke Q selalu sama
+(konstan).
 
 
-Daerah di bawah kurva yang akan dirotasi terhadap sumbu x sebagai
-berikut:
+Penyelesaian :
 
 
-\>plot2d("m(x)",-1,0,-1,2,grid=7,\>filled, style="/\\"): 
+Diketahui kedua titik fokus P = [-1,-1] dan Q = [1,-1]
 
 
-Hasil perputaran m(x) terhadap sumbu x sebagai berikut:
+\>P=[-1,-1]; Q=[1,-1];
 
+\>function d1(x,y):=sqrt((x-P[1])^2+(y-P[2])^2)
 
-\>plot3d("m(x)",-1,0,-1,1,\>rotate,angle=6.3,\>hue,\>contour,color=redgreen,height=11):
+\>Q=[1,-1]; function d2(x,y):=sqrt((x-P[1])^2+(y-P[2])^2)+sqrt((x-Q[1])^2+(y-Q[2])^2)
 
+\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
 
-## Menghitung panjang kurva
 
+Grafik yang lebih menarik
 
 
-Menghitung panjang kurva
+\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
 
 
+Batasan ke garis PQ
 
 
-dari x=1 sampai x=3.
+\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
 
 
-\>function d(x) &= x^2-x+1; $d(x)
+5. Gambarlah suatu hiperbola jika diketahui kedua titik fokusnya,
+misalnya P dan Q. Ingat ellips dengan fokus P dan Q adalah tempat
+kedudukan titik-titik yang selisih jarak ke P dan ke Q selalu sama
+(konstan).
 
-\>plot2d("d(x)",-5,6): // gambar kurva d(x)
 
-\>$showev('limit((d(x+h)-d(x))/h,h,0))
+Penyelesaian :
 
-\>function dd(x) &= limit((d(x+h)-d(x))/h,h,0); $dd(x)
 
-\>function q(x) &= ((dd(x))^2); $q(x)
+\>P=[-1,-1]; Q=[1,-1];
 
-\>$showev('integrate(sqrt(1+q(x)),x,1,3)) // menghitung panjang kurva
+\>function d1(x,y):=sqrt((x-p[1])^2+(y-p[2])^2)
 
+\>Q=[1,-1]; function d2(x,y):=sqrt((x-P[1])^2+(y-P[2])^2)+sqrt((x+Q[1])^2+(y+Q[2])^2)
 
-Jadi, panjang kurva
+\>fcontour("d2",xmin=-2,xmax=2,ymin=-3,ymax=1,hue=1):
 
 
+Grafik yang lebih menarik
 
 
-dari x=0 sampai x=4 adalah
+\>plot3d("d2",xmin=-2,xmax=2,ymin=-3,ymax=1):
 
-
-# Barisan dan Deret
-
-(Catatan: bagian ini belum lengkap. Anda dapat membaca contoh-contoh
-pengguanaan EMT dan Maxima untuk menghitung limit barisan, rumus
-jumlah parsial suatu deret, jumlah tak hingga suatu deret konvergen,
-dan sebagainya. Anda dapat mengeksplor contoh-contoh di EMT atau
-perbagai panduan penggunaan Maxima di software Maxima atau dari
-Internet.)
-
-
-Barisan dapat didefinisikan dengan beberapa cara di dalam EMT, di
-antaranya:
-
-
-* 
-dengan cara yang sama seperti mendefinisikan vektor dengan
-* elemen-elemen beraturan (menggunakan titik dua ":");
-
-* 
-menggunakan perintah "sequence" dan rumus barisan (suku ke -n);
-
-* 
-menggunakan perintah "iterate" atau "niterate";
-
-* 
-menggunakan fungsi Maxima "create_list" atau "makelist" untuk
-* menghasilkan barisan simbolik;
-
-* 
-menggunakan fungsi biasa yang inputnya vektor atau barisan;
-
-* 
-menggunakan fungsi rekursif.
-
-
-EMT menyediakan beberapa perintah (fungsi) terkait barisan, yakni:
-
-
-* 
-sum: menghitung jumlah semua elemen suatu barisan
-
-* 
-cumsum: jumlah kumulatif suatu barisan
-
-* 
-differences: selisih antar elemen-elemen berturutan
-
-
-EMT juga dapat digunakan untuk menghitung jumlah deret berhingga
-maupun deret tak hingga, dengan menggunakan perintah (fungsi) "sum".
-Perhitungan dapat dilakukan secara numerik maupun simbolik dan eksak.
-
-
-Berikut adalah beberapa contoh perhitungan barisan dan deret
-menggunakan EMT.
-
-
-\>1:10 // barisan sederhana
-
-
-    [1,  2,  3,  4,  5,  6,  7,  8,  9,  10]
-
-\>1:2:30
-
-
-    [1,  3,  5,  7,  9,  11,  13,  15,  17,  19,  21,  23,  25,  27,  29]
-
-\>sum(1:2:30), sum(1/(1:2:30))
-
-
-    225
-    2.33587263431
-
-\>$'sum(k, k, 1, n) = factor(ev(sum(k, k, 1, n),simpsum=true)) // simpsum:menghitung deret secara simbolik
-
-\>$'sum(1/(3^k+k), k, 0, inf) = factor(ev(sum(1/(3^k+k), k, 0, inf),simpsum=true))
-
-\>$'sum(1/x^2, x, 1, inf)= ev(sum(1/x^2, x, 1, inf),simpsum=true) // ev: menghitung nilai ekspresi
-
-\>$'sum((-1)^(k-1)/k, k, 1, inf) = factor(ev(sum((-1)^(x-1)/x, x, 1, inf),simpsum=true))
-
-
-Di sini masih gagal, hasilnya tidak dihitung.
-
-
-\>$'sum((-1)^k/(2\*k-1), k, 1, inf) = factor(ev(sum((-1)^k/(2\*k-1), k, 1, inf),simpsum=true))
-
-\>$ev(sum(1/n!, n, 0, inf),simpsum=true)
-
-
-Di sini masih gagal, hasilnya tidak dihitung, harusnya hasilnya e.
-
-
-\>&assume(abs(x)<1); $'sum(a\*x^k, k, 0, inf)=ev(sum(a\*x^k, k, 0, inf),simpsum=true), &forget(abs(x)<1);
-
-
-# Deret Taylor
-
-Deret Taylor suatu fungsi f yang diferensiabel sampai tak hingga di
-sekitar x=a adalah:
-
-
-\>$'e^x =taylor(exp(x),x,0,10) // deret Taylor e^x di sekitar x=0, sampai suku ke-11
-
-\>$'log(x)=taylor(log(x),x,1,10)// deret log(x) di sekitar x=1
+\>plot2d("abs(x+1)+abs(x-1)",xmin=-3,xmax=3):
 
