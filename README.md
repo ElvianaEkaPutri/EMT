@@ -1,2200 +1,1450 @@
-# EMT3Plot2D_Elviana Eka Putri_23030630094
-Nama : Elviana Eka Putri
+# EMT4Plot3D_Elviana Eka Putri_23030630094
+Nama: Elviana Eka Putri
 
 
-NIM  : 23030630094
+Nim: 23030630094
 
 
-Prodi: Matematika E 2023
+Kelas: Matematika E 2023
 
 
-# Menggambar Grafik 2D dengan EMT
+# Menggambar Plot 3D dengan EMT
 
-Notebook ini menjelaskan tentang cara menggambar berbagaikurva dan
-grafik 2D dengan software EMT. EMT menyediakan fungsi plot2d() untuk
-menggambar berbagai kurva dan grafik dua dimensi (2D).
-
-
-## Plot Dasar
-
-Ada fungsi yang sangat mendasar dari plot. Ada koordinat layar, yang
-selalu berkisar dari 0 hingga 1024 di setiap sumbu, tidak peduli
-apakah layarnya persegi atau tidak. Semut ada koordinat plot, yang
-dapat diatur dengan setplot(). Pemetaan antara koordinat tergantung
-pada jendela plot saat ini. Misalnya, shrinkwindow() default
-menyisakan ruang untuk label sumbu dan judul plot.
+Ini adalah pengantar plot 3D di Euler. Kita memerlukan plot 3D untuk
+memvisualisasikan fungsi dua variabel.
 
 
-Dalam contoh, kita hanya menggambar beberapa garis acak dalam berbagai
-warna. Untuk detail tentang fungsi ini, pelajari fungsi inti EMT.
+Euler menggambar fungsi tersebut menggunakan algoritma penyortiran
+untuk menyembunyikan bagian di latar belakang. Secara umum, Euler
+menggunakan proyeksi pusat. Defaultnya adalah dari kuadran x-y positif
+ke arah titik asal x=y=z=0, tetapi sudut=0° terlihat dari arah sumbu
+y. Sudut pandang dan tinggi dapat diubah.
 
 
-\>clg; // clear screen
-
-\>window(0,0,1024,1024); // use all of the window
-
-\>setplot(0,1,0,1); // set plot coordinates
-
-\>hold on; // start overwrite mode
-
-\>n=100; X=random(n,2); Y=random(n,2);  // get random points
-
-\>colors=rgb(random(n),random(n),random(n)); // get random colors
-
-\>loop 1 to n; color(colors[#]); plot(X[#],Y[#]); end; // plot
-
-\>hold off; // end overwrite mode
-
-\>insimg; // insert to notebook
-
-\>reset;
-
-
-Grafik perlu ditahan, karena perintah plot() akan menghapus jendela
-plot.
-
-
-Untuk menghapus semua yang kami lakukan, kami menggunakan reset().
-
-
-Untuk menampilkan gambar hasil plot di layar notebook, perintah
-plot2d() dapat diakhiri dengan titik dua (:). Cara lain adalah
-perintah plot2d() diakhiri dengan titik koma (;), kemudian menggunakan
-perintah insimg() untuk menampilkan gambar hasil plot.
-
-
-Untuk contoh lain, kami menggambar plot sebagai sisipan di plot lain.
-Ini dilakukan dengan mendefinisikan jendela plot yang lebih kecil.
-Perhatikan bahwa jendela ini tidak menyediakan ruang untuk label sumbu
-di luar jendela plot. Kita harus menambahkan beberapa margin untuk ini
-sesuai kebutuhan. Perhatikan bahwa kami menyimpan dan memulihkan
-jendela penuh, dan menahan plot saat ini saat kami memplot inset.
-
-
-\>plot2d("x^3-x");
-
-\>xw=200; yw=100; ww=300; hw=300;
-
-\>ow=window();
-
-\>window(xw,yw,xw+ww,yw+hw);
-
-\>hold on;
-
-\>barclear(xw-50,yw-10,ww+60,ww+60);
-
-\>plot2d("x^4-x",grid=6):
-
-\>hold off;
-
-\>window(ow);
-
-
-Plot dengan banyak angka dicapai dengan cara yang sama. Ada fungsi
-figure() utilitas untuk ini.
-
-
-## Aspek Plot
-
-Plot standar (default) menggunakan jendela plot persegi. Anda dapat
-mengubahnya dengan fungsi aspek(). Jangan lupa untuk mengatur ulang
-aspek nanti. Anda juga dapat mengubah default ini di menu dengan "Atur
-Aspek" ke rasio aspek tertentu atau ke ukuran jendela grafik saat ini.
-
-
-Tetapi Anda juga dapat mengubahnya untuk satu plot. Untuk ini, ukuran
-area plot saat ini diubah, dan jendela diatur sehingga label memiliki
-cukup ruang.
-
-
-\>aspect(2); // rasio panjang dan lebar 2:1
-
-\>plot2d(["sin(x)","cos(x)"],0,2pi):
-
-\>aspect();
-
-\>reset;
-
-
-Fungsi reset() mengembalikan default plot termasuk rasio aspek.
-
-
-# Plot 2D di Euler
-
-EMT Math Toolbox memiliki plot dalam 2D, baik untuk data maupun
-fungsi. EMT menggunakan fungsi plot2d. Fungsi ini dapat memplot fungsi
-dan data.
-
-
-Dimungkinkan untuk membuat plot di Maxima menggunakan Gnuplot atau
-dengan Python menggunakan Math Plot Lib.
-
-
-Euler dapat memplot plot 2D dari
+Euler dapat memplot
 
 
 * 
-ekspresi
+permukaan dengan bayangan dan garis datar atau rentang datar,
 
 * 
-fungsi, variabel, atau kurva parameter,
+awan titik,
 
 * 
-vektor nilai x-y,
+kurva parametrik,
 
 * 
-awan titik di pesawat,
-
-* 
-kurva implisit dengan level atau wilayah level.
-
-* 
-Fungsi kompleks
+permukaan implisit.
 
 
-Gaya plot mencakup berbagai gaya untuk garis dan titik, plot batang
-dan plot berbayang.
+Plot 3D suatu fungsi menggunakan plot3d. Cara termudah adalah memplot
+ekspresi dalam x dan y. Parameter r mengatur rentang plot di sekitar
+(0,0).
 
 
-# Plot Ekspresi atau Variabel
+\>aspect(1.5); plot3d("x^2+sin(y)",-5,5,0,6\*pi):
 
-Ekspresi tunggal dalam "x" (ex. "4*x^2") atau nama fungsi (ex. "f")
-menghasilkan grafik fungsi.
-
-
-Berikut adalah contoh paling dasar, yang menggunakan rentang default
-dan menetapkan rentang y yang tepat agar sesuai dengan plot fungsi.
+\>plot3d("x^2+x\*sin(y)",-5,5,0,6\*pi):
 
 
-Catatan: Jika Anda mengakhiri baris perintah dengan titik dua ":",
-plot akan dimasukkan ke dalam jendela teks. Jika tidak, tekan TAB
-untuk melihat plot jika jendela plot tertutup.
+# Fungsi Dua Variabel
 
-
-\>plot2d("x^2"):
-
-\>aspect(1.5); plot2d("x^3-x"):
-
-\>a:=5.6; plot2d("exp(-a\*x^2)/a"); insimg(30); // menampilkan gambar hasil plot setinggi 25 baris
-
-
-Dari beberapa contoh sebelumnya Anda dapat melihat bahwa aslinya
-gambar plot menggunakan sumbu X dengan rentang nilai dari -2 sampai
-dengan 2. Untuk mengubah rentang nilai X dan Y, Anda dapat menambahkan
-nilai-nilai batas X (dan Y) di belakang ekspresi yang digambar.
-
-
-Rentang plot diatur dengan parameter yang ditetapkan berikut:
+Untuk grafik fungsi, gunakan
 
 
 * 
-a,b: rentang-x (default -2,2)
+ekspresi sederhana dalam x dan y,
 
 * 
-c,d: y-range (default: skala dengan nilai)
+nama fungsi dua variabel
 
 * 
-r: sebagai alternatif radius di sekitar pusat plot
-
-* 
-cx,cy: koordinat pusat plot (default 0,0)
+atau matriks data.
 
 
-\>plot2d("x^3-x",-1,2):
-
-\>plot2d("sin(x)",-2\*pi,2\*pi): // plot sin(x) pada interval [-2pi, 2pi]
-
-\>plot2d("cos(x)","sin(3\*x)",xmin=0,xmax=2pi):
-
-
-Alternatif untuk titik dua adalah perintah insimg(baris), yang
-menyisipkan plot yang menempati sejumlah baris teks tertentu.
-
-
-Dalam opsi, plot dapat diatur untuk muncul
+Defaultnya adalah kisi kawat yang terisi dengan warna berbeda di kedua
+sisinya. Perhatikan bahwa jumlah interval kisi default adalah 10,
+tetapi plot menggunakan jumlah persegi panjang 40x40 default untuk
+membuat permukaan. Ini dapat diubah.
 
 
 * 
-di jendela terpisah yang dapat diubah ukurannya,
+n=40, n=[40,40]: jumlah garis kisi di setiap arah
 
 * 
-di jendela buku catatan.
+kisi=10, kisi=[10,10]: jumlah garis kisi di setiap arah.
 
 
-Lebih banyak gaya dapat dicapai dengan perintah plot tertentu.
+Kami menggunakan default n=40 dan kisi=10.
 
 
-Bagaimanapun, tekan tombol tabulator untuk melihat plot, jika
-disembunyikan.
+\>plot3d("x^2+y^2"):
 
 
-Untuk membagi jendela menjadi beberapa plot, gunakan perintah
-figure(). Dalam contoh, kami memplot x^1 hingga x^4 menjadi 4 bagian
-jendela. figure(0) mengatur ulang jendela default.
+Interaksi pengguna dimungkinkan dengan parameter &gt;user. Pengguna dapat
+menekan tombol berikut.
 
 
-\>reset;
+* 
+kiri, kanan, atas, bawah: mengubah sudut pandang
+
+* 
++, -: memperbesar atau memperkecil
+
+* 
+a: menghasilkan anaglif (lihat di bawah)
+
+* 
+l: mengubah arah sumber cahaya (lihat di bawah)
+
+* 
+spasi: mengatur ulang ke default
+
+* 
+return: mengakhiri interaksi
+
+
+\>plot3d("exp(-x^2+y^2)",\>user, ...  
+\>     title="Turn with the vector keys (press return to finish)"):
+
+
+Rentang plot untuk fungsi dapat ditentukan dengan
+
+
+* 
+a,b: rentang x
+
+* 
+c,d: rentang y
+
+* 
+r: persegi simetris di sekitar (0,0).
+
+* 
+n: jumlah subinterval untuk plot.
+
+
+Ada beberapa parameter untuk menskalakan fungsi atau mengubah tampilan
+grafik.
+
+
+fscale: skala ke nilai fungsi (default adalah &lt;fscale).
+
+
+scale: angka atau vektor 1x2 untuk diskalakan ke arah x dan y.
+
+
+frame: jenis frame (default 1).
+
+
+\>plot3d("exp(-(x^2+y^2)/5)",r=10,n=80,fscale=4,scale=1.2,frame=3,\>user):
+
+
+Tampilan dapat diubah dengan berbagai cara.
+
+
+* 
+jarak: jarak pandang ke plot.
+
+* 
+perbesaran: nilai perbesaran.
+
+* 
+sudut: sudut ke sumbu y negatif dalam radian.
+
+* 
+tinggi: tinggi tampilan dalam radian.
+
+
+Nilai default dapat diperiksa atau diubah dengan fungsi view(). Fungsi
+ini mengembalikan parameter dalam urutan di atas.
+
+
+\>view
+
+
+    [5,  2.6,  2,  0.4]
+
+Jarak yang lebih dekat membutuhkan zoom yang lebih sedikit. Efeknya
+lebih seperti lensa sudut lebar.
+
+
+Dalam contoh berikut, sudut=0 dan tinggi=0 terlihat dari sumbu y
+negatif. Label sumbu untuk y disembunyikan dalam kasus ini.
+
+
+\>plot3d("x^2+y",distance=3,zoom=1,angle=pi/2,height=0):
+
+
+Plot selalu mengarah ke tengah kubus plot. Anda dapat memindahkan
+bagian tengah dengan parameter center.
+
+
+\>plot3d("x^4+y^2",a=0,b=1,c=-1,d=1,angle=-20°,height=20°, ...  
+\>     center=[0.4,0,0],zoom=5):
+
+
+Plot diskalakan agar sesuai dengan kubus satuan untuk dilihat. Jadi
+tidak perlu mengubah jarak atau zoom tergantung pada ukuran plot.
+Namun, label merujuk pada ukuran sebenarnya.
+
+
+Jika Anda menonaktifkannya dengan scale=false, Anda perlu berhati-hati
+agar plot tetap sesuai dengan jendela plot, dengan mengubah jarak
+tampilan atau zoom, dan memindahkan bagian tengah.
+
+
+\>plot3d("5\*exp(-x^2-y^2)",r=2,<fscale,<scale,distance=13,height=50°, ...  
+\>     center=[0,0,-2],frame=3):
+
+
+Plot polar juga tersedia. Parameter polar=true menggambar plot polar.
+Fungsi tersebut harus tetap berupa fungsi x dan y. Parameter "fscale"
+menskalakan fungsi dengan skalanya sendiri. Jika tidak, fungsi
+tersebut diskalakan agar sesuai dengan kubus.
+
+
+\>plot3d("1/(x^2+y^2+1)",r=5,\>polar, ...  
+\>   fscale=2,\>hue,n=100,zoom=4,\>contour,color=blue):
+
+\>function f(r) := exp(-r/2)\*cos(r); ...  
+\>   plot3d("f(x^2+y^2)",\>polar,scale=[1,1,0.4],r=pi,frame=3,zoom=4):
+
+
+Parameter rotate memutar fungsi dalam x di sekitar sumbu x.
+
+
+* 
+rotate=1: Menggunakan sumbu x
+
+* 
+rotate=2: Menggunakan sumbu z
+
+
+\>plot3d("x^2+1",a=-1,b=1,rotate=true,grid=5):
+
+\>plot3d("x^2+1",a=-1,b=1,rotate=2,grid=5):
+
+\>plot3d("sqrt(25-x^2)",a=0,b=5,rotate=1):
+
+\>plot3d("x\*sin(x)",a=0,b=6pi,rotate=2):
+
+
+Berikut adalah plot dengan tiga fungsi.
+
+
+\>plot3d("x","x^2+y^2","y",r=2,zoom=3.5,frame=3):
+
+
+# Plot Kontur
+
+Untuk plot, Euler menambahkan garis kisi. Sebagai gantinya,
+dimungkinkan untuk menggunakan garis level dan rona satu warna atau
+rona warna spektral. Euler dapat menggambar tinggi fungsi pada plot
+dengan bayangan. Dalam semua plot 3D, Euler dapat menghasilkan anaglif
+merah/sian.
+
+
+* 
+&gt;hue: Mengaktifkan bayangan terang alih-alih kabel.
+
+* 
+&gt;contour: Memplot garis kontur otomatis pada plot.
+
+* 
+level=... (atau level): Vektor nilai untuk garis kontur.
+
+
+Nilai default adalah level="auto", yang menghitung beberapa garis
+level secara otomatis. Seperti yang Anda lihat di plot, level
+sebenarnya adalah rentang level.
+
+
+Gaya default dapat diubah. Untuk plot kontur berikut, kami menggunakan
+kisi yang lebih halus untuk titik 100x100, menskalakan fungsi dan
+plot, dan menggunakan sudut pandang yang berbeda.
+
+
+\>plot3d("exp(-x^2-y^2)",r=2,n=100,level="thin", ...  
+\>    \>contour,\>spectral,fscale=1,scale=1.1,angle=45°,height=20°):
+
+\>plot3d("exp(x\*y)",angle=100°,\>contour,color=green):
+
+
+Shading default menggunakan warna abu-abu. Namun, rentang warna
+spektral juga tersedia.
+
+
+* 
+&gt;spectral: Menggunakan skema spektral default
+
+* 
+color=...: Menggunakan warna khusus atau skema spektral
+
+
+Untuk plot berikut, kami menggunakan skema spektral default dan
+menambah jumlah titik untuk mendapatkan tampilan yang sangat halus.
+
+
+\>plot3d("x^2+y^2",\>spectral,\>contour,n=100):
+
+
+Alih-alih garis level otomatis, kita juga dapat mengatur nilai garis
+level. Ini akan menghasilkan garis level tipis alih-alih rentang
+level.
+
+
+\>plot3d("x^2-y^2",0,5,0,5,level=-1:0.1:1,color=redgreen):
+
+
+Dalam plot berikut, kami menggunakan dua pita level yang sangat lebar
+dari -0,1 hingga 1, dan dari 0,9 hingga 1. Ini dimasukkan sebagai
+matriks dengan batas level sebagai kolom.
+
+
+Selain itu, kami melapisi kisi dengan 10 interval di setiap arah.
+
+
+\>plot3d("x^2+y^3",level=[-0.1,0.9;0,1], ...  
+\>     \>spectral,angle=30°,grid=10,contourcolor=gray):
+
+
+Dalam contoh berikut, kami memplot himpunan, di mana
+
+
+Kami menggunakan satu garis tipis untuk garis datar.
+
+
+\>plot3d("x^y-y^x",level=0,a=0,b=6,c=0,d=6,contourcolor=red,n=100):
+
+
+Dimungkinkan untuk menunjukkan bidang kontur di bawah plot. Warna dan
+jarak ke plot dapat ditentukan.
+
+
+\>plot3d("x^2+y^4",\>cp,cpcolor=green,cpdelta=0.2):
+
+
+Berikut ini beberapa gaya lainnya. Kami selalu menonaktifkan bingkai,
+dan menggunakan berbagai skema warna untuk plot dan kisi.
+
 
 \>figure(2,2); ...  
-\>   for n=1 to 4; figure(n); plot2d("x^"+n); end; ...  
+\>   expr="y^3-x^2"; ...  
+\>   figure(1);  ...  
+\>     plot3d(expr,<frame,\>cp,cpcolor=spectral); ...  
+\>   figure(2);  ...  
+\>     plot3d(expr,<frame,\>spectral,grid=10,cp=2); ...  
+\>   figure(3);  ...  
+\>     plot3d(expr,<frame,\>contour,color=gray,nc=5,cp=3,cpcolor=greenred); ...  
+\>   figure(4);  ...  
+\>     plot3d(expr,<frame,\>hue,grid=10,\>transparent,\>cp,cpcolor=gray); ...  
 \>   figure(0):
 
 
-Di plot2d(), ada gaya alternatif yang tersedia dengan grid=x. Untuk
-gambaran umum, kami menunjukkan berbagai gaya kisi dalam satu gambar
-(lihat di bawah untuk perintah figure()). Gaya kisi=0 tidak
-disertakan. Ini menunjukkan tidak ada grid dan tidak ada bingkai.
+Ada beberapa skema spektral lain, yang diberi nomor dari 1 hingga 9.
+Namun, Anda juga dapat menggunakan color=value, di mana value
+
+
+* 
+spektral: untuk rentang dari biru hingga merah
+
+* 
+putih: untuk rentang yang lebih redup
+
+* 
+kuning biru, ungu hijau, biru kuning, hijau merah
+
+* 
+biru kuning, hijau ungu, kuning biru, merah hijau
 
 
 \>figure(3,3); ...  
-\>   for k=1:9; figure(k); plot2d("x^3-x",-2,1,grid=k); end; ...  
+\>   for i=1:9;  ...  
+\>     figure(i); plot3d("x^2+y^2",spectral=i,\>contour,\>cp,<frame,zoom=4);  ...  
+\>   end; ...  
 \>   figure(0):
 
 
-Jika argumen ke plot2d() adalah ekspresi yang diikuti oleh empat
-angka, angka-angka ini adalah rentang x dan y untuk plot.
-
-
-Atau, a, b, c, d dapat ditentukan sebagai parameter yang ditetapkan
-sebagai a=... dll.
-
-
-Dalam contoh berikut, kita mengubah gaya kisi, menambahkan label, dan
-menggunakan label vertikal untuk sumbu y.
-
-
-\>aspect(1.5); plot2d("sin(x)",0,2pi,-1.2,1.2,grid=3,xl="x",yl="sin(x)"):
-
-\>plot2d("sin(x)+cos(2\*x)",0,4pi):
-
-
-Gambar yang dihasilkan dengan memasukkan plot ke dalam jendela teks
-disimpan di direktori yang sama dengan buku catatan, secara default di
-subdirektori bernama "gambar". Mereka juga digunakan oleh ekspor HTML.
-
-
-Anda cukup menandai gambar apa saja dan menyalinnya ke clipboard
-dengan Ctrl-C. Tentu saja, Anda juga dapat mengekspor grafik saat ini
-dengan fungsi di menu File.
-
-
-Fungsi atau ekspresi dalam plot2d dievaluasi secara adaptif. Untuk
-kecepatan lebih, matikan plot adaptif dengan &lt;adaptive dan tentukan
-jumlah subinterval dengan n=... Ini hanya diperlukan dalam kasus yang
-jarang terjadi.
-
-
-\>plot2d("sign(x)\*exp(-x^2)",-1,1,<adaptive,n=10000):
-
-\>plot2d("x^x",r=1.2,cx=1,cy=1):
-
-
-Perhatikan bahwa x^x tidak didefinisikan untuk x&lt;=0. Fungsi plot2d
-menangkap kesalahan ini, dan mulai merencanakan segera setelah fungsi
-didefinisikan. Ini berfungsi untuk semua fungsi yang mengembalikan NAN
-keluar dari jangkauan definisinya.
-
-
-\>plot2d("log(x)",-0.1,2):
-
-
-Parameter square=true (atau &gt;square) memilih y-range secara otomatis
-sehingga hasilnya adalah jendela plot persegi. Perhatikan bahwa secara
-default, Euler menggunakan ruang persegi di dalam jendela plot.
-
-
-\>plot2d("x^3-x",\>square):
-
-\>plot2d(''integrate("sin(x)\*exp(-x^2)",0,x)'',0,2): // plot integral
-
-
-Jika Anda membutuhkan lebih banyak ruang untuk label-y, panggil
-shrinkwindow() dengan parameter yang lebih kecil, atau tetapkan nilai
-positif untuk "lebih kecil" di plot2d().
-
-
-\>plot2d("gamma(x)",1,10,yl="y-values",smaller=6,<vertical):
-
-
-Ekspresi simbolik juga dapat digunakan, karena disimpan sebagai
-ekspresi string sederhana.
-
-
-\>x=linspace(0,2pi,1000); plot2d(sin(5x),cos(7x)):
-
-\>a:=5.6; expr &= exp(-a\*x^2)/a; // define expression
-
-\>plot2d(expr,-2,2): // plot from -2 to 2
-
-\>plot2d(expr,r=1,thickness=2): // plot in a square around (0,0)
-
-\>plot2d(&diff(expr,x),\>add,style="--",color=red): // add another plot
-
-\>plot2d(&diff(expr,x,2),a=-2,b=2,c=-2,d=1): // plot in rectangle
-
-\>plot2d(&diff(expr,x),a=-2,b=2,\>square): // keep plot square
-
-\>plot2d("x^2",0,1,steps=1,color=red,n=10):
-
-\>plot2d("x^2",\>add,steps=2,color=blue,n=10):
-
-
-# Fungsi dalam satu Parameter
-
-Fungsi plot yang paling penting untuk plot planar adalah plot2d().
-Fungsi ini diimplementasikan dalam bahasa Euler dalam file "plot.e",
-yang dimuat di awal program.
-
-
-Berikut adalah beberapa contoh menggunakan fungsi. Seperti biasa di
-EMT, fungsi yang berfungsi untuk fungsi atau ekspresi lain, Anda dapat
-meneruskan parameter tambahan (selain x) yang bukan variabel global ke
-fungsi dengan parameter titik koma atau dengan koleksi panggilan.
-
-
-\>function f(x,a) := x^2/a+a\*x^2-x; // define a function
-
-\>a=0.3; plot2d("f",0,1;a): // plot with a=0.3
-
-\>plot2d("f",0,1;0.4): // plot with a=0.4
-
-\>plot2d({{"f",0.2}},0,1): // plot with a=0.2
-
-\>plot2d({{"f(x,b)",b=0.1}},0,1): // plot with 0.1
-
-\>function f(x) := x^3-x; ...  
-\>   plot2d("f",r=1):
-
-
-Berikut adalah ringkasan dari fungsi yang diterima
+Sumber cahaya dapat diubah dengan l dan tombol kursor selama interaksi
+pengguna. Sumber cahaya juga dapat diatur dengan parameter.
 
 
 * 
-ekspresi atau ekspresi simbolik dalam x
+light: arah cahaya
 
 * 
-fungsi atau fungsi simbolis dengan nama sebagai "f"
-
-* 
-fungsi simbolis hanya dengan nama f
+amb: cahaya sekitar antara 0 dan 1
 
 
-Fungsi plot2d() juga menerima fungsi simbolis. Untuk fungsi simbolis,
-nama saja yang berfungsi.
+Perlu dicatat bahwa program tidak membuat perbedaan antara sisi plot.
+Tidak ada bayangan. Untuk ini, Anda memerlukan Povray.
 
 
-\>function f(x) &= diff(x^x,x)
+\>plot3d("-x^2-y^2", ...  
+\>     hue=true,light=[0,1,1],amb=0,user=true, ...  
+\>     title="Press l and cursor keys (return to exit)"):
 
 
-    
-                                x
-                               x  (log(x) + 1)
-    
-
-\>plot2d(f,0,2):
+Parameter warna mengubah warna permukaan. Warna garis level juga dapat
+diubah.
 
 
-Tentu saja, untuk ekspresi atau ekspresi simbolik, nama variabel sudah
-cukup untuk memplotnya.
+\>plot3d("-x^2-y^2",color=rgb(0.2,0.2,0),hue=true,frame=false, ...  
+\>     zoom=3,contourcolor=red,level=-2:0.1:1,dl=0.01):
 
 
-\>expr &= sin(x)\*exp(-x)
+Warna 0 memberikan efek pelangi khusus.
 
 
-    
-                                  - x
-                                 E    sin(x)
-    
-
-\>plot2d(expr,0,3pi):
-
-\>function f(x) &= x^x;
-
-\>plot2d(f,r=1,cx=1,cy=1,color=blue,thickness=2);
-
-\>plot2d(&diff(f(x),x),\>add,color=red,style="-.-"):
+\>plot3d("x^2/(x^2+y^2+1)",color=0,hue=true,grid=10):
 
 
-Untuk gaya garis ada berbagai pilihan.
+Permukaannya juga bisa transparan.
 
 
-* 
-gaya="...". Pilih dari "-", "--", "-.", ".", ".-.", "-.-".
-
-* 
-warna: Lihat di bawah untuk warna.
-
-* 
-ketebalan: Default adalah 1.
+\>plot3d("x^2+y^2",\>transparent,grid=10,wirecolor=red):
 
 
-Warna dapat dipilih sebagai salah satu warna default, atau sebagai
-warna RGB.
+# Plot Implisit
+
+Ada juga plot implisit dalam tiga dimensi. Euler menghasilkan potongan
+melalui objek. Fitur plot3d mencakup plot implisit. Plot ini
+menunjukkan himpunan nol dari suatu fungsi dalam tiga variabel.
+
+
+Solusi dari
+
+
+dapat divisualisasikan dalam potongan yang sejajar dengan bidang x-y,
+x-z, dan y-z.
 
 
 * 
-0.15: indeks warna default.
+implicit=1: potongan sejajar dengan bidang y-z
 
 * 
-konstanta warna: putih, hitam, merah, hijau, biru, cyan, zaitun,
-* abu-abu muda, abu-abu, abu-abu tua, oranye, hijau muda, pirus, biru
-* muda, oranye terang, kuning
+implicit=2: potongan sejajar dengan bidang x-z
 
 * 
-rgb(merah, hijau, biru): parameter adalah real dalam [0,1].
+implicit=4: potongan sejajar dengan bidang x-y
 
 
-\>plot2d("exp(-x^2)",r=2,color=red,thickness=3,style="--"):
+Tambahkan nilai-nilai ini, jika Anda suka. Dalam contoh ini, kami
+memplot
 
 
-Berikut adalah tampilan warna EMT yang telah ditentukan sebelumnya.
+\>plot3d("x^2+y^3+z\*y-1",r=5,implicit=3):
 
+\>c=1; d=1;
 
-\>aspect(2); columnsplot(ones(1,16),lab=0:15,grid=0,color=0:15):
+\>plot3d("((x^2+y^2-c^2)^2+(z^2-1)^2)\*((y^2+z^2-c^2)^2+(x^2-1)^2)\*((z^2+x^2-c^2)^2+(y^2-1)^2)-d",r=2,<frame,\>implicit,\>user): 
 
+\>plot3d("x^2+y^2+4\*x\*z+z^3",\>implicit,r=2,zoom=2.5):
 
-Tapi Anda bisa menggunakan warna apa saja.
 
+# Merencanakan Data 3D
 
-\>columnsplot(ones(1,16),grid=0,color=rgb(0,0,linspace(0,1,15))):
+Sama seperti plot2d, plot3d menerima data. Untuk objek 3D, Anda perlu
+menyediakan matriks dengan nilai x, y, dan z, atau tiga fungsi atau
+ekspresi fx(x,y), fy(x,y), fz(x,y).
 
 
-# Menggambar Beberapa Kurva pada bidang koordinat yang sama
+Karena x,y,z adalah matriks, kami berasumsi bahwa (t,s) berjalan
+melalui kisi persegi. Hasilnya, Anda dapat memplot gambar persegi
+panjang di ruang angkasa.
 
-Plot lebih dari satu fungsi (multiple function) ke dalam satu jendela
-dapat dilakukan dengan berbagai cara. Salah satu metode menggunakan
-&gt;add untuk beberapa panggilan ke plot2d secara keseluruhan, tetapi
-panggilan pertama. Kami telah menggunakan fitur ini dalam contoh di
-atas.
 
+Anda dapat menggunakan bahasa matriks Euler untuk menghasilkan
+koordinat secara efektif.
 
-\>aspect(); plot2d("cos(x)",r=2,grid=6); plot2d("x",style=".",\>add):
 
-\>aspect(1.5); plot2d("sin(x)",0,2pi); plot2d("cos(x)",color=blue,style="--",\>add):
+Dalam contoh berikut, kami menggunakan vektor nilai t dan vektor kolom
+nilai s untuk membuat parameter permukaan bola. Dalam gambar, kami
+dapat menandai wilayah, dalam kasus kami wilayah kutub.
 
 
-Salah satu kegunaan &gt;add adalah untuk menambahkan titik pada kurva.
+\>t=linspace(0,2pi,180); s=linspace(-pi/2,pi/2,90)'; ...  
+\>   x=cos(s)\*cos(t); y=cos(s)\*sin(t); z=sin(s); ...  
+\>   plot3d(x,y,z,\>hue, ...  
+\>   color=blue,<frame,grid=[10,20], ...  
+\>   values=s,contourcolor=red,level=[90°-24°;90°-22°], ...  
+\>   scale=1.4,height=50°):
 
 
-\>plot2d("sin(x)",0,pi); plot2d(2,sin(2),\>points,\>add):
+Berikut adalah contoh, yang merupakan grafik suatu fungsi.
 
 
-Kami menambahkan titik persimpangan dengan label (pada posisi "cl"
-untuk kiri tengah), dan memasukkan hasilnya ke dalam notebook. Kami
-juga menambahkan judul ke plot.
+\>t=-1:0.1:1; s=(-1:0.1:1)'; plot3d(t,s,t\*s,grid=10):
 
 
-\>plot2d(["cos(x)","x"],r=1.1,cx=0.5,cy=0.5, ...  
-\>     color=[black,blue],style=["-","."], ...  
-\>     grid=1);
+Namun, kita dapat membuat berbagai macam permukaan. Berikut ini adalah
+permukaan yang sama sebagai fungsi
 
-\>x0=solve("cos(x)-x",1);  ...  
-\>     plot2d(x0,x0,\>points,\>add,title="Intersection Demo");  ...  
-\>     label("cos(x) = x",x0,x0,pos="cl",offset=20):
 
+\>plot3d(t\*s,t,s,angle=180°,grid=10):
 
-Dalam demo berikut, kami memplot fungsi sinc(x)=sin(x)/x dan ekspansi
-Taylor ke-8 dan ke-16. Kami menghitung ekspansi ini menggunakan Maxima
-melalui ekspresi simbolis.
 
+Dengan usaha lebih, kita dapat menghasilkan banyak permukaan.
 
-Plot ini dilakukan dalam perintah multi-baris berikut dengan tiga
-panggilan ke plot2d(). Yang kedua dan yang ketiga memiliki set flag
-&gt;add, yang membuat plot menggunakan rentang sebelumnya.
 
-
-Kami menambahkan kotak label yang menjelaskan fungsi.
-
-
-\>$taylor(sin(x)/x,x,0,4)
-
-\>plot2d("sinc(x)",0,4pi,color=green,thickness=2); ...  
-\>     plot2d(&taylor(sin(x)/x,x,0,8),\>add,color=blue,style="--"); ...  
-\>     plot2d(&taylor(sin(x)/x,x,0,16),\>add,color=red,style="-.-"); ...  
-\>     labelbox(["sinc","T8","T16"],styles=["-","--","-.-"], ...  
-\>       colors=[black,blue,red]):
-
-
-Dalam contoh berikut, kami menghasilkan Bernstein-Polinomial.
-
-
-\>plot2d("(1-x)^10",0,1); // plot first function
-
-\>for i=1 to 10; plot2d("bin(10,i)\*x^i\*(1-x)^(10-i)",\>add); end;
-
-\>insimg;
-
-
-Metode kedua menggunakan pasangan matriks nilai-x dan matriks nilai-y
-yang berukuran sama.
-
-
-Kami menghasilkan matriks nilai dengan satu Polinomial Bernstein di
-setiap baris. Untuk ini, kita cukup menggunakan vektor kolom i. Lihat
-pengantar tentang bahasa matriks untuk mempelajari lebih detail.
-
-
-\>x=linspace(0,1,500);
-
-\>n=10; k=(0:n)'; // n is row vector, k is column vector
-
-\>y=bin(n,k)\*x^k\*(1-x)^(n-k); // y is a matrix then
-
-\>plot2d(x,y):
-
-
-Perhatikan bahwa parameter warna dapat berupa vektor. Kemudian setiap
-warna digunakan untuk setiap baris matriks.
-
-
-\>x=linspace(0,1,200); y=x^(1:10)'; plot2d(x,y,color=1:10):
-
-
-Metode lain adalah menggunakan vektor ekspresi (string). Anda kemudian
-dapat menggunakan larik warna, larik gaya, dan larik ketebalan dengan
-panjang yang sama.
-
-
-\>plot2d(["sin(x)","cos(x)"],0,2pi,color=4:5): 
-
-\>plot2d(["sin(x)","cos(x)"],0,2pi): // plot vector of expressions
-
-
-Kita bisa mendapatkan vektor seperti itu dari Maxima menggunakan
-makelist() dan mxm2str().
-
-
-\>v &= makelist(binomial(10,i)\*x^i\*(1-x)^(10-i),i,0,10) // make list
-
-
-    
-                   10            9              8  2             7  3
-           [(1 - x)  , 10 (1 - x)  x, 45 (1 - x)  x , 120 (1 - x)  x , 
-               6  4             5  5             4  6             3  7
-    210 (1 - x)  x , 252 (1 - x)  x , 210 (1 - x)  x , 120 (1 - x)  x , 
-              2  8              9   10
-    45 (1 - x)  x , 10 (1 - x) x , x  ]
-    
-
-\>mxm2str(v) // get a vector of strings from the symbolic vector
-
-
-    (1-x)^10
-    10*(1-x)^9*x
-    45*(1-x)^8*x^2
-    120*(1-x)^7*x^3
-    210*(1-x)^6*x^4
-    252*(1-x)^5*x^5
-    210*(1-x)^4*x^6
-    120*(1-x)^3*x^7
-    45*(1-x)^2*x^8
-    10*(1-x)*x^9
-    x^10
-
-\>plot2d(mxm2str(v),0,1): // plot functions
-
-
-Alternatif lain adalah dengan menggunakan bahasa matriks Euler.
-
-
-Jika ekspresi menghasilkan matriks fungsi, dengan satu fungsi di
-setiap baris, semua fungsi ini akan diplot ke dalam satu plot.
-
-
-Untuk ini, gunakan vektor parameter dalam bentuk vektor kolom. Jika
-array warna ditambahkan, itu akan digunakan untuk setiap baris plot.
-
-
-\>n=(1:10)'; plot2d("x^n",0,1,color=1:10):
-
-
-Ekspresi dan fungsi satu baris dapat melihat variabel global.
-
-
-Jika Anda tidak dapat menggunakan variabel global, Anda perlu
-menggunakan fungsi dengan parameter tambahan, dan meneruskan parameter
-ini sebagai parameter titik koma.
-
-
-Berhati-hatilah, untuk meletakkan semua parameter yang ditetapkan di
-akhir perintah plot2d. Dalam contoh kita meneruskan a=5 ke fungsi f,
-yang kita plot dari -10 hingga 10.
-
-
-\>function f(x,a) := 1/a\*exp(-x^2/a); ...  
-\>   plot2d("f",-10,10;5,thickness=2,title="a=5"):
-
-
-Atau, gunakan koleksi dengan nama fungsi dan semua parameter tambahan.
-Daftar khusus ini disebut koleksi panggilan, dan itu adalah cara yang
-lebih disukai untuk meneruskan argumen ke fungsi yang dengan
-sendirinya diteruskan sebagai argumen ke fungsi lain.
-
-
-Dalam contoh berikut, kami menggunakan loop untuk memplot beberapa
-fungsi (lihat tutorial tentang pemrograman untuk loop).
-
-
-\>plot2d({{"f",1}},-10,10); ...  
-\>   for a=2:10; plot2d({{"f",a}},\>add); end:
-
-
-Kami dapat mencapai hasil yang sama dengan cara berikut menggunakan
-bahasa matriks EMT. Setiap baris matriks f(x,a) adalah fungsi. Selain
-itu, kita dapat mengatur warna untuk setiap baris matriks. Klik dua
-kali pada fungsi getspectral() untuk penjelasannya.
-
-
-\>x=-10:0.01:10; a=(1:10)'; plot2d(x,f(x,a),color=getspectral(a/10)):
-
-
-## Label Teks
-
-Dekorasi sederhana bisa
-
-
-* 
-judul dengan judul="..."
-
-* 
-x- dan y-label dengan xl="...", yl="..."
-
-* 
-label teks lain dengan label("...",x,y)
-
-
-Perintah label akan memplot ke dalam plot saat ini pada koordinat plot
-(x,y). Itu bisa mengambil argumen posisi.
-
-
-\>plot2d("x^3-x",-1,2,title="y=x^3-x",yl="y",xl="x"):
-
-\>expr := "log(x)/x"; ...  
-\>     plot2d(expr,0.5,5,title="y="+expr,xl="x",yl="y"); ...  
-\>     label("(1,0)",1,0); label("Max",E,expr(E),pos="lc"):
-
-
-Ada juga fungsi labelbox(), yang dapat menampilkan fungsi dan teks.
-Dibutuhkan vektor string dan warna, satu item untuk setiap fungsi.
-
-
-\>function f(x) &= x^2\*exp(-x^2);  ...  
-\>   plot2d(&f(x),a=-3,b=3,c=-1,d=1);  ...  
-\>   plot2d(&diff(f(x),x),\>add,color=blue,style="--"); ...  
-\>   labelbox(["function","derivative"],styles=["-","--"], ...  
-\>      colors=[black,blue],w=0.4):
-
-
-Kotak ditambatkan di kanan atas secara default, tetapi &gt; kiri
-menambatkannya di kiri atas. Anda dapat memindahkannya ke tempat yang
-Anda suka. Posisi jangkar adalah sudut kanan atas kotak, dan angkanya
-adalah pecahan dari ukuran jendela grafik. Lebarnya otomatis.
-
-
-Untuk plot titik, kotak label juga berfungsi. Tambahkan parameter
-&gt;points, atau vektor flag, satu untuk setiap label.
-
-
-Dalam contoh berikut, hanya ada satu fungsi. Jadi kita bisa
-menggunakan string sebagai pengganti vektor string. Kami mengatur
-warna teks menjadi hitam untuk contoh ini.
-
-
-\>n=10; plot2d(0:n,bin(n,0:n),\>addpoints); ...  
-\>   labelbox("Binomials",styles="[]",\>points,x=0.1,y=0.1, ...  
-\>   tcolor=black,\>left):
-
-
-Gaya plot ini juga tersedia di statplot(). Seperti di plot2d() warna
-dapat diatur untuk setiap baris plot. Ada lebih banyak plot khusus
-untuk keperluan statistik (lihat tutorial tentang statistik).
-
-
-\>statplot(1:10,random(2,10),color=[red,blue]):
-
-
-Fitur serupa adalah fungsi textbox().
-
-
-Lebar secara default adalah lebar maksimal dari baris teks. Tapi itu
-bisa diatur oleh pengguna juga.
-
-
-\>function f(x) &= exp(-x)\*sin(2\*pi\*x); ...  
-\>   plot2d("f(x)",0,2pi); ...  
-\>   textbox(latex("\\text{Example of a damped oscillation}\\ f(x)=e^{-x}sin(2\\pi x)"),w=0.85):
-
-
-Label teks, judul, kotak label, dan teks lainnya dapat berisi string
-Unicode (lihat sintaks EMT untuk mengetahui lebih lanjut tentang
-string Unicode).
-
-
-\>plot2d("x^3-x",title=u"x &rarr; x&sup3; - x"):
-
-
-Label pada sumbu x dan y bisa vertikal, begitu juga sumbunya.
-
-
-\>plot2d("sinc(x)",0,2pi,xl="x",yl=u"x &rarr; sinc(x)",\>vertical):
-
-
-# LaTeX
-
-Anda juga dapat memplot rumus LaTeX jika Anda telah menginstal sistem
-LaTeX. Saya merekomendasikan MiKTeX. Jalur ke biner "latex" dan
-"dvipng" harus berada di jalur sistem, atau Anda harus mengatur LaTeX
-di menu opsi.
-
-
-Perhatikan, bahwa penguraian LaTeX lambat. Jika Anda ingin menggunakan
-LaTeX dalam plot animasi, Anda harus memanggil latex() sebelum loop
-sekali dan menggunakan hasilnya (gambar dalam matriks RGB).
-
-
-Dalam plot berikut, kami menggunakan LaTeX untuk label x dan y, label,
-kotak label, dan judul plot.
-
-
-\>plot2d("exp(-x)\*sin(x)/x",a=0,b=2pi,c=0,d=1,grid=6,color=blue, ...  
-\>     title=latex("\\text{Function $\\Phi$}"), ...  
-\>     xl=latex("\\phi"),yl=latex("\\Phi(\\phi)")); ...  
-\>   textbox( ...  
-\>     latex("\\Phi(\\phi) = e^{-\\phi} \\frac{\\sin(\\phi)}{\\phi}"),x=0.8,y=0.5); ...  
-\>   label(latex("\\Phi",color=blue),1,0.4):
-
-
-Seringkali, kami menginginkan spasi dan label teks non-konformal pada
-sumbu x. Kita dapat menggunakan x axis() dan y axis() seperti yang
-akan kita tunjukkan nanti.
-
-
-Cara termudah adalah dengan membuat plot kosong dengan bingkai
-menggunakan grid=4, lalu menambahkan grid dengan ygrid() dan xgrid().
-Dalam contoh berikut, kami menggunakan tiga string LaTeX untuk label
-pada sumbu x dengan xtick().
-
-
-\>plot2d("sinc(x)",0,2pi,grid=4,<ticks); ...  
-\>   ygrid(-2:0.5:2,grid=6); ...  
-\>   xgrid([0:2]\*pi,<ticks,grid=6);  ...  
-\>   xtick([0,pi,2pi],["0","\\pi","2\\pi"],\>latex):
-
-
-Tentu saja, fungsi juga dapat digunakan.
-
-
-\>function map f(x) ...
-
-
-    if x>0 then return x^4
-    else return x^2
-    endif
-    endfunction
-</pre>
-Parameter "map" membantu menggunakan fungsi untuk vektor. Untuk
-
-
-plot, itu tidak perlu. Tetapi untuk mendemonstrasikan vektorisasi itu
-
-
-berguna, kami menambahkan beberapa poin kunci ke plot di x=-1, x=0 dan
-x=1.
-
-
-Pada plot berikut, kami juga memasukkan beberapa kode LaTeX. Kami
-menggunakannya untuk
-
-
-dua label dan kotak teks. Tentu saja, Anda hanya akan dapat
-menggunakan
-
-
-LaTeX jika Anda telah menginstal LaTeX dengan benar.
-
-
-\>plot2d("f",-1,1,xl="x",yl="f(x)",grid=6);  ...  
-\>   plot2d([-1,0,1],f([-1,0,1]),\>points,\>add); ...  
-\>   label(latex("x^3"),0.72,f(0.72)); ...  
-\>   label(latex("x^2"),-0.52,f(-0.52),pos="ll"); ...  
-\>   textbox( ...  
-\>     latex("f(x)=\\begin{cases} x^3 & x\>0 \\\\ x^2 & x \\le 0\\end{cases}"), ...  
-\>     x=0.7,y=0.2):
-
-
-## Interaksi pengguna
-
-Saat memplot fungsi atau ekspresi, parameter &gt;user memungkinkan
-pengguna untuk memperbesar dan menggeser plot dengan tombol kursor
-atau mouse. Pengguna dapat
-
-
-* 
-perbesar dengan + atau -
-
-* 
-pindahkan plot dengan tombol kursor
-
-* 
-pilih jendela plot dengan mouse
-
-* 
-atur ulang tampilan dengan spasi
-
-* 
-keluar dengan kembali
-
-
-Tombol spasi akan mengatur ulang plot ke jendela plot asli.
-
-
-Saat memplot data, flag &gt;user hanya akan menunggu penekanan tombol.
-
-
-\>plot2d({{"x^3-a\*x",a=1}},\>user,title="Press any key!"):
-
-\>plot2d("exp(x)\*sin(x)",user=true, ...  
-\>     title="+/- or cursor keys (return to exit)"):
-
-
-Berikut ini menunjukkan cara interaksi pengguna tingkat lanjut (lihat
-tutorial tentang pemrograman untuk detailnya).
-
-
-Fungsi bawaan mousedrag() menunggu event mouse atau keyboard. Ini
-melaporkan mouse ke bawah, mouse dipindahkan atau mouse ke atas, dan
-penekanan tombol. Fungsi dragpoints() memanfaatkan ini, dan
-memungkinkan pengguna menyeret titik mana pun dalam plot.
-
-
-Kita membutuhkan fungsi plot terlebih dahulu. Sebagai contoh, kita
-interpolasi dalam 5 titik dengan polinomial. Fungsi harus diplot ke
-area plot tetap.
-
-
-\>function plotf(xp,yp,select) ...
-
-
-      d=interp(xp,yp);
-      plot2d("interpval(xp,d,x)";d,xp,r=2);
-      plot2d(xp,yp,>points,>add);
-      if select>0 then
-        plot2d(xp[select],yp[select],color=red,>points,>add);
-      endif;
-      title("Drag one point, or press space or return!");
-    endfunction
-</pre>
-Perhatikan parameter titik koma di plot2d (d dan xp), yang diteruskan
-ke evaluasi fungsi interp(). Tanpa ini, kita harus menulis fungsi
-plotinterp() terlebih dahulu, mengakses nilai secara global.
-
-
-Sekarang kita menghasilkan beberapa nilai acak, dan membiarkan
-pengguna menyeret poin.
-
-
-\>t=-1:0.5:1; dragpoints("plotf",t,random(size(t))-0.5):
-
-
-Ada juga fungsi, yang memplot fungsi lain tergantung pada vektor
-parameter, dan memungkinkan pengguna menyesuaikan parameter ini.
-
-
-Pertama kita membutuhkan fungsi plot.
-
-
-\>function plotf([a,b]) := plot2d("exp(a\*x)\*cos(2pi\*b\*x)",0,2pi;a,b);
-
-
-Kemudian kita membutuhkan nama untuk parameter, nilai awal dan matriks
-rentang nx2, opsional baris judul.
-
-
-Ada slider interaktif, yang dapat mengatur nilai oleh pengguna. Fungsi
-dragvalues() menyediakan ini.
-
-
-\>dragvalues("plotf",["a","b"],[-1,2],[[-2,2];[1,10]], ...  
-\>     heading="Drag these values:",hcolor=black):
-
-
-Dimungkinkan untuk membatasi nilai yang diseret ke bilangan bulat.
-Sebagai contoh, kita menulis fungsi plot, yang memplot polinomial
-Taylor derajat n ke fungsi kosinus.
-
-
-\>function plotf(n) ...
-
-
-    plot2d("cos(x)",0,2pi,>square,grid=6);
-    plot2d(&"taylor(cos(x),x,0,@n)",color=blue,>add);
-    textbox("Taylor polynomial of degree "+n,0.1,0.02,style="t",>left);
-    endfunction
-</pre>
-Sekarang kami mengizinkan derajat n bervariasi dari 0 hingga 20 dalam
-20 pemberhentian. Hasil dragvalues() digunakan untuk memplot sketsa
-ini dengan n, dan untuk memasukkan plot ke dalam buku catatan.
-
-
-\>nd=dragvalues("plotf","degree",2,[0,20],20,y=0.8, ...  
-\>      heading="Drag the value:"); ...  
-\>   plotf(nd):
-
-
-Berikut ini adalah demonstrasi sederhana dari fungsi tersebut.
-Pengguna dapat menggambar di atas jendela plot, meninggalkan jejak
-poin.
-
-
-\>function dragtest ...
-
-
-      plot2d(none,r=1,title="Drag with the mouse, or press any key!");
-      start=0;
-      repeat
-        {flag,m,time}=mousedrag();
-        if flag==0 then return; endif;
-        if flag==2 then
-          hold on; mark(m[1],m[2]); hold off;
-        endif;
-      end
-    endfunction
-</pre>
-\>dragtest // lihat hasilnya dan cobalah lakukan!
-
-
-## Gaya Plot 2D
-
-Secara default, EMT menghitung tick sumbu otomatis dan menambahkan
-label ke setiap tick. Ini dapat diubah dengan parameter grid. Gaya
-default sumbu dan label dapat dimodifikasi. Selain itu, label dan
-judul dapat ditambahkan secara manual. Untuk mengatur ulang ke gaya
-default, gunakan reset().
-
-
-\>aspect();
-
-\>figure(3,4); ...  
-\>    figure(1); plot2d("x^3-x",grid=0); ... // no grid, frame or axis
-
-\> figure(2); plot2d("x^3-x",grid=1); ... // x-y-axis
-
-\> figure(3); plot2d("x^3-x",grid=2); ... // default ticks
-
-\> figure(4); plot2d("x^3-x",grid=3); ... // x-y- axis with labels inside
-
-\> figure(5); plot2d("x^3-x",grid=4); ... // no ticks, only labels
-
-\> figure(6); plot2d("x^3-x",grid=5); ... // default, but no margin
-
-\> figure(7); plot2d("x^3-x",grid=6); ... // axes only
-
-\> figure(8); plot2d("x^3-x",grid=7); ... // axes only, ticks at axis
-
-\> figure(9); plot2d("x^3-x",grid=8); ... // axes only, finer ticks at axis
-
-\> figure(10); plot2d("x^3-x",grid=9); ... // default, small ticks inside
-
-\> figure(11); plot2d("x^3-x",grid=10); ...// no ticks, axes only
-
-\> figure(0):
-
-
-Parameter &lt;frame mematikan frame, dan framecolor=blue mengatur frame
-ke warna biru.
-
-
-Jika Anda ingin centang sendiri, Anda dapat menggunakan style=0, dan
-menambahkan semuanya nanti.
-
-
-\>aspect(1.5); 
-
-\>plot2d("x^3-x",grid=0); // plot
-
-\>frame; xgrid([-1,0,1]); ygrid(0): // add frame and grid
-
-
-Untuk judul plot dan label sumbu, lihat contoh berikut.
-
-
-\>plot2d("exp(x)",-1,1);
-
-\>textcolor(black); // set the text color to black
-
-\>title(latex("y=e^x")); // title above the plot
-
-\>xlabel(latex("x")); // "x" for x-axis
-
-\>ylabel(latex("y"),\>vertical); // vertical "y" for y-axis
-
-\>label(latex("(0,1)"),0,1,color=blue): // label a point
-
-
-Sumbu dapat digambar secara terpisah dengan xaxis() dan yaxis().
-
-
-\>plot2d("x^3-x",<grid,<frame);
-
-\>xaxis(0,xx=-2:1,style="-\>"); yaxis(0,yy=-5:5,style="-\>"):
-
-
-Teks pada plot dapat diatur dengan label(). Dalam contoh berikut, "lc"
-berarti tengah bawah. Ini mengatur posisi label relatif terhadap
-koordinat plot.
-
-
-\>function f(x) &= x^3-x
-
-
-    
-                                     3
-                                    x  - x
-    
-
-\>plot2d(f,-1,1,\>square);
-
-\>x0=fmin(f,0,1); // compute point of minimum
-
-\>label("Rel. Min.",x0,f(x0),pos="lc"): // add a label there
-
-
-Ada juga kotak teks.
-
-
-\>plot2d(&f(x),-1,1,-2,2); // function
-
-\>plot2d(&diff(f(x),x),\>add,style="--",color=red); // derivative
-
-\>labelbox(["f","f'"],["-","--"],[black,red]): // label box
-
-\>plot2d(["exp(x)","1+x"],color=[black,blue],style=["-","-.-"]):
-
-\>gridstyle("-\>",color=gray,textcolor=gray,framecolor=gray);  ...  
-\>    plot2d("x^3-x",grid=1);   ...  
-\>    settitle("y=x^3-x",color=black); ...  
-\>    label("x",2,0,pos="bc",color=gray);  ...  
-\>    label("y",0,6,pos="cl",color=gray); ...  
-\>    reset():
-
-
-Untuk kontrol lebih, sumbu x dan sumbu y dapat dilakukan secara
-manual.
-
-
-Perintah fullwindow() memperluas jendela plot karena kita tidak lagi
-membutuhkan tempat untuk label di luar jendela plot. Gunakan
-shrinkwindow() atau reset() untuk mengatur ulang ke default.
-
-
-\>fullwindow; ...  
-\>    gridstyle(color=darkgray,textcolor=darkgray); ...  
-\>    plot2d(["2^x","1","2^(-x)"],a=-2,b=2,c=0,d=4,<grid,color=4:6,<frame); ...  
-\>    xaxis(0,-2:1,style="-\>"); xaxis(0,2,"x",<axis); ...  
-\>    yaxis(0,4,"y",style="-\>"); ...  
-\>    yaxis(-2,1:4,\>left); ...  
-\>    yaxis(2,2^(-2:2),style=".",<left); ...  
-\>    labelbox(["2^x","1","2^-x"],colors=4:6,x=0.8,y=0.2); ...  
-\>    reset:
-
-
-Berikut adalah contoh lain, di mana string Unicode digunakan dan sumbu
-di luar area plot.
-
-
-\>aspect(1.5); 
-
-\>plot2d(["sin(x)","cos(x)"],0,2pi,color=[red,green],<grid,<frame); ...  
-\>    xaxis(-1.1,(0:2)\*pi,xt=["0",u"&pi;",u"2&pi;"],style="-",\>ticks,\>zero);  ...  
-\>    xgrid((0:0.5:2)\*pi,<ticks); ...  
-\>    yaxis(-0.1\*pi,-1:0.2:1,style="-",\>zero,\>grid); ...  
-\>    labelbox(["sin","cos"],colors=[red,green],x=0.5,y=0.2,\>left); ...  
-\>    xlabel(u"&phi;"); ylabel(u"f(&phi;)"):
-
-
-# Merencanakan Data 2D
-
-Jika x dan y adalah vektor data, data ini akan digunakan sebagai
-koordinat x dan y dari suatu kurva. Dalam hal ini, a, b, c, dan d,
-atau radius r dapat ditentukan, atau jendela plot akan menyesuaikan
-secara otomatis dengan data. Atau, &gt;persegi dapat diatur untuk menjaga
-rasio aspek persegi.
-
-
-Memplot ekspresi hanyalah singkatan untuk plot data. Untuk plot data,
-Anda memerlukan satu atau beberapa baris nilai x, dan satu atau
-beberapa baris nilai y. Dari rentang dan nilai-x, fungsi plot2d akan
-menghitung data yang akan diplot, secara default dengan evaluasi
-fungsi yang adaptif. Untuk plot titik gunakan "&gt;titik", untuk garis
-campuran dan titik gunakan "&gt;tambahan".
-
-
-Tapi Anda bisa memasukkan data secara langsung.
-
-
-* 
-Gunakan vektor baris untuk x dan y untuk satu fungsi.
-
-* 
-Matriks untuk x dan y diplot baris demi baris.
-
-
-Berikut adalah contoh dengan satu baris untuk x dan y.
-
-
-\>x=-10:0.1:10; y=exp(-x^2)\*x; plot2d(x,y):
-
-
-Data juga dapat diplot sebagai titik. Gunakan poin=true untuk ini.
-Plotnya bekerja seperti poligon, tetapi hanya menggambar
-sudut-sudutnya.
-
-
-* 
-style="...": Pilih dari "[]", "&lt;&gt;", "o", ".", "..", "+", "*", "[]#",
-* "&lt; &gt;#", "o#", "..#", "#", "|".
-
-
-Untuk memplot set poin gunakan &gt;points. Jika warna adalah vektor
-warna, setiap titik
-
-
-mendapat warna yang berbeda. Untuk matriks koordinat dan vektor kolom,
-warna berlaku untuk baris matriks.
-
-
-Parameter &gt;addpoints menambahkan titik ke segmen garis untuk plot
-data.
-
-
-\>xdata=[1,1.5,2.5,3,4]; ydata=[3,3.1,2.8,2.9,2.7]; // data
-
-\>plot2d(xdata,ydata,a=0.5,b=4.5,c=2.5,d=3.5,style="."); // lines
-
-\>plot2d(xdata,ydata,\>points,\>add,style="o"): // add points
-
-\>p=polyfit(xdata,ydata,1); // get regression line
-
-\>plot2d("polyval(p,x)",\>add,color=red): // add plot of line
-
-
-# Menggambar Daerah Yang Dibatasi Kurva
-
-Plot data benar-benar poligon. Kita juga dapat memplot kurva atau
-kurva terisi.
-
-
-* 
-terisi=benar mengisi plot.
-
-* 
-style="...": Pilih dari "#", "/", "\", "\/".
-
-* 
-fillcolor: Lihat di atas untuk warna yang tersedia.
-
-
-Warna isian ditentukan oleh argumen "fillcolor", dan pada &lt;outline
-opsional mencegah menggambar batas untuk semua gaya kecuali yang
-default.
-
-
-\>t=linspace(0,2pi,1000); // parameter for curve
-
-\>x=sin(t)\*exp(t/pi); y=cos(t)\*exp(t/pi); // x(t) and y(t)
-
-\>figure(1,2); aspect(16/9)
-
-\>figure(1); plot2d(x,y,r=10); // plot curve
-
-\>figure(2); plot2d(x,y,r=10,\>filled,style="/",fillcolor=red); // fill curve
-
-\>figure(0):
-
-
-Dalam contoh berikut kami memplot elips terisi dan dua segi enam
-terisi menggunakan kurva tertutup dengan 6 titik dengan gaya isian
-berbeda.
-
-
-\>x=linspace(0,2pi,1000); plot2d(sin(x),cos(x)\*0.5,r=1,\>filled,style="/"):
-
-\>t=linspace(0,2pi,5); ...  
-\>   plot2d(cos(t),sin(t),\>filled,style="/",fillcolor=red,r=1.2):
-
-\>t=linspace(0,2pi,6); plot2d(cos(t),sin(t),\>filled,style="#"):
-
-
-Contoh lainnya adalah segi empat, yang kita buat dengan 7 titik pada
-lingkaran satuan.
-
-
-\>t=linspace(0,2pi,7);  ...  
-\>    plot2d(cos(t),sin(t),r=1,\>filled,style="/",fillcolor=red):
-
-
-Berikut ini adalah himpunan nilai maksimal dari empat kondisi linier
-yang kurang dari atau sama dengan 3. Ini adalah A[k].v&lt;=3 untuk semua
-baris A. Untuk mendapatkan sudut yang bagus, kita menggunakan n yang
-relatif besar.
-
-
-\>A=[2,1;1,2;-1,0;0,-1];
-
-\>function f(x,y) := max([x,y].A');
-
-\>plot2d("f",r=4,level=[0;3],color=green,n=111):
-
-
-Poin utama dari bahasa matriks adalah memungkinkan untuk menghasilkan
-tabel fungsi dengan mudah.
-
-
-\>t=linspace(0,2pi,1000); x=cos(3\*t); y=sin(4\*t);
-
-
-Kami sekarang memiliki nilai vektor x dan y . plot2d() dapat memplot
-nilai-nilai ini
-
-
-sebagai kurva yang menghubungkan titik-titik. Plotnya bisa diisi. Pada
-kasus ini
-
-
-ini menghasilkan hasil yang bagus karena aturan lilitan, yang
-digunakan untuk
-
-
-isi.
-
-
-\>plot2d(x,y,<grid,<frame,\>filled):
-
-
-Sebuah vektor interval diplot terhadap nilai x sebagai daerah terisi
-
-
-antara nilai interval bawah dan atas.
-
-
-Hal ini dapat berguna untuk memplot kesalahan perhitungan. Tapi itu
-bisa
-
-
-juga digunakan untuk memplot kesalahan statistik.
-
-
-\>t=0:0.1:1; ...  
-\>    plot2d(t,interval(t-random(size(t)),t+random(size(t))),style="|");  ...  
-\>    plot2d(t,t,add=true):
-
-
-Jika x adalah vektor yang diurutkan, dan y adalah vektor interval,
-maka plot2d akan memplot rentang interval yang terisi dalam bidang.
-Gaya isian sama dengan gaya poligon.
-
-
-\>t=-1:0.01:1; x=~t-0.01,t+0.01~; y=x^3-x;
-
-\>plot2d(t,y):
-
-
-Dimungkinkan untuk mengisi wilayah nilai untuk fungsi tertentu. Untuk
-
-
-ini, level harus berupa matriks 2xn. Baris pertama adalah batas bawah
-
-
-dan baris kedua berisi batas atas.
-
-
-\>expr := "2\*x^2+x\*y+3\*y^4+y"; // define an expression f(x,y)
-
-\>plot2d(expr,level=[0;1],style="-",color=blue): // 0 <= f(x,y) <= 1
-
-
-Kami juga dapat mengisi rentang nilai seperti
-
-
-\>plot2d("(x^2+y^2)^2-x^2+y^2",r=1.2,level=[-1;0],style="/"):
-
-\>plot2d("cos(x)","sin(x)^3",xmin=0,xmax=2pi,\>filled,style="/"):
-
-
-# Grafik Fungsi Parametrik
-
-Nilai-x tidak perlu diurutkan. (x,y) hanya menggambarkan kurva. Jika x
-diurutkan, kurva tersebut merupakan grafik fungsi.
-
-
-Dalam contoh berikut, kami memplot spiral
-
-
-Kita perlu menggunakan banyak titik untuk tampilan yang halus atau
-fungsi adaptif() untuk mengevaluasi ekspresi (lihat fungsi adaptif()
-untuk lebih jelasnya).
-
-
-\>t=linspace(0,1,1000); ...  
-\>   plot2d(t\*cos(2\*pi\*t),t\*sin(2\*pi\*t),r=1):
-
-
-Atau, dimungkinkan untuk menggunakan dua ekspresi untuk kurva. Berikut
-ini plot kurva yang sama seperti di atas.
-
-
-\>plot2d("x\*cos(2\*pi\*x)","x\*sin(2\*pi\*x)",xmin=0,xmax=1,r=1):
-
-\>t=linspace(0,1,1000); r=exp(-t); x=r\*cos(2pi\*t); y=r\*sin(2pi\*t);
-
-\>plot2d(x,y,r=1):
-
-
-ini contoh selanjutnya, membuat plot (titi) kurva
+Dalam contoh berikut, kita membuat tampilan berbayang dari bola yang
+terdistorsi. Koordinat yang biasa untuk bola adalah
 
 
 dengan
 
 
-\>t=linspace(0,2pi,1000); r=1+sin(3\*t)/2; x=r\*cos(t); y=r\*sin(t); ...  
-\>   plot2d(x,y,\>filled,fillcolor=red,style="/",r=1.5):
+Kita mendistorsi ini dengan faktor
 
 
-# Menggambar Grafik Bilangan Kompleks
-
-Array bilangan kompleks juga dapat diplot. Kemudian titik-titik grid
-akan terhubung. Jika sejumlah garis kisi ditentukan (atau vektor garis
-kisi 1x2) dalam argumen cgrid, hanya garis kisi tersebut yang
-terlihat.
+\>t=linspace(0,2pi,320); s=linspace(-pi/2,pi/2,160)'; ...  
+\>   d=1+0.2\*(cos(4\*t)+cos(8\*s)); ...  
+\>   plot3d(cos(t)\*cos(s)\*d,sin(t)\*cos(s)\*d,sin(s)\*d,hue=1, ...  
+\>     light=[1,0,1],frame=0,zoom=5):
 
 
-Matriks bilangan kompleks akan secara otomatis diplot sebagai kisi di
-bidang kompleks.
+Tentu saja, titik awan juga memungkinkan. Untuk memplot data titik di
+ruang, kita memerlukan tiga vektor untuk koordinat titik.
 
 
-Dalam contoh berikut, kami memplot gambar lingkaran satuan di bawah
-fungsi eksponensial. Parameter cgrid menyembunyikan beberapa kurva
-grid.
+Gayanya sama seperti di plot2d dengan points=true;
 
 
-\>aspect(); r=linspace(0,1,50); a=linspace(0,2pi,80)'; z=r\*exp(I\*a);...  
-\>   plot2d(z,a=-1.25,b=1.25,c=-1.25,d=1.25,cgrid=10):
-
-\>aspect(1.25); r=linspace(0,1,50); a=linspace(0,2pi,200)'; z=r\*exp(I\*a);
-
-\>plot2d(exp(z),cgrid=[40,10]):
-
-\>r=linspace(0,1,10); a=linspace(0,2pi,40)'; z=r\*exp(I\*a);
-
-\>plot2d(exp(z),\>points,\>add):
+\>n=500;  ...  
+\>     plot3d(normal(1,n),normal(1,n),normal(1,n),points=true,style="."):
 
 
-Sebuah vektor bilangan kompleks secara otomatis diplot sebagai kurva
-pada bidang kompleks dengan bagian real dan bagian imajiner.
+Anda juga dapat memplot kurva dalam 3D. Dalam kasus ini, lebih mudah
+untuk menghitung titik-titik kurva terlebih dahulu. Untuk kurva dalam
+bidang, kami menggunakan urutan koordinat dan parameter wire=true.
 
 
-Dalam contoh, kami memplot lingkaran satuan dengan
+\>t=linspace(0,8pi,500); ...  
+\>   plot3d(sin(t),cos(t),t/10,\>wire,zoom=3):
+
+\>t=linspace(0,4pi,1000); plot3d(cos(t),sin(t),t/2pi,\>wire, ...  
+\>   linewidth=3,wirecolor=blue):
+
+\>X=cumsum(normal(3,100)); ...  
+\>    plot3d(X[1],X[2],X[3],\>anaglyph,\>wire):
 
 
-\>t=linspace(0,2pi,1000); ...  
-\>   plot2d(exp(I\*t)+exp(4\*I\*t),r=2):
+EMT juga dapat membuat grafik dalam mode anaglif. Untuk melihat grafik
+tersebut, Anda memerlukan kacamata merah/sian.
+
+
+\> plot3d("x^2+y^3",\>anaglyph,\>contour,angle=30°):
+
+
+Seringkali, skema warna spektral digunakan untuk plot. Ini menekankan
+tinggi fungsi.
+
+
+\>plot3d("x^2\*y^3-y",\>spectral,\>contour,zoom=3.2):
+
+
+Euler juga dapat memplot permukaan berparameter, ketika parameternya
+adalah nilai x, y, dan z dari gambar kotak persegi panjang di ruang
+tersebut.
+
+
+Untuk demo berikut, kami menyiapkan parameter u dan v, dan
+menghasilkan koordinat ruang dari parameter tersebut.
+
+
+\>u=linspace(-1,1,10); v=linspace(0,2\*pi,50)'; ...  
+\>   X=(3+u\*cos(v/2))\*cos(v); Y=(3+u\*cos(v/2))\*sin(v); Z=u\*sin(v/2); ...  
+\>   plot3d(X,Y,Z,\>anaglyph,<frame,\>wire,scale=2.3):
+
+
+Berikut adalah contoh yang lebih rumit, yang tampak megah dengan kaca
+merah/cyan.
+
+
+\>u:=linspace(-pi,pi,160); v:=linspace(-pi,pi,400)';  ...  
+\>   x:=(4\*(1+.25\*sin(3\*v))+cos(u))\*cos(2\*v); ...  
+\>   y:=(4\*(1+.25\*sin(3\*v))+cos(u))\*sin(2\*v); ...  
+\>    z=sin(u)+2\*cos(3\*v); ...  
+\>   plot3d(x,y,z,frame=0,scale=1.5,hue=1,light=[1,0,-1],zoom=2.8,\>anaglyph):
 
 
 # Plot Statistik
 
-Ada banyak fungsi yang dikhususkan pada plot statistik. Salah satu
-plot yang sering digunakan adalah plot kolom.
+Plot batang juga dimungkinkan. Untuk ini, kita harus menyediakan
 
 
-Jumlah kumulatif dari nilai terdistribusi 0-1-normal menghasilkan
-jalan acak.
+* 
+x: vektor baris dengan n+1 elemen
 
+* 
+y: vektor kolom dengan n+1 elemen
 
-\>plot2d(cumsum(randnormal(1,1000))):
+* 
+z: matriks nilai nxn.
 
 
-Menggunakan dua baris menunjukkan jalan dalam dua dimensi.
+z dapat lebih besar, tetapi hanya nilai nxn yang akan digunakan.
 
 
-\>X=cumsum(randnormal(2,1000)); plot2d(X[1],X[2]):
+Dalam contoh, pertama-tama kita menghitung nilai. Kemudian kita
+menyesuaikan x dan y, sehingga vektor berpusat pada nilai yang
+digunakan.
 
-\>columnsplot(cumsum(random(10)),style="/",color=blue):
 
+\>x=-1:0.1:1; y=x'; z=x^2+y^2; ...  
+\>   xa=(x|1.1)-0.05; ya=(y\_1.1)-0.05; ...  
+\>   plot3d(xa,ya,z,bar=true):
 
-Itu juga dapat menampilkan string sebagai label.
 
+Dimungkinkan untuk membagi bidang permukaan menjadi dua bagian atau
+lebih.
 
-\>months=["Jan","Feb","Mar","Apr","May","Jun", ...  
-\>     "Jul","Aug","Sep","Oct","Nov","Dec"];
 
-\>values=[10,12,12,18,22,28,30,26,22,18,12,8];
+\>x=-1:0.1:1; y=x'; z=x+y; d=zeros(size(x)); ...  
+\>   plot3d(x,y,z,disconnect=2:2:20):
 
-\>columnsplot(values,lab=months,color=red,style="-");
 
-\>title("Temperature"):
+Jika memuat atau membuat matriks data M dari sebuah file dan perlu
+memplotnya dalam 3D, Anda dapat menskalakan matriks ke [-1,1] dengan
+scale(M), atau menskalakan matriks dengan &gt;zscale. Ini dapat
+dikombinasikan dengan faktor penskalaan individual yang diterapkan
+sebagai tambahan.
 
-\>k=0:10;
 
-\>plot2d(k,bin(10,k),\>bar):
+\>i=1:20; j=i'; ...  
+\>   plot3d(i\*j^2+100\*normal(20,20),\>zscale,scale=[1,1,1.5],angle=-40°,zoom=1.8):
 
-\>plot2d(k,bin(10,k)); plot2d(k,bin(10,k),\>points,\>add):
+\>Z=intrandom(5,100,6); v=zeros(5,6); ...  
+\>   loop 1 to 5; v[#]=getmultiplicities(1:6,Z[#]); end; ...  
+\>   columnsplot3d(v',scols=1:5,ccols=[1:5]):
 
-\>plot2d(normal(1000),normal(1000),\>points,grid=6,style=".."):
 
-\>plot2d(normal(1,1000),\>distribution,style="O"):
-
-\>plot2d("qnormal",0,5;2.5,0.5,\>filled):
-
-
-Untuk memplot distribusi statistik eksperimental, Anda dapat
-menggunakan distribution=n dengan plot2d.
-
-
-\>w=randexponential(1,1000); // exponential distribution
-
-\>plot2d(w,\>distribution): // or distribution=n with n intervals
-
-
-Atau Anda dapat menghitung distribusi dari data dan memplot hasilnya
-dengan &gt;bar di plot3d, atau dengan plot kolom.
-
-
-\>w=normal(1000); // 0-1-normal distribution
-
-\>{x,y}=histo(w,10,v=[-6,-4,-2,-1,0,1,2,4,6]); // interval bounds v
-
-\>plot2d(x,y,\>bar):
-
-
-Fungsi statplot() menyetel gaya dengan string sederhana.
-
-
-\>statplot(1:10,cumsum(random(10)),"b"):
-
-\>n=10; i=0:n; ...  
-\>   plot2d(i,bin(n,i)/2^n,a=0,b=10,c=0,d=0.3); ...  
-\>   plot2d(i,bin(n,i)/2^n,points=true,style="ow",add=true,color=blue):
-
-
-Selain itu, data dapat diplot sebagai batang. Dalam hal ini, x harus
-diurutkan dan satu elemen lebih panjang dari y. Bilah akan memanjang
-dari x[i] ke x[i+1] dengan nilai y[i]. Jika x memiliki ukuran yang
-sama dengan y, maka akan diperpanjang satu elemen dengan spasi
-terakhir.
-
-
-Gaya isian dapat digunakan seperti di atas.
-
-
-\>n=10; k=bin(n,0:n); ...  
-\>   plot2d(-0.5:n+0.5,k,bar=true,fillcolor=lightgray):
-
-
-Data untuk plot batang (bar=1) dan histogram (histogram=1) dapat
-dinyatakan secara eksplisit dalam xv dan yv, atau dapat dihitung dari
-distribusi empiris dalam xv dengan &gt;distribusi (atau distribusi=n).
-Histogram nilai xv akan dihitung secara otomatis dengan &gt;histogram.
-Jika &gt;genap ditentukan, nilai xv akan dihitung dalam interval bilangan
-bulat.
-
-
-\>plot2d(normal(10000),distribution=50):
-
-\>k=0:10; m=bin(10,k); x=(0:11)-0.5; plot2d(x,m,\>bar):
-
-\>columnsplot(m,k):
-
-\>plot2d(random(600)\*6,histogram=6):
-
-
-Untuk distribusi, ada parameter distribusi=n, yang menghitung nilai
-secara otomatis dan mencetak distribusi relatif dengan n sub-interval.
-
-
-\>plot2d(normal(1,1000),distribution=10,style="\\/"):
-
-
-Dengan parameter even=true, ini akan menggunakan interval integer.
-
-
-\>plot2d(intrandom(1,1000,10),distribution=10,even=true):
-
-
-Perhatikan bahwa ada banyak plot statistik, yang mungkin berguna.
-Silahkan lihat tutorial tentang statistik.
-
-
-\>columnsplot(getmultiplicities(1:6,intrandom(1,6000,6))):
-
-\>plot2d(normal(1,1000),\>distribution); ...  
-\>     plot2d("qnormal(x)",color=red,thickness=2,\>add):
-
-
-Ada juga banyak plot khusus untuk statistik. Boxplot menunjukkan
-kuartil dari distribusi ini dan banyak outlier. Menurut definisi,
-outlier dalam boxplot adalah data yang melebihi 1,5 kali kisaran 50%
-tengah plot.
-
-
-\>M=normal(5,1000); boxplot(quartiles(M)):
-
-
-# Fungsi implisit
-
-Plot implisit menunjukkan garis level yang menyelesaikan f(x,y)=level,
-di mana "level" dapat berupa nilai tunggal atau vektor nilai. Jika
-level="auto", akan ada garis level nc, yang akan menyebar antara
-fungsi minimum dan maksimum secara merata. Warna yang lebih gelap atau
-lebih terang dapat ditambahkan dengan &gt;hue untuk menunjukkan nilai
-fungsi. Untuk fungsi implisit, xv harus berupa fungsi atau ekspresi
-dari parameter x dan y, atau, sebagai alternatif, xv dapat berupa
-matriks nilai.
-
-
-Euler dapat menandai garis level
-
-
-dari fungsi apapun.
-
-
-Untuk menggambar himpunan f(x,y)=c untuk satu atau lebih konstanta c,
-Anda dapat menggunakan plot2d() dengan plot implisitnya di dalam
-bidang. Parameter untuk c adalah level=c, di mana c dapat berupa
-vektor garis level. Selain itu, skema warna dapat digambar di latar
-belakang untuk menunjukkan nilai fungsi untuk setiap titik dalam plot.
-Parameter "n" menentukan kehalusan plot.
-
-
-\>aspect(1.5); 
-
-\>plot2d("x^2+y^2-x\*y-x",r=1.5,level=0,contourcolor=red):
-
-\>expr := "2\*x^2+x\*y+3\*y^4+y"; // define an expression f(x,y)
-
-\>plot2d(expr,level=0): // Solutions of f(x,y)=0
-
-\>plot2d(expr,level=0:0.5:20,\>hue,contourcolor=white,n=200): // nice
-
-\>plot2d(expr,level=0:0.5:20,\>hue,\>spectral,n=200,grid=4): // nicer
-
-
-Ini berfungsi untuk plot data juga. Tetapi Anda harus menentukan
-rentangnya untuk label sumbu.
-
-
-\>x=-2:0.05:1; y=x'; z=expr(x,y);
-
-\>plot2d(z,level=0,a=-1,b=2,c=-2,d=1,\>hue):
-
-\>plot2d("x^3-y^2",\>contour,\>hue,\>spectral):
-
-\>plot2d("x^3-y^2",level=0,contourwidth=3,\>add,contourcolor=red):
-
-\>z=z+normal(size(z))\*0.2;
-
-\>plot2d(z,level=0.5,a=-1,b=2,c=-2,d=1):
-
-\>plot2d(expr,level=[0:0.2:5;0.05:0.2:5.05],color=lightgray):
-
-\>plot2d("x^2+y^3+x\*y",level=1,r=4,n=100):
-
-\>plot2d("x^2+2\*y^2-x\*y",level=0:0.1:10,n=100,contourcolor=white,\>hue):
-
-
-Juga dimungkinkan untuk mengisi set
-
-
-dengan rentang tingkat.
-
-
-Dimungkinkan untuk mengisi wilayah nilai untuk fungsi tertentu. Untuk
-ini, level harus berupa matriks 2xn. Baris pertama adalah batas bawah
-dan baris kedua berisi batas atas.
-
-
-\>plot2d(expr,level=[0;1],style="-",color=blue): // 0 <= f(x,y) <= 1
-
-
-Plot implisit juga dapat menunjukkan rentang level. Kemudian level
-harus berupa matriks 2xn dari interval level, di mana baris pertama
-berisi awal dan baris kedua adalah akhir dari setiap interval. Atau,
-vektor baris sederhana dapat digunakan untuk level, dan parameter dl
-memperluas nilai level ke interval.
-
-
-\>plot2d("x^4+y^4",r=1.5,level=[0;1],color=blue,style="/"):
-
-\>plot2d("x^2+y^3+x\*y",level=[0,2,4;1,3,5],style="/",r=2,n=100):
-
-\>plot2d("x^2+y^3+x\*y",level=-10:20,r=2,style="-",dl=0.1,n=100):
-
-\>plot2d("sin(x)\*cos(y)",r=pi,\>hue,\>levels,n=100):
-
-
-Dimungkinkan juga untuk menandai suatu wilayah
-
-
-Ini dilakukan dengan menambahkan level dengan dua baris.
-
+# Permukaan Benda Putar
 
 \>plot2d("(x^2+y^2-1)^3-x^2\*y^3",r=1.3, ...  
-\>     style="#",color=red,<outline, ...  
-\>     level=[-2;0],n=100):
+\>   style="#",color=red,<outline, ...  
+\>   level=[-2;0],n=100):
+
+\>ekspresi &= (x^2+y^2-1)^3-x^2\*y^3; $ekspresi
 
 
-Dimungkinkan untuk menentukan level tertentu. Misalnya, kita dapat
-memplot solusi persamaan seperti:
+Kita ingin memutar kurva jantung di sekitar sumbu y. Berikut ini
+adalah ekspresi yang mendefinisikan jantung:
 
 
-\>plot2d("x^3-x\*y+x^2\*y^2",r=6,level=1,n=100):
+Selanjutnya kita tetapkan
 
-\>function starplot1 (v, style="/", color=green, lab=none) ...  
+
+\>function fr(r,a) &= ekspresi with [x=r\*cos(a),y=r\*sin(a)] | trigreduce; $fr(r,a)
+
+
+Hal ini memungkinkan untuk mendefinisikan fungsi numerik, yang
+memecahkan r, jika a diberikan. Dengan fungsi itu kita dapat memplot
+jantung yang diputar sebagai permukaan parametrik.
+
+
+\>function map f(a) := bisect("fr",0,2;a); ...  
+\>   t=linspace(-pi/2,pi/2,100); r=f(t);  ...  
+\>   s=linspace(pi,2pi,100)'; ...  
+\>   plot3d(r\*cos(t)\*sin(s),r\*cos(t)\*cos(s),r\*sin(t), ...  
+\>   \>hue,<frame,color=red,zoom=4,amb=0,max=0.7,grid=12,height=50°):
+
+
+Berikut ini adalah plot 3D dari gambar di atas yang diputar di sekitar
+sumbu z. Kami mendefinisikan fungsi yang menggambarkan objek tersebut.
+
+
+\>function f(x,y,z) ...
+
+
+    r=x^2+y^2;
+    return (r+z^2-1)^3-r*z^3;
+     endfunction
+</pre>
+\>plot3d("f(x,y,z)", ...  
+\>   xmin=0,xmax=1.2,ymin=-1.2,ymax=1.2,zmin=-1.2,zmax=1.4, ...  
+\>   implicit=1,angle=-30°,zoom=2.5,n=[10,100,60],\>anaglyph):
+
+
+# Plot 3D Khusus
+
+Fungsi plot3d memang bagus, tetapi tidak memenuhi semua kebutuhan.
+Selain rutinitas yang lebih mendasar, Anda dapat memperoleh plot
+berbingkai dari objek apa pun yang Anda suka.
+
+
+Meskipun Euler bukanlah program 3D, ia dapat menggabungkan beberapa
+objek dasar. Kami mencoba memvisualisasikan parabola dan garis
+singgungnya.
+
+
+\>function myplot ...
+
+
+      y=-1:0.01:1; x=(-1:0.01:1)';
+      plot3d(x,y,0.2*(x-0.1)/2,<scale,<frame,>hue, ..
+        hues=0.5,>contour,color=orange);
+      h=holding(1);
+      plot3d(x,y,(x^2+y^2)/2,<scale,<frame,>contour,>hue);
+      holding(h);
+    endfunction
+</pre>
+Sekarang framedplot() menyediakan bingkai dan mengatur tampilan.
+
+
+\>framedplot("myplot",[-1,1,-1,1,0,1],height=0,angle=-30°, ...  
+\>     center=[0,0,-0.7],zoom=3):
+
+
+Dengan cara yang sama, Anda dapat memplot bidang kontur secara manual.
+Perhatikan bahwa plot3d() menetapkan jendela ke fullwindow() secara
+default, tetapi plotcontourplane() mengasumsikannya.
+
+
+\>x=-1:0.02:1.1; y=x'; z=x^2-y^4;
+
+\>function myplot (x,y,z) ...  
 \>  
-<pre class="udf">      if !holding() then clg; endif;
-      w=window(); window(0,0,1024,1024);
-      h=holding(1);
-      r=max(abs(v))*1.2;
-      setplot(-r,r,-r,r);
-      n=cols(v); t=linspace(0,2pi,n);
-      v=v|v[1]; c=v*cos(t); s=v*sin(t);
-      cl=barcolor(color); st=barstyle(style);
-      loop 1 to n
-        polygon([0,c[#],c[#+1]],[0,s[#],s[#+1]],1);
-        if lab!=none then
-          rlab=v[#]+r*0.1;
-          {col,row}=toscreen(cos(t[#])*rlab,sin(t[#])*rlab);
-          ctext(""+lab[#],col,row-textheight()/2);
-        endif;
-      end;
-      barcolor(cl); barstyle(st);
-      holding(h);
-      window(w);
+<pre class="udf">      zoom(2);
+      wi=fullwindow();
+      plotcontourplane(x,y,z,level="auto",<scale);
+      plot3d(x,y,z,>hue,<scale,>add,color=white,level="thin");
+      window(wi);
+      reset();
     endfunction
 </pre>
-Tidak ada kotak atau sumbu kutu di sini. Selain itu, kami menggunakan
-jendela penuh untuk plot.
+\>myplot(x,y,z):
 
 
-Kami memanggil reset sebelum kami menguji plot ini untuk mengembalikan
-default grafis. Ini tidak perlu, jika Anda yakin plot Anda berhasil.
+# Animasi
+
+Euler dapat menggunakan bingkai untuk melakukan pra-komputasi animasi.
 
 
-\>reset; starplot1(normal(1,10)+5,color=red,lab=1:10):
+Salah satu fungsi yang memanfaatkan teknik ini adalah rotate. Fungsi
+ini dapat mengubah sudut pandang dan menggambar ulang plot 3D. Fungsi
+ini memanggil addpage() untuk setiap plot baru. Terakhir, fungsi ini
+menganimasikan plot tersebut.
 
 
-Terkadang, Anda mungkin ingin merencanakan sesuatu yang tidak dapat
-dilakukan plot2d, tetapi hampir.
+Silakan pelajari sumber rotate untuk melihat detail selengkapnya.
 
 
-Dalam fungsi berikut, kami melakukan plot impuls logaritmik. plot2d
-dapat melakukan plot logaritmik, tetapi tidak untuk batang impuls.
+\>function testplot () := plot3d("x^2+y^3"); ...  
+\>   rotate("testplot"); testplot():
 
 
-\>function logimpulseplot1 (x,y) ...
+# Menggambar Povray
+
+Dengan bantuan file Euler povray.e, Euler dapat membuat file Povray.
+Hasilnya sangat bagus untuk dilihat.
 
 
-      {x0,y0}=makeimpulse(x,log(y)/log(10));
-      plot2d(x0,y0,>bar,grid=0);
-      h=holding(1);
-      frame();
-      xgrid(ticks(x));
-      p=plot();
-      for i=-10 to 10;
-        if i<=p[4] and i>=p[3] then
-           ygrid(i,yt="10^"+i);
-        endif;
-      end;
-      holding(h);
+Anda perlu menginstal Povray (32bit atau 64bit) dari
+  <a href="http://www.povray.org/, dan meletakkan subdirektori "bin" dari Povray ke dalam jalur lingkungan, atau mengatur variabel "defaultpovray" dengan jalur lengkap yang mengarah ke "pvengine.exe".">http://www.povray.org/, dan meletakkan subdirektori "bin" dari Povray ke dalam jalur lingkungan, atau mengatur variabel "defaultpovray" dengan jalur lengkap yang mengarah ke "pvengine.exe".</a>
+
+
+Antarmuka Povray dari Euler membuat file Povray di direktori home
+pengguna, dan memanggil Povray untuk mengurai file-file ini. Nama file
+default adalah current.pov, dan direktori default adalah eulerhome(),
+biasanya c:\Users\Username\Euler. Povray membuat file PNG, yang dapat
+dimuat oleh Euler ke dalam buku catatan. Untuk membersihkan file-file
+ini, gunakan povclear().
+
+
+Fungsi pov3d memiliki semangat yang sama dengan plot3d. Fungsi ini
+dapat menghasilkan grafik fungsi f(x,y), atau permukaan dengan
+koordinat X,Y,Z dalam matriks, termasuk garis level opsional. Fungsi
+ini memulai raytracer secara otomatis, dan memuat adegan ke dalam buku
+catatan Euler.
+
+
+Selain pov3d(), ada banyak fungsi, yang menghasilkan objek Povray.
+Fungsi-fungsi ini mengembalikan string, yang berisi kode Povray untuk
+objek. Untuk menggunakan fungsi-fungsi ini, mulai file Povray dengan
+povstart(). Kemudian gunakan writeln(...) untuk menulis objek ke file
+adegan. Terakhir, akhiri file dengan povend(). Secara default,
+raytracer akan mulai, dan PNG akan dimasukkan ke dalam buku catatan
+Euler.
+
+
+Fungsi objek memiliki parameter yang disebut "look", yang memerlukan
+string dengan kode Povray untuk tekstur dan penyelesaian objek. Fungsi
+povlook() dapat digunakan untuk menghasilkan string ini. Fungsi ini
+memiliki parameter untuk warna, transparansi, Phong Shading, dll.
+
+
+Perhatikan bahwa alam semesta Povray memiliki sistem koordinat lain.
+Antarmuka ini menerjemahkan semua koordinat ke sistem Povray. Jadi
+Anda dapat terus berpikir dalam sistem koordinat Euler dengan z
+menunjuk vertikal ke atas, dan sumbu x, y, z dalam arah kanan.
+
+
+Anda perlu memuat berkas povray.
+
+
+\>load povray;
+
+
+Pastikan direktori bin Povray ada di jalur tersebut. Jika tidak, edit
+variabel berikut sehingga berisi jalur ke povray yang dapat
+dieksekusi.
+
+
+\>defaultpovray="C:\\Program Files\\POV-Ray\\v3.7\\bin\\pvengine.exe"
+
+
+    C:\Program Files\POV-Ray\v3.7\bin\pvengine.exe
+
+Untuk kesan pertama, kami membuat fungsi sederhana. Perintah berikut
+menghasilkan file povray di direktori pengguna Anda, dan menjalankan
+Povray untuk melakukan ray tracing pada file ini.
+
+
+Jika Anda menjalankan perintah berikut, GUI Povray akan terbuka,
+menjalankan file, dan menutup secara otomatis. Karena alasan keamanan,
+Anda akan ditanya apakah Anda ingin mengizinkan file exe untuk
+berjalan. Anda dapat menekan batal untuk menghentikan pertanyaan lebih
+lanjut. Anda mungkin harus menekan OK di jendela Povray untuk mengakui
+dialog awal Povray.
+
+
+\>plot3d("x^2+y^2",zoom=2):
+
+\>pov3d("x^2+y^2",zoom=3);
+
+
+Kita dapat membuat fungsi tersebut transparan dan menambahkan
+penyelesaian lainnya. Kita juga dapat menambahkan garis level pada
+plot fungsi.
+
+
+\>pov3d("x^2+y^3",axiscolor=red,angle=-45°,\>anaglyph, ...  
+\>     look=povlook(cyan,0.2),level=-1:0.5:1,zoom=3.8);
+
+
+Terkadang perlu untuk mencegah penskalaan fungsi, dan menskalakan
+fungsi secara manual.
+
+
+Kami memplot himpunan titik pada bidang kompleks, di mana hasil kali
+jarak ke 1 dan -1 sama dengan 1.
+
+
+\>pov3d("((x-1)^2+y^2)\*((x+1)^2+y^2)/40",r=2, ...  
+\>     angle=-120°,level=1/40,dlevel=0.005,light=[-1,1,1],height=10°,n=50, ...  
+\>     <fscale,zoom=3.8);
+
+
+# Membuat Plot dengan Koordinat
+
+Alih-alih menggunakan fungsi, kita dapat membuat plot dengan
+koordinat. Seperti pada plot3d, kita memerlukan tiga matriks untuk
+menentukan objek.
+
+
+Dalam contoh ini, kita memutar fungsi di sekitar sumbu z.
+
+
+\>function f(x) := x^3-x+1; ...  
+\>   x=-1:0.01:1; t=linspace(0,2pi,50)'; ...  
+\>   Z=x; X=cos(t)\*f(x); Y=sin(t)\*f(x); ...  
+\>   pov3d(X,Y,Z,angle=40°,look=povlook(red,0.1),height=50°,axis=0,zoom=4,light=[10,5,15]);
+
+
+Dalam contoh berikut, kami memplot gelombang yang diredam. Kami
+menghasilkan gelombang dengan bahasa matriks Euler.
+
+
+Kami juga menunjukkan, bagaimana objek tambahan dapat ditambahkan ke
+adegan pov3d. Untuk pembuatan objek, lihat contoh berikut. Perhatikan
+bahwa plot3d menskalakan plot, sehingga sesuai dengan kubus satuan.
+
+
+\>r=linspace(0,1,80); phi=linspace(0,2pi,80)'; ...  
+\>   x=r\*cos(phi); y=r\*sin(phi); z=exp(-5\*r)\*cos(8\*pi\*r)/3;  ...  
+\>   pov3d(x,y,z,zoom=6,axis=0,height=30°,add=povsphere([0.5,0,0.25],0.15,povlook(red)), ...  
+\>     w=500,h=300);
+
+
+Dengan metode shading Povray yang canggih, hanya sedikit titik yang
+dapat menghasilkan permukaan yang sangat halus. Hanya pada batas dan
+bayangan, triknya mungkin menjadi jelas.
+
+
+Untuk ini, kita perlu menambahkan vektor normal di setiap titik
+matriks.
+
+
+\>Z &= x^2\*y^3
+
+
+    
+                                     2  3
+                                    x  y
+    
+
+Persamaan permukaannya adalah [x,y,Z]. Kita hitung dua turunan x dan y
+dari persamaan ini dan ambil perkalian silang sebagai normalnya.
+
+
+\>dx &= diff([x,y,Z],x); dy &= diff([x,y,Z],y);
+
+
+Kami mendefinisikan normal sebagai perkalian silang turunan-turunan
+ini dan mendefinisikan fungsi koordinat.
+
+
+\>N &= crossproduct(dx,dy); NX &= N[1]; NY &= N[2]; NZ &= N[3]; N,
+
+
+    
+                                   3       2  2
+                           [- 2 x y , - 3 x  y , 1]
+    
+
+Kami hanya menggunakan 25 poin.
+
+
+\>x=-1:0.5:1; y=x';
+
+\>pov3d(x,y,Z(x,y),angle=10°, ...  
+\>     xv=NX(x,y),yv=NY(x,y),zv=NZ(x,y),<shadow);
+
+
+Berikut ini adalah simpul Trefoil yang dibuat oleh A. Busser di
+Povray. Ada versi yang lebih baik dari simpul ini dalam
+contoh-contohnya.
+
+
+Lihat: Contoh\Simpul Trefoil | Simpul Trefoil
+
+
+Untuk tampilan yang bagus dengan tidak terlalu banyak titik, kami
+menambahkan vektor normal di sini. Kami menggunakan Maxima untuk
+menghitung normal bagi kami. Pertama, tiga fungsi untuk koordinat
+sebagai ekspresi simbolik.
+
+
+\>X &= ((4+sin(3\*y))+cos(x))\*cos(2\*y); ...  
+\>   Y &= ((4+sin(3\*y))+cos(x))\*sin(2\*y); ...  
+\>   Z &= sin(x)+2\*cos(3\*y);
+
+
+Kemudian dua vektor turunan ke x dan y.
+
+
+\>dx &= diff([X,Y,Z],x); dy &= diff([X,Y,Z],y);
+
+
+Sekarang normal, yang merupakan perkalian silang dari dua turunan.
+
+
+\>dn &= crossproduct(dx,dy);
+
+
+Sekarang mari kita evaluasi semua ini secara numerik.
+
+
+\>x:=linspace(-%pi,%pi,40); y:=linspace(-%pi,%pi,100)';
+
+
+Vektor normal adalah evaluasi ekspresi simbolik dn[i] untuk i=1,2,3.
+Sintaks untuk ini adalah &amp;"ekspresi"(parameter). Ini adalah alternatif
+untuk metode pada contoh sebelumnya, di mana kita mendefinisikan
+ekspresi simbolik NX, NY, NZ terlebih dahulu.
+
+
+\>pov3d(X(x,y),Y(x,y),Z(x,y),\>anaglyph,axis=0,zoom=5,w=450,h=350, ...  
+\>     <shadow,look=povlook(blue), ...  
+\>     xv=&"dn[1]"(x,y), yv=&"dn[2]"(x,y), zv=&"dn[3]"(x,y));
+
+
+Kita juga bisa membuat grid dalam 3D.
+
+
+\>povstart(zoom=4); ...  
+\>   x=-1:0.5:1; r=1-(x+1)^2/6; ...  
+\>   t=(0°:30°:360°)'; y=r\*cos(t); z=r\*sin(t); ...  
+\>   writeln(povgrid(x,y,z,d=0.02,dballs=0.05)); ...  
+\>   povend();
+
+
+Dengan povgrid(), kurva dimungkinkan.
+
+
+\>povstart(center=[0,0,1],zoom=3.6); ...  
+\>   t=linspace(0,2,1000); r=exp(-t); ...  
+\>   x=cos(2\*pi\*10\*t)\*r; y=sin(2\*pi\*10\*t)\*r; z=t; ...  
+\>   writeln(povgrid(x,y,z,povlook(red))); ...  
+\>   writeAxis(0,2,axis=3); ...  
+\>   povend();
+
+
+# Objek Povray
+
+Di atas, kami menggunakan pov3d untuk memplot permukaan. Antarmuka
+povray di Euler juga dapat menghasilkan objek Povray. Objek-objek ini
+disimpan sebagai string di Euler, dan perlu ditulis ke berkas Povray.
+
+
+Kami memulai output dengan povstart().
+
+
+\>povstart(zoom=4);
+
+
+Pertama, kita mendefinisikan tiga silinder, dan menyimpannya dalam
+string di Euler.
+
+
+Fungsi povx() dll. hanya mengembalikan vektor [1,0,0], yang dapat
+digunakan sebagai gantinya.
+
+
+\>c1=povcylinder(-povx,povx,1,povlook(red)); ...  
+\>   c2=povcylinder(-povy,povy,1,povlook(yellow)); ...  
+\>   c3=povcylinder(-povz,povz,1,povlook(blue)); ...  
+\>  
+Rangkaian tersebut berisi kode Povray, yang tidak perlu kita pahami
+saat itu.
+
+
+\>c2
+
+
+    cylinder { &lt;0,0,-1&gt;, &lt;0,0,1&gt;, 1
+     texture { pigment { color rgb &lt;0.941176,0.941176,0.392157&gt; }  } 
+     finish { ambient 0.2 } 
+     }
+
+Seperti yang Anda lihat, kami menambahkan tekstur ke objek dalam tiga
+warna berbeda.
+
+
+Hal itu dilakukan oleh povlook(), yang mengembalikan string dengan
+kode Povray yang relevan. Kita dapat menggunakan warna Euler default,
+atau menentukan warna kita sendiri. Kita juga dapat menambahkan
+transparansi, atau mengubah cahaya sekitar.
+
+
+\>povlook(rgb(0.1,0.2,0.3),0.1,0.5)
+
+
+     texture { pigment { color rgbf &lt;0.101961,0.2,0.301961,0.1&gt; }  } 
+     finish { ambient 0.5 } 
+    
+
+Sekarang kita mendefinisikan objek persimpangan dan menulis hasilnya
+ke berkas.
+
+
+\>writeln(povintersection([c1,c2,c3]));
+
+
+Persimpangan tiga silinder sulit dibayangkan, jika Anda belum pernah
+melihatnya sebelumnya.
+
+
+\>povend;
+
+
+Fungsi-fungsi berikut menghasilkan fraktal secara rekursif.
+
+
+Fungsi pertama menunjukkan bagaimana Euler menangani objek-objek
+Povray sederhana. Fungsi povbox() mengembalikan string yang berisi
+koordinat kotak, tekstur, dan hasil akhir.
+
+
+\>function onebox(x,y,z,d) := povbox([x,y,z],[x+d,y+d,z+d],povlook());
+
+\>function fractal (x,y,z,h,n) ...  
+\>  
+<pre class="udf">     if n==1 then writeln(onebox(x,y,z,h));
+     else
+       h=h/3;
+       fractal(x,y,z,h,n-1);
+       fractal(x+2*h,y,z,h,n-1);
+       fractal(x,y+2*h,z,h,n-1);
+       fractal(x,y,z+2*h,h,n-1);
+       fractal(x+2*h,y+2*h,z,h,n-1);
+       fractal(x+2*h,y,z+2*h,h,n-1);
+       fractal(x,y+2*h,z+2*h,h,n-1);
+       fractal(x+2*h,y+2*h,z+2*h,h,n-1);
+       fractal(x+h,y+h,z+h,h,n-1);
+     endif;
     endfunction
 </pre>
-Mari kita uji dengan nilai yang terdistribusi secara eksponensial.
+\>povstart(fade=10,<shadow);
+
+\>fractal(-1,-1,-1,2,4);
+
+\>povend();
 
 
-\>aspect(1.5); x=1:10; y=-log(random(size(x)))\*200; ...  
-\>   logimpulseplot1(x,y):
+Perbedaan memungkinkan pemisahan satu objek dari objek lainnya.
+Seperti halnya persimpangan, ada beberapa objek CSG dari Povray.
 
 
-Mari kita menganimasikan kurva 2D menggunakan plot langsung. Perintah
-plot(x,y) hanya memplot kurva ke jendela plot. setplot(a,b,c,d)
-mengatur jendela ini.
+\>povstart(light=[5,-5,5],fade=10);
 
 
-Fungsi wait(0) memaksa plot untuk muncul di jendela grafik. Jika
-tidak, menggambar ulang terjadi dalam interval waktu yang jarang.
+Untuk demonstrasi ini, kami mendefinisikan objek dalam Povray,
+alih-alih menggunakan string dalam Euler. Definisi langsung ditulis ke
+berkas.
 
 
-\>function animliss (n,m) ...
+Koordinat kotak -1 berarti [-1,-1,-1].
 
 
-    t=linspace(0,2pi,500);
-    f=0;
-    c=framecolor(0);
-    l=linewidth(2);
-    setplot(-1,1,-1,1);
-    repeat
-      clg;
-      plot(sin(n*t),cos(m*t+f));
-      wait(0);
-      if testkey() then break; endif;
-      f=f+0.02;
-    end;
-    framecolor(c);
-    linewidth(l);
+\>povdefine("mycube",povbox(-1,1));
+
+
+Kita dapat menggunakan objek ini dalam povobject(), yang mengembalikan
+string seperti biasa.
+
+
+\>c1=povobject("mycube",povlook(red));
+
+
+Kita buat kubus kedua, lalu putar dan ubah skalanya sedikit.
+
+
+\>c2=povobject("mycube",povlook(yellow),translate=[1,1,1], ...  
+\>     rotate=xrotate(10°)+yrotate(10°), scale=1.2);
+
+
+Lalu kita ambil selisih kedua benda tersebut.
+
+
+\>writeln(povdifference(c1,c2));
+
+
+Sekarang tambahkan tiga sumbu.
+
+
+\>writeAxis(-1.2,1.2,axis=1); ...  
+\>   writeAxis(-1.2,1.2,axis=2); ...  
+\>   writeAxis(-1.2,1.2,axis=4); ...  
+\>   povend();
+
+
+# Fungsi Implisit
+
+Povray dapat memplot himpunan di mana f(x,y,z)=0, sama seperti
+parameter implisit dalam plot3d. Namun, hasilnya terlihat jauh lebih
+baik.
+
+
+Sintaks untuk fungsi-fungsi tersebut sedikit berbeda. Anda tidak dapat
+menggunakan output dari ekspresi Maxima atau Euler.
+
+
+\>povstart(angle=70°,height=50°,zoom=4);
+
+\>c=0.1; d=0.1; ...  
+\>   writeln(povsurface ("(pow(pow(x^2)+pow(y^2)-pow(c^2)^2)+(pow(pow(z^2-1)^2))\*(pow(pow(y^2)+pow(z^2)-pow(c^2)^2)+pow(pow(x^2-1)^2))\*(pow(pow(z^2)+pow(x^2)-pow(c^2)^2)+pow(pow(y^2-1)^2))=d",povlook(red))) ; ...  
+\>   povend();
+
+
+    Error : Povray error!
+    
+    Error generated by error() command
+    
+    povray:
+        error("Povray error!");
+    Try "trace errors" to inspect local variables after errors.
+    povend:
+        povray(file,w,h,aspect,exit); 
+
+\>povstart(angle=25°,height=10°);
+
+\>writeln(povsurface("pow(x,2)+pow(y,2)\*pow(z,2)-1",povlook(blue),povbox(-2,2,"")));
+
+\>povend();
+
+\>povstart(angle=70°,height=50°,zoom=4); 
+
+
+Buat permukaan implisit. Perhatikan sintaksis yang berbeda dalam
+ekspresi.
+
+
+\>writeln(povsurface("pow(x,2)\*y-pow(y,3)-pow(z,2)",povlook(green))); ...  
+\>   writeAxes(); ...  
+\>   povend();
+
+
+# Objek Mesh
+
+Dalam contoh ini, kami menunjukkan cara membuat objek mesh, dan
+menggambarnya dengan informasi tambahan.
+
+
+Kami ingin memaksimalkan xy dalam kondisi x+y=1 dan menunjukkan
+sentuhan tangensial garis-garis level.
+
+
+\>povstart(angle=-10°,center=[0.5,0.5,0.5],zoom=7);
+
+
+Kita tidak dapat menyimpan objek dalam string seperti sebelumnya,
+karena terlalu besar. Jadi kita mendefinisikan objek dalam file Povray
+menggunakan #declare. Fungsi povtriangle() melakukan ini secara
+otomatis. Fungsi ini dapat menerima vektor normal seperti pov3d().
+
+
+Berikut ini mendefinisikan objek mesh, dan langsung menuliskannya ke
+dalam file.
+
+
+\>x=0:0.02:1; y=x'; z=x\*y; vx=-y; vy=-x; vz=1;
+
+\>mesh=povtriangles(x,y,z,"",vx,vy,vz);
+
+
+Sekarang kita definisikan dua cakram, yang akan berpotongan dengan
+permukaan.
+
+
+\>cl=povdisc([0.5,0.5,0],[1,1,0],2); ...  
+\>   ll=povdisc([0,0,1/4],[0,0,1],2);
+
+
+Tuliskan permukaan dikurangi kedua cakram.
+
+
+\>writeln(povdifference(mesh,povunion([cl,ll]),povlook(green)));
+
+
+Tuliskan dua titik potongnya.
+
+
+\>writeln(povintersection([mesh,cl],povlook(red))); ...  
+\>   writeln(povintersection([mesh,ll],povlook(gray)));
+
+
+Tuliskan titik maksimumnya.
+
+
+\>writeln(povpoint([1/2,1/2,1/4],povlook(gray),size=2\*defaultpointsize));
+
+
+Tambahkan sumbu dan selesaikan.
+
+
+\>writeAxes(0,1,0,1,0,1,d=0.015); ...  
+\>   povend();
+
+
+# Anaglif dalam Povray
+
+Untuk menghasilkan anaglif untuk kacamata merah/sian, Povray harus
+dijalankan dua kali dari posisi kamera yang berbeda. Ia menghasilkan
+dua file Povray dan dua file PNG, yang dimuat dengan fungsi
+loadanaglyph().
+
+
+Tentu saja, Anda memerlukan kacamata merah/sian untuk melihat contoh
+berikut dengan benar.
+
+
+Fungsi pov3d() memiliki sakelar sederhana untuk menghasilkan anaglif.
+
+
+\>pov3d("-exp(-x^2-y^2)/2",r=2,height=45°,\>anaglyph, ...  
+\>     center=[0,0,0.5],zoom=3.5);
+
+
+Jika Anda membuat suatu pemandangan dengan objek, Anda perlu
+memasukkan pembuatan pemandangan tersebut ke dalam suatu fungsi, dan
+menjalankannya dua kali dengan nilai yang berbeda untuk parameter
+anaglyph.
+
+
+\>function myscene ...
+
+
+      s=povsphere(povc,1);
+      cl=povcylinder(-povz,povz,0.5);
+      clx=povobject(cl,rotate=xrotate(90°));
+      cly=povobject(cl,rotate=yrotate(90°));
+      c=povbox([-1,-1,0],1);
+      un=povunion([cl,clx,cly,c]);
+      obj=povdifference(s,un,povlook(red));
+      writeln(obj);
+      writeAxes();
     endfunction
 </pre>
-Press any key to stop this animation.
+Fungsi povanaglyph() melakukan semua ini. Parameternya seperti pada
+povstart() dan povend() yang digabungkan.
 
 
-\>animliss(2,3); // lihat hasilnya, jika sudah puas, tekan ENTER
+\>povanaglyph("myscene",zoom=4.5);
 
 
-# Plot Logaritmik
+# Menentukan Objek Sendiri
 
-EMT menggunakan parameter "logplot" untuk skala logaritmik.
-
-
-Plot logaritma dapat diplot baik menggunakan skala logaritma dalam y
-dengan logplot=1, atau menggunakan skala logaritma dalam x dan y
-dengan logplot=2, atau dalam x dengan logplot=3.
+Antarmuka povray Euler berisi banyak objek. Namun, Anda tidak terbatas
+pada objek-objek ini. Anda dapat membuat objek sendiri, yang
+menggabungkan objek lain, atau objek yang sama sekali baru.
 
 
- - logplot=1: y-logaritma  
- - logplot=2: x-y-logaritma  
- - logplot=3: x-logaritma  
-
-\>plot2d("exp(x^3-x)\*x^2",1,5,logplot=1):
-
-\>plot2d("exp(x+sin(x))",0,100,logplot=1):
-
-\>plot2d("exp(x+sin(x))",10,100,logplot=2):
-
-\>plot2d("gamma(x)",1,10,logplot=1):
-
-\>plot2d("log(x\*(2+sin(x/100)))",10,1000,logplot=3):
+Kami mendemonstrasikan sebuah torus. Perintah Povray untuk ini adalah
+"torus". Jadi, kami mengembalikan string dengan perintah ini dan
+parameternya. Perhatikan bahwa torus selalu berpusat di titik asal.
 
 
-Ini juga berfungsi dengan plot data.
+\>function povdonat (r1,r2,look="") ...
 
 
-\>x=10^(1:20); y=x^2-x;
+      return "torus {"+r1+","+r2+look+"}";
+    endfunction
+</pre>
+Inilah torus pertama kita.
 
-\>plot2d(x,y,logplot=2):
+
+\>t1=povdonat(0.8,0.2)
 
 
-# Contoh Soal 1
+    torus {0.8,0.2}
 
-Gambarkan grafik fungsi berikut: 
+Mari kita gunakan objek ini untuk membuat torus kedua, diterjemahkan
+dan diputar.
+
+
+\>t2=povobject(t1,rotate=xrotate(90°),translate=[0.8,0,0])
+
+
+    object { torus {0.8,0.2}
+     rotate 90 *x 
+     translate &lt;0.8,0,0&gt;
+     }
+
+Sekarang kita tempatkan objek-objek ini ke dalam sebuah scene. Untuk
+tampilannya, kita gunakan Phong Shading.
+
+
+\>povstart(center=[0.4,0,0],angle=0°,zoom=3.8,aspect=1.5); ...  
+\>   writeln(povobject(t1,povlook(green,phong=1))); ...  
+\>   writeln(povobject(t2,povlook(green,phong=1))); ...  
+\>  
+&gt;povend();
+
+
+memanggil program Povray. Namun, jika terjadi kesalahan, program
+tersebut tidak menampilkan kesalahan tersebut. Oleh karena itu, Anda
+harus menggunakan
+
+
+&gt;povend(&lt;exit);
+
+
+jika ada yang tidak berhasil. Ini akan membiarkan jendela Povray
+terbuka.
+
+
+\>povend(h=320,w=480);
+
+
+Berikut adalah contoh yang lebih rinci. Kami memecahkan
+
+
+dan menunjukkan titik-titik yang layak dan titik-titik optimum dalam
+plot 3D.
+
+
+\>A=[10,8,4;5,6,8;6,3,2;9,5,6];
+
+\>b=[10,10,10,10]';
+
+\>c=[1,1,1];
+
+
+Pertama, mari kita periksa, apakah contoh ini punya solusi.
+
+
+\>x=simplex(A,b,c,\>max,\>check)'
+
+
+    [0,  1,  0.5]
+
+Ya, benar.
+
+
+Berikutnya kita mendefinisikan dua objek. Yang pertama adalah bidang
+datar
+
+
+\>function oneplane (a,b,look="") ...
+
+
+      return povplane(a,b,look)
+    endfunction
+</pre>
+Kemudian kita mendefinisikan irisan semua ruang setengah dan sebuah
+kubus.
+
+
+\>function adm (A, b, r, look="") ...
+
+
+      ol=[];
+      loop 1 to rows(A); ol=ol|oneplane(A[#],b[#]); end;
+      ol=ol|povbox([0,0,0],[r,r,r]);
+      return povintersection(ol,look);
+    endfunction
+</pre>
+Sekarang, kita dapat merencanakan adegannya.
+
+
+\>povstart(angle=120°,center=[0.5,0.5,0.5],zoom=3.5); ...  
+\>   writeln(adm(A,b,2,povlook(green,0.4))); ...  
+\>   writeAxes(0,1.3,0,1.6,0,1.5); ...  
+\>  
+Berikut ini adalah lingkaran di sekitar titik optimum.
+
+
+\>writeln(povintersection([povsphere(x,0.5),povplane(c,c.x')], ...  
+\>     povlook(red,0.9)));
+
+
+Dan kesalahan dalam arah yang optimum.
+
+
+\>writeln(povarrow(x,c\*0.5,povlook(red)));
+
+
+Kita menambahkan teks ke layar. Teks hanyalah objek 3D. Kita perlu
+menempatkan dan memutarnya sesuai dengan pandangan kita.
+
+
+\>writeln(povtext("Linear Problem",[0,0.2,1.3],size=0.05,rotate=5°)); ...  
+\>   povend();
+
+
+# Contoh
+
+1. Buatlah Plot 3D dari fungsi
 
 
 \>reset; ...  
-\>   aspect(3,1); ...  
-\>   figure(1,3); figure(1); plot2d("x^4+x+3", grid=2); ...  
-\>   figure(2); plot2d("3x^3+2x^2+2", grid=5); ...  
-\>   figure(3); plot2d("x^2+15x", grid=4); ...  
-\>   figure(0):
+\>   plot3d("x^3+x\*sin(y)", -1,1,0,2\*pi):
 
 
-# Contoh Soal 2
-
-Buatlah grafik dan sertakan labelnya dari
-
-
-
-
-Dengan batas 0,2 pi
+2. Buatlah Animasi Plot 3D dari fungsi
 
 
 \>reset; ...  
-\>   plot2d("cos(2x)",0,2pi,title="y=cos(2x)",yl="y",xl="x"):
+\>   function testplot () := plot3d("sin(y)+cos(x^2)"); ...  
+\>   rotate("testplot"); testplot():
 
 
-# Contoh Soal 3
-
-Buatlah plot 2D dengan mengisi rentang nilai seperti
+3. Buatlah Plot 3D dari fungsi trigonometri dibawah ini
 
 
 \>reset; ...  
-\>   plot2d("(x^4+y^4)^4-x^2+y^2",r=1.1,level=[-1;0],color=red,style="/"):
-
-
-# Rujukan Lengkap Fungsi plot2d()
-
-  function plot2d (xv, yv, btest, a, b, c, d, xmin, xmax, r, n,  ..  
-  logplot, grid, frame, framecolor, square, color, thickness, style, ..  
-  auto, add, user, delta, points, addpoints, pointstyle, bar, histogram,  ..  
-  distribution, even, steps, own, adaptive, hue, level, contour,  ..  
-  nc, filled, fillcolor, outline, title, xl, yl, maps, contourcolor, ..  
-  contourwidth, ticks, margin, clipping, cx, cy, insimg, spectral,  ..  
-  cgrid, vertical, smaller, dl, niveau, levels)  
-
-Multipurpose plot function for plots in the plane (2D plots). This function can do
-plots of functions of one variables, data plots, curves in the plane, bar plots, grids
-of complex numbers, and implicit plots of functions of two variables.
-
-
-Parameters
-
-
-
-
-x,y       : equations, functions or data vectors
-
-
-a,b,c,d   : Plot area (default a=-2,b=2)
-
-
-r         : if r is set, then a=cx-r, b=cx+r, c=cy-r, d=cy+r
-
-
-            r can be a vector [rx,ry] or a vector [rx1,rx2,ry1,ry2].
-
-
-xmin,xmax : range of the parameter for curves
-
-
-auto      : Determine y-range automatically (default)
-
-
-square    : if true, try to keep square x-y-ranges
-
-
-n         : number of intervals (default is adaptive)
-
-
-grid      : 0 = no grid and labels,
-
-
-            1 = axis only,
-
-
-            2 = normal grid (see below for the number of grid lines)
-
-
-            3 = inside axis
-
-
-            4 = no grid
-
-
-            5 = full grid including margin
-
-
-            6 = ticks at the frame
-
-
-            7 = axis only
-
-
-            8 = axis only, sub-ticks
-
-
-frame     : 0 = no frame
-
-
-framecolor: color of the frame and the grid
-
-
-margin    : number between 0 and 0.4 for the margin around the plot
-
-
-color     : Color of curves. If this is a vector of colors,
-
-
-            it will be used for each row of a matrix of plots. In the case of
-
-
-            point plots, it should be a column vector. If a row vector or a
-
-
-            full matrix of colors is used for point plots, it will be used for
-
-
-            each data point.
-
-
-thickness : line thickness for curves
-
-
-            This value can be smaller than 1 for very thin lines.
-
-
-style     : Plot style for lines, markers, and fills.
-
-
-            For points use
-
-
-            "[]", "&lt;&gt;", ".", "..", "...",
-
-
-            "*", "+", "|", "-", "o"
-
-
-            "[]#", "&lt;&gt;#", "o#" (filled shapes)
-
-
-            "[]w", "&lt;&gt;w", "ow" (non-transparent)
-
-
-            For lines use
-
-
-            "-", "--", "-.", ".", ".-.", "-.-", "-&gt;"
-
-
-            For filled polygons or bar plots use
-
-
-            "#", "#O", "O", "/", "\", "\/",
-
-
-            "+", "|", "-", "t"
-
-
-points    : plot single points instead of line segments
-
-
-addpoints : if true, plots line segments and points
-
-
-add       : add the plot to the existing plot
-
-
-user      : enable user interaction for functions
-
-
-delta     : step size for user interaction
-
-
-bar       : bar plot (x are the interval bounds, y the interval values)
-
-
-histogram : plots the frequencies of x in n subintervals
-
-
-distribution=n : plots the distribution of x with n subintervals
-
-
-even      : use inter values for automatic histograms.
-
-
-steps     : plots the function as a step function (steps=1,2)
-
-
-adaptive  : use adaptive plots (n is the minimal number of steps)
-
-
-level     : plot level lines of an implicit function of two variables
-
-
-outline   : draws boundary of level ranges.
-
-
-
-
-If the level value is a 2xn matrix, ranges of levels will be drawn
-
-
-in the color using the given fill style. If outline is true, it
-
-
-will be drawn in the contour color. Using this feature, regions of
-
-
-f(x,y) between limits can be marked.
-
-
-
-
-hue       : add hue color to the level plot to indicate the function
-
-
-            value
-
-
-contour   : Use level plot with automatic levels
-
-
-nc        : number of automatic level lines
-
-
-title     : plot title (default "")
-
-
-xl, yl    : labels for the x- and y-axis
-
-
-smaller   : if &gt;0, there will be more space to the left for labels.
-
-
-vertical  :
-
-
-  Turns vertical labels on or off. This changes the global variable
-
-
-  verticallabels locally for one plot. The value 1 sets only vertical
-
-
-  text, the value 2 uses vertical numerical labels on the y axis.
-
-
-filled    : fill the plot of a curve
-
-
-fillcolor : fill color for bar and filled curves
-
-
-outline   : boundary for filled polygons
-
-
-logplot   : set logarithmic plots
-
-
-            1 = logplot in y,
-
-
-            2 = logplot in xy,
-
-
-            3 = logplot in x
-
-
-own       :
-
-
-  A string, which points to an own plot routine. With &gt;user, you get
-
-
-  the same user interaction as in plot2d. The range will be set
-
-
-  before each call to your function.
-
-
-maps      : map expressions (0 is faster), functions are always mapped.
-
-
-contourcolor : color of contour lines
-
-
-contourwidth : width of contour lines
-
-
-clipping  : toggles the clipping (default is true)
-
-
-title     :
-
-
-  This can be used to describe the plot. The title will appear above
-
-
-  the plot. Moreover, a label for the x and y axis can be added with
-
-
-  xl="string" or yl="string". Other labels can be added with the
-
-
-  functions label() or labelbox(). The title can be a unicode
-
-
-  string or an image of a Latex formula.
-
-
-cgrid     :
-
-
-  Determines the number of grid lines for plots of complex grids.
-
-
-  Should be a divisor of the the matrix size minus 1 (number of
-
-
-  subintervals). cgrid can be a vector [cx,cy].
-
-
-Overview
-
-
-The function can plot
-
-
-* 
-expressions, call collections or functions of one variable,
-
-* 
-parametric curves,
-
-* 
-x data against y data,
-
-* 
-implicit functions,
-
-* 
-bar plots,
-
-* 
-complex grids,
-
-* 
-polygons.
-
-
-If a function or expression for xv is given, plot2d() will compute
-
-
-values in the given range using the function or expression. The
-
-
-expression must be an expression in the variable x. The range must
-
-
-be defined in the parameters a and b unless the default range
-
-
-[-2,2] should be used. The y-range will be computed automatically,
-
-
-unless c and d are specified, or a radius r, which yields the range
-
-
-[-r,r] for x and y. For plots of functions, plot2d will use an
-
-
-adaptive evaluation of the function by default. To speed up the
-
-
-plot for complicated functions, switch this off with &lt;adaptive, and
-
-
-optionally decrease the number of intervals n. Moreover, plot2d()
-
-
-will by default use mapping. I.e., it will compute the plot element
-
-
-for element. If your expression or your functions can handle a
-
-
-vector x, you can switch that off with &lt;maps for faster evaluation.
-
-
-Note that adaptive plots are always computed element for element. 
-
-
-If functions or expressions for both xv and for yv are specified,
-
-
-plot2d() will compute a curve with the xv values as x-coordinates
-
-
-and the yv values as y-coordinates. In this case, a range should be
-
-
-defined for the parameter using xmin, xmax. Expressions contained
-
-
-in strings must always be expressions in the parameter variable x.
+\>   plot3d("log(2\*x\*y)"):
 
