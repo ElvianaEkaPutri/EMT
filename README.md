@@ -1,3969 +1,2200 @@
-# Translate
-Elviana Eka Putri
+# EMT3Plot2D_Elviana Eka Putri_23030630094
+Nama : Elviana Eka Putri
 
 
-23030630094
+NIM  : 23030630094
 
 
-Matematika E 2023
+Prodi: Matematika E 2023
 
 
----
+# Menggambar Grafik 2D dengan EMT
+
+Notebook ini menjelaskan tentang cara menggambar berbagaikurva dan
+grafik 2D dengan software EMT. EMT menyediakan fungsi plot2d() untuk
+menggambar berbagai kurva dan grafik dua dimensi (2D).
 
 
+## Plot Dasar
 
-EMT untuk Perhitungan Aljabar
+Ada fungsi yang sangat mendasar dari plot. Ada koordinat layar, yang
+selalu berkisar dari 0 hingga 1024 di setiap sumbu, tidak peduli
+apakah layarnya persegi atau tidak. Semut ada koordinat plot, yang
+dapat diatur dengan setplot(). Pemetaan antara koordinat tergantung
+pada jendela plot saat ini. Misalnya, shrinkwindow() default
+menyisakan ruang untuk label sumbu dan judul plot.
 
 
-Pada notebook ini Anda belajar menggunakan EMT untuk melakukan
-berbagai perhitungan terkait dengan materi atau topik dalam Aljabar.
-Kegiatan yang harus Anda lakukan adalah sebagai berikut:
+Dalam contoh, kita hanya menggambar beberapa garis acak dalam berbagai
+warna. Untuk detail tentang fungsi ini, pelajari fungsi inti EMT.
+
+
+\>clg; // clear screen
+
+\>window(0,0,1024,1024); // use all of the window
+
+\>setplot(0,1,0,1); // set plot coordinates
+
+\>hold on; // start overwrite mode
+
+\>n=100; X=random(n,2); Y=random(n,2);  // get random points
+
+\>colors=rgb(random(n),random(n),random(n)); // get random colors
+
+\>loop 1 to n; color(colors[#]); plot(X[#],Y[#]); end; // plot
+
+\>hold off; // end overwrite mode
+
+\>insimg; // insert to notebook
+
+\>reset;
+
+
+Grafik perlu ditahan, karena perintah plot() akan menghapus jendela
+plot.
+
+
+Untuk menghapus semua yang kami lakukan, kami menggunakan reset().
+
+
+Untuk menampilkan gambar hasil plot di layar notebook, perintah
+plot2d() dapat diakhiri dengan titik dua (:). Cara lain adalah
+perintah plot2d() diakhiri dengan titik koma (;), kemudian menggunakan
+perintah insimg() untuk menampilkan gambar hasil plot.
+
+
+Untuk contoh lain, kami menggambar plot sebagai sisipan di plot lain.
+Ini dilakukan dengan mendefinisikan jendela plot yang lebih kecil.
+Perhatikan bahwa jendela ini tidak menyediakan ruang untuk label sumbu
+di luar jendela plot. Kita harus menambahkan beberapa margin untuk ini
+sesuai kebutuhan. Perhatikan bahwa kami menyimpan dan memulihkan
+jendela penuh, dan menahan plot saat ini saat kami memplot inset.
+
+
+\>plot2d("x^3-x");
+
+\>xw=200; yw=100; ww=300; hw=300;
+
+\>ow=window();
+
+\>window(xw,yw,xw+ww,yw+hw);
+
+\>hold on;
+
+\>barclear(xw-50,yw-10,ww+60,ww+60);
+
+\>plot2d("x^4-x",grid=6):
+
+\>hold off;
+
+\>window(ow);
+
+
+Plot dengan banyak angka dicapai dengan cara yang sama. Ada fungsi
+figure() utilitas untuk ini.
+
+
+## Aspek Plot
+
+Plot standar (default) menggunakan jendela plot persegi. Anda dapat
+mengubahnya dengan fungsi aspek(). Jangan lupa untuk mengatur ulang
+aspek nanti. Anda juga dapat mengubah default ini di menu dengan "Atur
+Aspek" ke rasio aspek tertentu atau ke ukuran jendela grafik saat ini.
+
+
+Tetapi Anda juga dapat mengubahnya untuk satu plot. Untuk ini, ukuran
+area plot saat ini diubah, dan jendela diatur sehingga label memiliki
+cukup ruang.
+
+
+\>aspect(2); // rasio panjang dan lebar 2:1
+
+\>plot2d(["sin(x)","cos(x)"],0,2pi):
+
+\>aspect();
+
+\>reset;
+
+
+Fungsi reset() mengembalikan default plot termasuk rasio aspek.
+
+
+# Plot 2D di Euler
+
+EMT Math Toolbox memiliki plot dalam 2D, baik untuk data maupun
+fungsi. EMT menggunakan fungsi plot2d. Fungsi ini dapat memplot fungsi
+dan data.
+
+
+Dimungkinkan untuk membuat plot di Maxima menggunakan Gnuplot atau
+dengan Python menggunakan Math Plot Lib.
+
+
+Euler dapat memplot plot 2D dari
 
 
 * 
-Membaca secara cermat dan teliti notebook ini;
+ekspresi
 
 * 
-Menerjemahkan teks bahasa Inggris ke bahasa Indonesia;
+fungsi, variabel, atau kurva parameter,
 
 * 
-Mencoba contoh-contoh perhitungan (perintah EMT) dengan cara
-* meng-ENTER setiap perintah EMT yang ada (pindahkan kursor ke baris
-* perintah)
+vektor nilai x-y,
 
 * 
-Jika perlu Anda dapat memodifikasi perintah yang ada dan memberikan
-* keterangan/penjelasan tambahan terkait hasilnya.
+awan titik di pesawat,
 
 * 
-Menyisipkan baris-baris perintah baru untuk mengerjakan soal-soal
-* Aljabar dari file PDF yang saya berikan;
+kurva implisit dengan level atau wilayah level.
 
 * 
-Memberi catatan hasilnya.
+Fungsi kompleks
 
-* 
-Jika perlu tuliskan soalnya pada teks notebook (menggunakan format
-* LaTeX).
 
-* 
-Gunakan tampilan hasil semua perhitungan yang eksak atau simbolik
-* dengan format LaTeX. (Seperti contoh-contoh pada notebook ini.)
+Gaya plot mencakup berbagai gaya untuk garis dan titik, plot batang
+dan plot berbayang.
 
 
-## Contoh pertama
+# Plot Ekspresi atau Variabel
 
-Menyederhanakan bentuk aljabar:
+Ekspresi tunggal dalam "x" (ex. "4*x^2") atau nama fungsi (ex. "f")
+menghasilkan grafik fungsi.
 
 
-\>$&6\*x^(-3)\*y^5\*-7\*x^2\*y^(-9)
+Berikut adalah contoh paling dasar, yang menggunakan rentang default
+dan menetapkan rentang y yang tepat agar sesuai dengan plot fungsi.
 
 
-Menjabarkan:
+Catatan: Jika Anda mengakhiri baris perintah dengan titik dua ":",
+plot akan dimasukkan ke dalam jendela teks. Jika tidak, tekan TAB
+untuk melihat plot jika jendela plot tertutup.
 
 
-\>$&showev('expand((6\*x^(-3)+y^5)\*(-7\*x^2-y^(-9))))
+\>plot2d("x^2"):
 
+\>aspect(1.5); plot2d("x^3-x"):
 
-## Baris Perintah
+\>a:=5.6; plot2d("exp(-a\*x^2)/a"); insimg(30); // menampilkan gambar hasil plot setinggi 25 baris
 
-Baris perintah Euler terdiri dari satu atau beberapa perintah Euler
-diikuti dengan titik koma ";" atau koma ",". Titik koma mencegah
-pencetakan hasil. Koma setelah perintah terakhir dapat dihilangkan.
 
+Dari beberapa contoh sebelumnya Anda dapat melihat bahwa aslinya
+gambar plot menggunakan sumbu X dengan rentang nilai dari -2 sampai
+dengan 2. Untuk mengubah rentang nilai X dan Y, Anda dapat menambahkan
+nilai-nilai batas X (dan Y) di belakang ekspresi yang digambar.
 
-Baris perintah berikut hanya akan mencetak hasil ekspresi, bukan tugas
-atau perintah format.
 
-
-\>r:=2; h:=4; pi\*r^2\*h/3
-
-
-    16.7551608191
-
-Perintah harus dipisahkan dengan tanda kosong. Baris perintah berikut
-mencetak dua hasilnya.
-
-
-\>pi\*2\*r\*h, %+2\*pi\*r\*h // Ingat tanda % menyatakan hasil perhitungan terakhir sebelumnya
-
-
-    50.2654824574
-    100.530964915
-
-Baris perintah dieksekusi dalam urutan yang ditekan pengguna kembali.
-Jadi, Anda mendapatkan nilai baru setiap kali menjalankan baris kedua.
-
-
-\>x := 1;
-
-\>x := cos(x) // nilai cosinus (x dalam radian)
-
-
-    0.540302305868
-
-\>x := cos(x)
-
-
-    0.857553215846
-
-Jika dua baris dihubungkan dengan "..." kedua baris akan selalu
-dijalankan secara bersamaan.
-
-
-\>x := 1.5; ...  
-\>   x := (x+2/x)/2, x := (x+2/x)/2, x := (x+2/x)/2, 
-
-
-    1.41666666667
-    1.41421568627
-    1.41421356237
-
-Ini juga cara yang baik untuk menyebarkan perintah panjang ke dua
-baris atau lebih. Anda dapat menekan Ctrl + Return untuk membagi garis
-menjadi dua pada posisi kursor saat ini, atau Ctlr + Back untuk
-menggabungkan garis.
-
-
-Untuk melipat semua multi-garis tekan Ctrl + L. Kemudian garis-garis
-berikutnya hanya akan terlihat, jika salah satunya memiliki fokus.
-Untuk melipat satu garis banyak, mulailah baris pertama dengan "% +".
-
-
-\>%+ x=4+5; ...  
-\>    //Baris ini tidak akan terlihat setelah kursor adalah dari baris
-
-
-Garis yang dimulai dengan %% akan benar-benar tidak terlihat.
-
-
-    81
-
-Euler mendukung loop dalam baris perintah, asalkan sesuai dengan satu
-baris atau beberapa baris. Dalam program, pembatasan ini tentu saja
-tidak berlaku. Untuk informasi lebih lanjut, lihat pengantar berikut.
-
-
-\>x=1; for i=1 to 5; x := (x+2/x)/2, end; // menghitung akar 2
-
-
-    1.5
-    1.41666666667
-    1.41421568627
-    1.41421356237
-    1.41421356237
-
-Tidak apa-apa menggunakan multi-garis. Pastikan baris diakhiri dengan
-"...".
-
-
-\>x := 1.5; //komentar diletakkan di sini sebelum ...  
-\>   repeat xnew:=(x+2/x)/2; until xnew~=x; ...  
-\>      x := xnew; ...  
-\>   end; ...  
-\>   x,
-
-
-Struktur bersyarat juga berfungsi.
-
-
-\>if E^pi\>pi^E; then "Thought so!", endif;
-
-
-    Thought so!
-
-Saat Anda menjalankan perintah, kursor dapat berada di posisi mana pun
-di baris perintah. Anda dapat kembali ke perintah sebelumnya atau
-melompat ke perintah berikutnya dengan tombol panah. Atau Anda dapat
-mengklik bagian komentar di atas perintah untuk membuka perintah.
-
-
-Saat Anda menggerakkan kursor di sepanjang garis, pasangan buka dan
-tutup tanda kurung atau tanda kurung akan disorot. Juga, perhatikan
-baris statusnya. Setelah kurung buka dari fungsi sqrt (), baris status
-akan menampilkan teks bantuan untuk fungsi tersebut. Jalankan perintah
-dengan tombol kembali.
-
-
-\>sqrt(sin(10°)/cos(20°))
-
-
-    0.429875017772
-
-Untuk melihat bantuan untuk perintah terbaru, buka jendela bantuan
-dengan F1. Di sana, Anda dapat memasukkan teks untuk dicari. Pada
-baris kosong, bantuan untuk jendela bantuan akan ditampilkan. Anda
-dapat menekan escape untuk menghapus garis, atau untuk menutup jendela
-bantuan.
-
-
-Anda dapat mengklik dua kali pada perintah apa pun untuk membuka
-bantuan untuk perintah ini. Coba klik dua kali perintah exp di bawah
-ini di baris perintah.
-
-
-\>exp(log(2.5))
-
-
-    2.5
-
-## Sintaks Dasar
-
-Euler mengetahui fungsi matematika biasa. Seperti yang Anda lihat di
-atas, fungsi trigonometri bekerja dalam radian atau derajat. Untuk
-mengonversi menjadi derajat, tambahkan simbol derajat (dengan tombol
-F7) ke nilainya, atau gunakan fungsi rad (x). Fungsi akar kuadrat
-disebut akar di Euler. Tentu saja, x ^ (1/2) juga dimungkinkan.
-
-
-Untuk menyetel variabel, gunakan "=" atau ": =". Demi kejelasan,
-pendahuluan ini menggunakan bentuk yang terakhir. Spasi tidak penting.
-Tapi jarak antar perintah diharapkan.
-
-
-Beberapa perintah dalam satu baris dipisahkan dengan "," atau ";".
-Titik koma menekan keluaran dari perintah. Di akhir baris perintah,
-"," diasumsikan, jika ";" hilang.
-
-
-\>g:=9.81; t:=2.5; 1/2\*g\*t^2
-
-
-    30.65625
-
-EMT menggunakan sintaks pemrograman untuk ekspresi. Memasuki
-
-
-Anda harus mengatur tanda kurung yang benar dan menggunakan / untuk
-pecahan. Perhatikan tanda kurung yang disorot untuk bantuan.
-Perhatikan bahwa konstanta Euler e dinamai E dalam EMT.
-
-
-\>E^2\*(1/(3+4\*log(0.6))+1/7)
-
-
-    8.77908249441
-
-Untuk menghitung ekspresi yang rumit seperti
-
-
-Anda harus memasukkannya dalam bentuk baris.
-
-
-\>((1/7 + 1/8 + 2) / (1/3 + 1/2))^2 \* pi
-
-
-    23.2671801626
-
-Tempatkan tanda kurung dengan hati-hati di sekitar sub-ekspresi yang
-perlu dihitung terlebih dahulu. EMT membantu Anda dengan menyoroti
-ekspresi bahwa kurung tutup selesai. Anda juga harus memasukkan nama
-"pi" untuk huruf Yunani pi.
-
-
-Hasil dari perhitungan ini adalah bilangan floating point. Ini secara
-default dicetak dengan akurasi sekitar 12 digit. Di baris perintah
-berikut, kita juga belajar bagaimana kita bisa merujuk ke hasil
-sebelumnya dalam baris yang sama.
-
-
-\>1/3+1/7, fraction %
-
-
-    0.47619047619
-    10/21
-
-Perintah Euler bisa berupa ekspresi atau perintah primitif. Ekspresi
-dibuat dari operator dan fungsi. Jika perlu, itu harus berisi tanda
-kurung untuk memaksa urutan eksekusi yang benar. Jika ragu, menetapkan
-braket adalah ide yang bagus. Perhatikan bahwa EMT menampilkan tanda
-kurung buka dan tutup saat mengedit baris perintah.
-
-
-\>(cos(pi/4)+1)^3\*(sin(pi/4)+1)^2
-
-
-    14.4978445072
-
-Operator numerik Euler termasuk
-
-
-  + unary atau operator plus  
-  - unary atau operator minus  
-  *, /  
-  . produk matriks  
-  a ^ b pangkat untuk positif a atau bilangan bulat b (a ** b bekerja  
-
-juga)
-
-
-  n! operator faktorial
-
-
-dan masih banyak lagi.
-
-
-Berikut beberapa fungsi yang mungkin Anda perlukan. Masih banyak lagi.
-
-
-  sin, cos, tan, atan, asin, acos, rad, deg  
-  log, exp, log10, sqrt, logbase  
-  bin, logbin, logfac, mod, floor, ceil, round, abs, sign  
-  konj, re, im, arg, konj, nyata, kompleks  
-  beta, betai, gamma, complexgamma, ellrf, ellf, ellrd, elle  
-  bitand, bitor, bitxor, bitnot  
-
-Beberapa perintah memiliki alias, mis. ln untuk log.
-
-
-\>ln(E^2), arctan(tan(0.5))
-
-
-    2
-    0.5
-
-\>sin(30°)
-
-
-    0.5
-
-Pastikan untuk menggunakan tanda kurung (tanda kurung bulat), setiap
-kali ada keraguan tentang urutan eksekusi! Berikut ini tidak sama
-dengan (2 ^ 3) ^ 4, yang merupakan default untuk 2 ^ 3 ^ 4 di EMT
-(beberapa sistem numerik melakukannya dengan cara lain).
-
-
-\>2^3^4, (2^3)^4, 2^(3^4)
-
-
-    2.41785163923e+24
-    4096
-    2.41785163923e+24
-
-## Bilangan Real
-
-Tipe data utama di Euler adalah bilangan real. Real direpresentasikan
-dalam format IEEE dengan akurasi sekitar 16 digit desimal.
-
-
-\>longest 1/3
-
-
-         0.3333333333333333 
-
-Representasi ganda internal membutuhkan 8 byte.
-
-
-\>printdual(1/3)
-
-
-    1.0101010101010101010101010101010101010101010101010101*2^-2
-
-\>printhex(1/3)
-
-
-    5.5555555555554*16^-1
-
-## String
-
-Sebuah string di Euler didefinisikan dengan "...".
-
-
-\>"Sebuah string bisa berisi apa saja."
-
-
-    Sebuah string bisa berisi apa saja.
-
-String bisa digabungkan dengan | atau dengan +. Ini juga berfungsi
-dengan angka, yang diubah menjadi string dalam kasus itu.
-
-
-\>"Luas lingkaran berjari-jari " + 2 + " cm adalah " + pi \* 4 + " cm ^ 2."
-
-
-    Luas lingkaran berjari-jari 2 cm adalah 12.5663706144 cm ^ 2.
-
-Fungsi print juga mengubah angka menjadi string. Ini bisa mengambil
-sejumlah digit dan sejumlah tempat (0 untuk output padat), dan secara
-optimal satu unit.
-
-
-\>"Golden Ratio : " + print((1+sqrt(5))/2,5,0)
-
-
-    Golden Ratio : 1.61803
-
-Tidak ada string khusus, yang tidak dicetak. Itu dikembalikan oleh
-beberapa fungsi, ketika hasilnya tidak penting. (Ini dikembalikan
-secara otomatis, jika fungsi tidak memiliki pernyataan pengembalian.)
-
-
-\>none
-
-
-Untuk mengonversi string menjadi angka, cukup evaluasi. Ini berfungsi
-untuk ekspresi juga (lihat di bawah).
-
-
-\>"1234.5"()
-
-
-    1234.5
-
-Untuk mendefinisikan vektor string, gunakan notasi vektor [...].
-
-
-\>v:=["affe","charlie","bravo"]
-
-
-    affe
-    charlie
-    bravo
-
-Vektor string kosong dilambangkan dengan [tidak ada]. Vektor string
-dapat digabungkan.
-
-
-\>w:=[none]; w|v|v
-
-
-    affe
-    charlie
-    bravo
-    affe
-    charlie
-    bravo
-
-String dapat berisi karakter Unicode. Secara internal, string ini
-berisi kode UTF-8. Untuk menghasilkan string seperti itu, gunakan u
-"..." dan salah satu entitas HTML.
-
-
-String unicode dapat digabungkan seperti string lainnya.
-
-
-\>u"&alpha; = " + 45 + u"&deg;" // pdfLaTeX mungkin gagal menampilkan secara benar
-
-
-    α = 45°
-
-I
-
-
-Dalam komentar, entitas yang sama seperti, dll. Dapat digunakan. Ini
-mungkin alternatif cepat untuk Latex. (Keterangan lebih lanjutpada
-komentar di bawah).
-
-
-Ada beberapa fungsi untuk membuat atau menganalisis string unicode.
-Fungsi strtochar () akan mengenali Unicodestring, dan terjemahkan
-dengan benar.
-
-
-\>v=strtochar(u"&Auml; is a German letter")
-
-
-    [196,  32,  105,  115,  32,  97,  32,  71,  101,  114,  109,  97,  110,
-    32,  108,  101,  116,  116,  101,  114]
-
-Hasilnya adalah vektor bilangan Unicode. Fungsi kebalikannya adalah
-chartoutf ().
-
-
-\>v[1]=strtochar(u"&Uuml;")[1]; chartoutf(v)
-
-
-    Ü is a German letter
-
-Fungsi utf () dapat menerjemahkan string dengan entitas dalam variabel
-menjadi string Unicode.
-
-
-\>s="We have &alpha;=&beta;."; utf(s) // pdfLaTeX mungkin gagal menampilkan secara benar
-
-
-    We have α=β.
-
-Dimungkinkan juga untuk menggunakan entitas numerik.
-
-
-\>u"&#196;hnliches"
-
-
-    Ähnliches
-
-## Nilai Boolean
-
-Nilai Boolean diwakili dengan 1 = true atau 0 = false di Euler. String
-dapat dibandingkan, seperti halnya angka.
-
-
-\>2<1, "apel"<"banana"
-
-
-    0
-    1
-
-"dan" adalah operator "&amp;&amp;" dan "atau" adalah operator "||", seperti
-dalam bahasa C. (Kata "dan" dan "atau" bisahanya digunakan dalam
-kondisi untuk "jika".)
-
-
-\>2<E && E<3
-
-
-    1
-
-Operator Boolean mematuhi aturan bahasa matriks.
-
-
-\>(1:10)\>5, nonzeros(%)
-
-
-    [0,  0,  0,  0,  0,  1,  1,  1,  1,  1]
-    [6,  7,  8,  9,  10]
-
-Anda dapat menggunakan fungsi nonzeros () untuk mengekstrak elemen
-tertentu dari vektor. Dalam contoh, kami menggunakan fileisprime
-bersyarat (n)
-
-
-\>N=2|3:2:99 // N berisi elemen 2 dan bilangan2 ganjil dari 3 s.d. 99
-
-
-    [2,  3,  5,  7,  9,  11,  13,  15,  17,  19,  21,  23,  25,  27,  29,
-    31,  33,  35,  37,  39,  41,  43,  45,  47,  49,  51,  53,  55,  57,
-    59,  61,  63,  65,  67,  69,  71,  73,  75,  77,  79,  81,  83,  85,
-    87,  89,  91,  93,  95,  97,  99]
-
-\>N[nonzeros(isprime(N))] //pilih anggota2 N yang prima
-
-
-    [2,  3,  5,  7,  11,  13,  17,  19,  23,  29,  31,  37,  41,  43,  47,
-    53,  59,  61,  67,  71,  73,  79,  83,  89,  97]
-
-## Format Keluaran
-
-Format keluaran default EMT mencetak 12 digit. Untuk memastikan bahwa
-kami melihat default, kami mengatur ulang format.
-
-
-\>defformat; pi
-
-
-    3.14159265359
-
-Secara internal, EMT menggunakan standar IEEE untuk bilangan ganda
-dengan sekitar 16 digit desimal. Untuk melihat secara lengkapjumlah
-digit, gunakan perintah "longestformat", atau kita menggunakan
-operator "terpanjang" untuk menampilkan hasilnyaformat terpanjang.
-
-
-\>longest pi
-
-
-          3.141592653589793 
-
-Berikut adalah representasi heksadesimal internal dari bilangan ganda
-
-
-\>printhex(pi)
-
-
-    3.243F6A8885A30*16^0
-
-Format keluaran dapat diubah secara permanen dengan perintah format.
-
-
-\>format(12,5); 1/3, pi, sin(1)
-
-
-        0.33333 
-        3.14159 
-        0.84147 
-
-defaultnya adalah format (12).
-
-
-\>format(12); 1/3
-
-
-    0.333333333333
-
-Fungsi seperti "shortestformat", "shortformat", "longformat" bekerja
-untuk vektor dengan cara berikut.
-
-
-\>shortestformat; random(3,8)
-
-
-      0.66    0.2   0.89   0.28   0.53   0.31   0.44    0.3 
-      0.28   0.88   0.27    0.7   0.22   0.45   0.31   0.91 
-      0.19   0.46  0.095    0.6   0.43   0.73   0.47   0.32 
-
-Format default untuk skalar adalah format (12). Tapi ini bisa diubah.
-
-
-\>setscalarformat(5); pi
-
-
-    3.1416
-
-Fungsi "format terpanjang" mengatur format skalar juga.
-
-
-\>longestformat; pi
-
-
-    3.141592653589793
-
-Untuk referensi, berikut adalah daftar format keluaran yang paling
-penting.
-
-
- shortestformat shortformat longformat, longestformat  
- format(panjang,digit) goodformat(panjang)  
- fracformat(panjang)  
- defformat  
-
-Akurasi internal EMT adalah sekitar 16 tempat desimal, yang merupakan
-standar IEEE. Angka disimpan dalamformat internal ini.
-
-
-Tetapi format keluaran EMT dapat diatur dengan cara yang fleksibel.
-
-
-\>longestformat; pi,
-
-
-    3.141592653589793
-
-\>format(10,5); pi
-
-
-      3.14159 
-
-defaultnya adalah defformat().
-
-
-\>defformat; // default
-
-
-Ada operator pendek yang hanya mencetak satu nilai. Operator
-"terpanjang" akan mencetak semua digit valid dari ajumlah.
-
-
-\>longest pi^2/2
-
-
-          4.934802200544679 
-
-Ada juga operator singkat untuk mencetak hasil dalam format pecahan.
-Kami telah menggunakannya di atas.
-
-
-\>fraction 1+1/2+1/3+1/4
-
-
-    25/12
-
-Karena format internal menggunakan cara biner untuk menyimpan angka,
-nilai 0.1 tidak akan direpresentasikan dengan tepat. Itukesalahan
-bertambah sedikit, seperti yang Anda lihat dalam perhitungan berikut.
-
-
-\>longest 0.1+0.1+0.1+0.1+0.1+0.1+0.1+0.1+0.1+0.1-1
-
-
-     -1.110223024625157e-16 
-
-Tetapi dengan "longformat" default Anda tidak akan melihat ini. Untuk
-kenyamanan, keluaran angka sangat kecil adalah 0.
-
-
-\>0.1+0.1+0.1+0.1+0.1+0.1+0.1+0.1+0.1+0.1-1
-
-
-    0
-
-# Ekspresi
-
-String atau nama dapat digunakan untuk menyimpan ekspresi matematika,
-yang dapat dievaluasi oleh EMT. Untuk ini, gunakantanda kurung setelah
-ekspresi. Jika Anda ingin menggunakan string sebagai ekspresi, gunakan
-konvensi untuk menamainya"fx" atau "fxy" dll. Ekspresi lebih
-diutamakan daripada fungsi.Variabel global dapat digunakan dalam
-evaluasi.
-
-
-\>r:=2; fx:="pi\*r^2"; longest fx()
-
-
-          12.56637061435917 
-
-Parameter ditetapkan ke x, y, dan z dalam urutan itu. Parameter
-tambahan dapat ditambahkan menggunakan ditugaskanparameter.
-
-
-\>fx:="a\*sin(x)^2"; fx(5,a=-1)
-
-
-    -0.919535764538
-
-Perhatikan bahwa ekspresi akan selalu menggunakan variabel global,
-meskipun ada variabel dalam fungsi yang samanama. (Jika tidak,
-evaluasi ekspresi dalam fungsi dapat memberikan hasil yang sangat
-membingungkan bagi penggunayang disebut fungsi.)
-
-
-\>at:=4; function f(expr,x,at) := expr(x); ...  
-\>   f("at\*x^2",3,5) // computes 4\*3^2 not 5\*3^2
-
-
-    36
-
-Jika Anda ingin menggunakan nilai lain untuk "at" daripada nilai
-global, Anda perlu menambahkan "at = value".
-
-
-\>at:=4; function f(expr,x,a) := expr(x,at=a); ...  
-\>   f("at\*x^2",3,5)
-
-
-    45
-
-Sebagai referensi, kami berkomentar bahwa koleksi panggilan (dibahas
-di tempat lain) dapat berisi ekspresi. Jadi kita bisa membuatnyacontoh
-di atas sebagai berikut
-
-
-\>at:=4; function f(expr,x) := expr(x); ...  
-\>   f({{"at\*x^2",at=5}},3)
-
-
-    45
-
-Ekspresi dalam x sering digunakan seperti fungsi.Perhatikan bahwa
-mendefinisikan fungsi dengan nama yang sama seperti ekspresi simbolik
-global menghapus variabel ini menjadihindari kebingungan antara
-ekspresi dan fungsi simbolik.
-
-
-\>f &= 5\*x;
-
-\>function f(x) := 6\*x;
-
-\>f(2)
-
-
-    12
-
-Dengan cara konvensi, ekspresi simbolik atau numerik harus diberi nama
-fx, fxy dll. Skema penamaan initidak boleh digunakan untuk fungsi.
-
-
-\>fx &= diff(x^x,x); $&fx
-
-
-Bentuk ekspresi khusus memungkinkan variabel apa pun sebagai parameter
-tanpa nama untuk evaluasi ekspresision, bukan hanya "x", "y" dll.
-Untuk ini, mulailah ekspresi dengan "@ (variabel) ...".
-
-
-\>"@(a,b) a^2+b^2", %(4,5)
-
-
-    @(a,b) a^2+b^2
-    41
-
-Hal ini memungkinkan untuk memanipulasi ekspresi dalam variabel lain
-untuk fungsi EMT yang membutuhkan ekspresi dalam "x".
-
-
-Cara paling dasar untuk mendefinisikan fungsi sederhana adalah dengan
-menyimpan rumusnya dalam ekspresi simbolis atau numerik.sion. Jika
-variabel utamanya adalah x, ekspresi tersebut dapat dievaluasi seperti
-fungsi.
-
-
-Seperti yang Anda lihat pada contoh berikut, variabel global terlihat
-selama evaluasi
-
-
-\>fx &= x^3-a\*x;  ...  
-\>   a=1.2; fx(0.5)
-
-
-    -0.475
-
-Semua variabel lain dalam ekspresi dapat ditentukan dalam evaluasi
-menggunakan parameter yang ditetapkan.
-
-
-\>fx(0.5,a=1.1)
-
-
-    -0.425
-
-Ekspresi tidak perlu simbolis. Ini diperlukan, jika ekspresi berisi
-fungsi, yang hanyadikenal di kernel numerik, bukan di Maxima.
-
-
-# Matematika Simbolik
-
-EMT melakukan matematika simbolis dengan bantuan Maxima. Untuk
-detailnya, mulailah dengan tutorial berikut, atau telusurireferensi
-untuk Maxima. Para ahli di Maxima harus memperhatikan bahwa ada
-perbedaan dalam sintaks antara filesintaks asli Maxima dan sintaks
-default ekspresi simbolik di EMT.
-
-
-Matematika simbolik terintegrasi mulus ke dalam Euler dengan &amp;.
-Ekspresi apa pun yang dimulai dengan &amp; adalah simbolikekspresi. Itu
-dievaluasi dan dicetak oleh Maxima.
-
-
-Pertama-tama, Maxima memiliki aritmatika "tak terbatas" yang dapat
-menangani angka yang sangat besar.
-
-
-\>$&44!
-
-
-Dengan cara ini, Anda dapat menghitung hasil yang besar dengan tepat.
-Mari kita hitung
-
-
-\>$& 44!/(34!\*10!) // nilai C(44,10)
-
-
-Tentu saja, Maxima memiliki fungsi yang lebih efisien untuk ini
-(seperti halnya bagian numerik EMT).
-
-
-\>$binomial(44,10) //menghitung C(44,10) menggunakan fungsi binomial()
-
-
-Untuk mempelajari lebih lanjut tentang fungsi tertentu, klik dua kali
-di atasnya. Misalnya, coba klik dua kali pada "&amp; binomial" dibaris
-perintah sebelumnya. Ini membuka dokumentasi Maxima yang disediakan
-oleh penulis program itu.
-
-
-Anda akan belajar bahwa yang berikut ini juga berfungsi
-
-
-\>$binomial(x,3) // C(x,3)
-
-
-Jika Anda ingin mengganti x dengan nilai tertentu, gunakan "dengan".
-
-
-\>$&binomial(x,3) with x=10 // substitusi x=10 ke C(x,3)
-
-
-Dengan begitu, Anda bisa menggunakan solusi persamaan di persamaan
-lain.
-
-
-Ekspresi simbolik dicetak oleh Maxima dalam bentuk 2D. Alasan untuk
-ini adalah bendera simbolis khusus ditali.
-
-
-Seperti yang akan Anda lihat pada contoh sebelumnya dan berikut, jika
-Anda menginstal LaTeX, Anda dapat mencetak simbolekspresi bolic dengan
-Latex. Jika tidak, perintah berikut akan mengeluarkan pesan kesalahan.
-
-
-Untuk mencetak ekspresi simbolik dengan LaTeX, gunakan $ infront dari
-&amp; (atau Anda dapat menghapus &amp;) sebelum perintah. jangan menjalankan
-perintah Maxima dengan $, jika Anda belum menginstal LaTeX
-
-
-\>$(3+x)/(x^2+1)
-
-
-Ekspresi simbolik diurai oleh Euler. Jika Anda membutuhkan sintaks
-kompleks dalam satu ekspresi, Anda dapat menyertakanekspresi dalam
-"...". Menggunakan lebih dari sekedar ekspresi sederhana dimungkinkan,
-tetapi sangat tidak disarankan.
-
-
-\>&"v := 5; v^2"
-
-
-    
-                                      25
-    
-
-Untuk kelengkapan, kami menyatakan bahwa ekspresi simbolik dapat
-digunakan dalam program, tetapi perlu diapittanda kutip. Selain itu,
-jauh lebih efektif untuk memanggil Maxima pada waktu kompilasi jika
-memungkinkan.
-
-
-\>$&expand((1+x)^4), $&factor(diff(%,x)) // diff: turunan, factor: faktor
-
-
-Sekali lagi,% mengacu pada hasil sebelumnya.Untuk mempermudah, kami
-menyimpan solusi ke variabel simbolik. Variabel simbolik didefinisikan
-dengan "&amp; =".
-
-
-\>fx &= (x+1)/(x^4+1); $&fx
-
-
-Ekspresi simbolik dapat digunakan dalam ekspresi simbolik lainnya.
-
-
-\>$&factor(diff(fx,x))
-
-
-Masukan langsung dari perintah Maxima juga tersedia. Mulai baris
-perintah dengan "::". Sintaks Maximadiadaptasi ke sintaks EMT (disebut
-"mode kompatibilitas").
-
-
-\>&factor(20!)
-
-
-    
-                             2432902008176640000
-    
-
-\>::: factor(10!)
-
-
-    
-                                   8  4  2
-                                  2  3  5  7
-    
-
-\>:: factor(20!)
-
-
-    
-                            18  8  4  2
-                           2   3  5  7  11 13 17 19
-    
-
-Jika Anda ahli dalam Maxima, Anda mungkin ingin menggunakan sintaks
-asli Maxima. Anda dapat melakukan ini dengan ":::".
-
-
-\>::: av:g$ av^2;
-
-
-    
-                                       2
-                                      g
-    
-
-\>fx &= x^3\*exp(x), $fx
-
-
-    
-                                     3  x
-                                    x  E
-    
-
-Variabel semacam itu dapat digunakan dalam ekspresi simbolik lainnya.
-Perhatikan, bahwa dalam perintah berikut ini tangan kanansisi &amp; =
-dievaluasi sebelum penugasan ke Fx.
-
-
-\>&(fx with x=5), $%, &float(%)
-
-
-    
-                                         5
-                                    125 E
-    
-    
-                              18551.64488782208
-    
-
-\>fx(5)
-
-
-    18551.6448878
-
-Untuk evaluasi ekspresi dengan nilai variabel tertentu, Anda dapat
-menggunakan operator "dengan".
-
-
-Baris perintah berikut juga menunjukkan bahwa Maxima dapat
-mengevaluasi ekspresi secara numerik denganmengapung().
-
-
-\>&(fx with x=10)-(fx with x=5), &float(%)
-
-
-    
-                                    10        5
-                              1000 E   - 125 E
-    
-    
-                             2.20079141499189e+7
-    
-
-\>$factor(diff(fx,x,2))
-
-
-Untuk mendapatkan kode Latex untuk ekspresi, Anda dapat menggunakan
-perintah tex.
-
-
-\>tex(fx)
-
-
-    x^3\,e^{x}
-
-Ekspresi simbolik dapat dievaluasi seperti ekspresi numerik.
-
-
-\>fx(0.5)
-
-
-    0.206090158838
-
-Dalam ekspresi simbolik, ini tidak berfungsi, karena Maxima tidak
-mendukungnya. Sebagai gantinya, gunakan sintaks "with"(bentuk yang
-lebih bagus dari perintah at (...) dari Maxima).
-
-
-\>$&fx with x=1/2
-
-
-Penugasan juga bisa bersifat simbolis.
-
-
-\>$&fx with x=1+t
-
-
-Pemecahan perintah memecahkan ekspresi simbolik untuk variabel di
-Maxima. Hasilnya adalah vektor solusi.
-
-
-\>$&solve(x^2+x=4,x)
-
-
-Bandingkan dengan perintah numerik "selesaikan" di Euler, yang
-membutuhkan nilai awal, dan secara opsional targetnilai.
-
-
-\>solve("x^2+x",1,y=4)
-
-
-    1.56155281281
-
-Nilai numerik dari solusi simbolik dapat dihitung dengan evaluasi
-hasil simbolik. Eulerakan membaca tugas x = dll. Jika Anda tidak
-memerlukan hasil numerik untuk perhitungan lebih lanjut Andadapat juga
-membiarkan Maxima menemukan nilai numerik.
-
-
-\>sol &= solve(x^2+2\*x=4,x); $&sol, sol(), $&float(sol)
-
-
-    [-3.23607,  1.23607]
-
-Untuk mendapatkan solusi simbolis tertentu, seseorang dapat
-menggunakan "dengan" dan indeks.
-
-
-\>$&solve(x^2+x=1,x), x2 &= x with %[2]; $&x2
-
-
-Untuk menyelesaikan sistem persamaan, gunakan vektor persamaan.
-Hasilnya adalah vektor solusi.
-
-
-\>sol &= solve([x+y=3,x^2+y^2=5],[x,y]); $&sol, $&x\*y with sol[1]
-
-
-Ekspresi simbolis dapat memiliki bendera, yang menunjukkan perlakuan
-khusus dalam Maxima. Beberapa bendera dapat digunakan sebagaiperintah
-juga, orang lain tidak bisa. Bendera ditambahkan dengan "|" (a nicer
-form of "ev(...,flags)")
-
-
-\>$& diff((x^3-1)/(x+1),x) //turunan bentuk pecahan
-
-\>$& diff((x^3-1)/(x+1),x) | ratsimp //menyederhanakan pecahan
-
-\>$&factor(%)
-
-
-## Fungsi
-
-Dalam EMT, fungsi adalah program yang ditentukan dengan perintah
-"fungsi". Ini bisa menjadi fungsi satu baris atau multiline fungsi.
-
-
-Fungsi satu baris dapat berupa numerik atau simbolik. Fungsi satu
-baris numerik ditentukan oleh ": =".
-
-
-\>function f(x) := x\*sqrt(x^2+1)
-
-
-Untuk gambaran umum, kami menunjukkan semua kemungkinan definisi untuk
-fungsi satu baris. Suatu fungsi dapat dievaluasi seperti fungsi Euler
-bawaan apa pun.
-
-
-\>f(2)
-
-
-    4.472135955
-
-Fungsi ini akan bekerja untuk vektor juga, mengikuti bahasa matriks
-Euler, karena ekspresi yang digunakan dalamfungsi adalah vektorisasi.
-
-
-\>f(0:0.1:1)
-
-
-    [0,  0.100499,  0.203961,  0.313209,  0.430813,  0.559017,  0.699714,
-    0.854459,  1.0245,  1.21083,  1.41421]
-
-Fungsi dapat diplot. Sebagai ganti ekspresi, kita hanya perlu
-memberikan nama fungsi.
-
-
-Berbeda dengan ekspresi simbolik atau numerik, nama fungsi harus
-diberikan dalam string.
-
-
-\>solve("f",1,y=1)
-
-
-    0.786151377757
-
-Secara default, jika Anda perlu menimpa fungsi built-in, Anda harus
-menambahkan kata kunci "overwrite". Menimpafungsi built-in berbahaya
-dan dapat menyebabkan masalah pada fungsi lain tergantung pada
-fungsinya.
-
-
-Anda masih bisa memanggil fungsi built-in sebagai "_...", jika itu
-berfungsi di inti Euler.
-
-
-\>function overwrite sin (x) := \_sin(x°) // redine sinus dalam derajat
-
-\>sin(45)
-
-
-    0.707106781187
-
-Lebih baik kita menghapus definisi ulang sin ini.
-
-
-\>forget sin; sin(pi/4)
-
-
-    0.707106781187
-
-## Parameter Default
-
-Fungsi numerik dapat memiliki parameter default.
-
-
-\>function f(x,a=1) := a\*x^2
-
-
-Menghilangkan parameter ini menggunakan nilai default.
-
-
-\>f(4)
-
-
-    16
-
-Menyetelnya menimpa nilai default.
-
-
-\>f(4,5)
-
-
-    80
-
-Parameter yang ditetapkan juga menimpanya. Ini digunakan oleh banyak
-fungsi Euler seperti plot2d, plot3d.
-
-
-\>f(4,a=1)
-
-
-    16
-
-Jika variabel bukan parameter, itu harus global. Fungsi satu baris
-dapat melihat variabel global.
-
-
-\>function f(x) := a\*x^2
-
-\>a=6; f(2)
-
-
-    24
-
-Tetapi parameter yang ditetapkan menggantikan nilai global.
-
-
-Jika argumen tidak ada dalam daftar parameter yang telah ditentukan
-sebelumnya, itu harus dideklarasikan dengan ": ="!
-
-
-\>f(2,a:=5)
-
-
-    20
-
-Fungsi simbolik didefinisikan dengan "&amp; =". Mereka didefinisikan di
-Euler dan Maxima, dan bekerja di kedua dunia. Ekspresi yang menentukan
-dijalankan melalui Maxima sebelum definisi.
-
-
-\>function g(x) &= x^3-x\*exp(-x); $&g(x)
-
-
-Fungsi simbolik dapat digunakan dalam ekspresi simbolik.
-
-
-\>$&diff(g(x),x), $&% with x=4/3
-
-
-Mereka juga dapat digunakan dalam ekspresi numerik. Tentu saja, ini
-hanya akan berfungsi jika EMT dapat menafsirkan semua yang ada di
-dalam fungsi tersebut.
-
-
-\>g(5+g(1))
-
-
-    178.635099908
-
-Mereka dapat digunakan untuk mendefinisikan fungsi atau ekspresi
-simbolik lainnya.
-
-
-\>function G(x) &= factor(integrate(g(x),x)); $&G(c) // integrate: mengintegralkan
-
-
-\>solve(&g(x),0.5)
-
-
-    0.703467422498
-
-Cara berikut juga berfungsi, karena Euler menggunakan ekspresi
-simbolik dalam fungsi g, jika tidak menemukan variabel simbolis g, dan
-jika terdapat fungsi simbolik g.
-
-
-\>solve(&g,0.5)
-
-
-    0.703467422498
-
-\>function P(x,n) &= (2\*x-1)^n; $&P(x,n)
-
-\>function Q(x,n) &= (x+2)^n; $&Q(x,n)
-
-\>$&P(x,4), $&expand(%)
-
-\>P(3,4)
-
-
-    625
-
-\>$&P(x,4)+ Q(x,3), $&expand(%)
-
-\>$&P(x,4)-Q(x,3), $&expand(%), $&factor(%)
-
-\>$&P(x,4)\*Q(x,3), $&expand(%), $&factor(%)
-
-\>$&P(x,4)/Q(x,1), $&expand(%), $&factor(%)
-
-\>function f(x) &= x^3-x; $&f(x)
-
-
-With &amp;= the function is symbolic, and can be used in other symbolic
-expressions.
-
-
-\>$&integrate(f(x),x)
-
-
-Dengan: = fungsinya adalah numerik. Contoh yang baik adalah seperti
-integral pasti
-
-
-yang tidak dapat dievaluasi secara simbolis.
-
-
-Jika kita mendefinisikan ulang fungsi dengan kata kunci "map", ini
-dapat digunakan untuk vektor x. Secara internal, fungsi ini dipanggil
-untuk semua nilai x satu kali, dan hasilnya disimpan dalam vektor.
-
-
-\>function map f(x) := integrate("x^x",1,x)
-
-\>f(0:0.5:2)
-
-
-    [-0.783431,  -0.410816,  0,  0.676863,  2.05045]
-
-Fungsi dapat memiliki nilai default untuk parameter.
-
-
-\>function mylog (x,base=10) := ln(x)/ln(base);
-
-
-Sekarang fungsi tersebut dapat dipanggil dengan atau tanpa parameter
-"base".
-
-
-\>mylog(100), mylog(2^6.7,2)
-
-
-    2
-    6.7
-
-Selain itu, dimungkinkan untuk menggunakan parameter yang ditetapkan.
-
-
-\>mylog(E^2,base=E)
-
-
-    2
-
-Seringkali, kami ingin menggunakan fungsi untuk vektor di satu tempat,
-dan untuk elemen individu di tempat lain. Ini dimungkinkan dengan
-parameter vektor.
-
-
-\>function f([a,b]) &= a^2+b^2-a\*b+b; $&f(a,b), $&f(x,y)
-
-
-Fungsi simbolik seperti itu dapat digunakan untuk variabel simbolik.
-
-
-Tetapi fungsinya juga dapat digunakan untuk vektor numerik.
-
-
-\>v=[3,4]; f(v)
-
-
-    17
-
-Ada juga fungsi simbolik murni, yang tidak dapat digunakan secara
-numerik.
-
-
-\>function lapl(expr,x,y) &&= diff(expr,x,2)+diff(expr,y,2)//turunan parsial kedua
-
-
-    
-                     diff(expr, y, 2) + diff(expr, x, 2)
-    
-
-\>$&realpart((x+I\*y)^4), $&lapl(%,x,y)
-
-
-Tetapi tentu saja, mereka dapat digunakan dalam ekspresi simbolik atau
-dalam definisi fungsi simbolik.
-
-
-\>function f(x,y) &= factor(lapl((x+y^2)^5,x,y)); $&f(x,y)
-
-
-Untuk meringkas
+Rentang plot diatur dengan parameter yang ditetapkan berikut:
 
 
 * 
-&amp; = mendefinisikan fungsi simbolik,
-* -: = mendefinisikan fungsi numerik,
+a,b: rentang-x (default -2,2)
 
 * 
-&amp;&amp; = mendefinisikan fungsi simbolik murni.
+c,d: y-range (default: skala dengan nilai)
 
+* 
+r: sebagai alternatif radius di sekitar pusat plot
 
-# Memecahkan Ekspresi
+* 
+cx,cy: koordinat pusat plot (default 0,0)
 
-Ekspresi dapat diselesaikan secara numerik dan simbolik.
 
+\>plot2d("x^3-x",-1,2):
 
-Untuk menyelesaikan ekspresi sederhana dari satu variabel, kita dapat
-menggunakan fungsi Solving (). Diperlukan nilai awal untuk memulai
-pencarian. Secara internal, Solving () menggunakan metode garis
-potong.
+\>plot2d("sin(x)",-2\*pi,2\*pi): // plot sin(x) pada interval [-2pi, 2pi]
 
+\>plot2d("cos(x)","sin(3\*x)",xmin=0,xmax=2pi):
 
-\>solve("x^2-2",1)
 
+Alternatif untuk titik dua adalah perintah insimg(baris), yang
+menyisipkan plot yang menempati sejumlah baris teks tertentu.
 
-    1.41421356237
 
-Ini bekerja untuk ekspresi simbolik juga. Ambil fungsi berikut.
-
-
-\>$&solve(x^2=2,x)
-
-\>$&solve(x^2-2,x)
-
-\>$&solve(a\*x^2+b\*x+c=0,x)
-
-\>$&solve([a\*x+b\*y=c,d\*x+e\*y=f],[x,y])
-
-
-\>px &= 4\*x^8+x^7-x^4-x; $&px
-
-
-Sekarang kita mencari titik, di mana polinomialnya adalah 2. Dalam
-Solving (), nilai target default y = 0 dapat diubah dengan variabel
-yang ditetapkan.
-
-
-Kami menggunakan y = 2 dan memeriksa dengan mengevaluasi polinomial
-pada hasil sebelumnya.
-
-
-\>solve(px,1,y=2), px(%)
-
-
-    0.966715594851
-    2
-
-Memecahkan ekspresi simbolis dalam bentuk simbolik mengembalikan
-daftar solusi. Kami menggunakan penyelesaian pemecah simbolik () yang
-disediakan oleh Maxima.
-
-
-\>sol &= solve(x^2-x-1,x); $&sol
-
-
-Cara termudah untuk mendapatkan nilai numerik adalah dengan
-mengevaluasi solusi secara numerik seperti ekspresi.
-
-
-\>longest sol()
-
-
-        -0.6180339887498949       1.618033988749895 
-
-Untuk menggunakan solusi secara simbolis dalam ekspresi lain, cara
-termudah adalah "dengan".
-
-
-\>$&x^2 with sol[1], $&expand(x^2-x-1 with sol[2])
-
-
-Sistem pemecahan persamaan secara simbolis dapat dilakukan dengan
-vektor persamaan dan penyelesaian pemecah simbolik (). Jawabannya
-adalah daftar persamaan.
-
-
-\>$&solve([x+y=2,x^3+2\*y+x=4],[x,y])
-
-
-Fungsi f () dapat melihat variabel global. Namun seringkali kita ingin
-menggunakan parameter lokal.
-
-
-dengan a = 3.
-
-
-\>function f(x,a) := x^a-a^x;
-
-
-Salah satu cara untuk meneruskan parameter tambahan ke f () adalah
-dengan menggunakan daftar dengan nama fungsi dan parameternya (cara
-lainnya adalah parameter titik koma).
-
-
-\>solve({{"f",3}},2,y=0.1)
-
-
-    2.54116291558
-
-Ini juga bekerja dengan ekspresi. Tapi kemudian, elemen daftar bernama
-harus digunakan. (Lebih lanjut tentang daftar di tutorial tentang
-sintaks EMT).
-
-
-\>solve({{"x^a-a^x",a=3}},2,y=0.1)
-
-
-    2.54116291558
-
-# Menyelesaikan Pertidaksamaan
-
-Untuk menyelesaikan pertidaksamaan, EMT tidak akan dapat melakukan,
-melainkan dengan bantuan Maxima, yaitu secara eksak (simbolik).
-Perintah Maxima yang digunakan adalah fourier_elim (), yang harus
-dipanggil dengan perintah "load (fourier_elim)" terlebih dahulu.
-
-
-\>&load(fourier\_elim)
-
-
-    
-            C:/Program Files/Euler x64/maxima/share/maxima/5.35.1/share/f\
-    ourier_elim/fourier_elim.lisp
-    
-
-\>$&fourier\_elim([x^2 - 1\>0],[x]) // x^2-1 \> 0
-
-\>$&fourier\_elim([x^2 - 1<0],[x]) // x^2-1 < 0
-
-\>$&fourier\_elim([x^2 - 1 # 0],[x]) // x^-1 <\> 0
-
-\>$&fourier\_elim([x # 6],[x])
-
-\>$&fourier\_elim([x < 1, x \> 1],[x]) // tidak memiliki penyelesaian
-
-\>$&fourier\_elim([minf < x, x < inf],[x]) // solusinya R
-
-\>$&fourier\_elim([x^3 - 1 \> 0],[x])
-
-\>$&fourier\_elim([cos(x) < 1/2],[x]) // ??? gagal
-
-
-\>$&fourier\_elim([y-x < 5, x - y < 7, 10 < y],[x,y]) // sistem pertidaksamaan
-
-\>$&fourier\_elim([y-x < 5, x - y < 7, 10 < y],[y,x])
-
-\>$&fourier\_elim((x + y < 5) and (x - y \>8),[x,y])
-
-\>$&fourier\_elim(((x + y < 5) and x < 1) or  (x - y \>8),[x,y])
-
-\>&fourier\_elim([max(x,y) \> 6, x # 8, abs(y-1) \> 12],[x,y])
-
-
-    
-            [6 &lt; x, x &lt; 8, y &lt; - 11] or [8 &lt; x, y &lt; - 11]
-     or [x &lt; 8, 13 &lt; y] or [x = y, 13 &lt; y] or [8 &lt; x, x &lt; y, 13 &lt; y]
-     or [y &lt; x, 13 &lt; y]
-    
-
-\>$&fourier\_elim([(x+6)/(x-9) <= 6],[x])
-
-
-# Bahasa Matriks
-
-Dokumentasi inti EMT berisi diskusi terperinci tentang bahasa matriks
-Euler.
-
-
-Vektor dan matriks dimasukkan dengan tanda kurung siku, elemen
-dipisahkan dengan koma, baris dipisahkan dengan titik koma.
-
-
-\>A=[1,2;3,4]
-
-
-                1             2 
-                3             4 
-
-Produk matriks dilambangkan dengan titik.
-
-
-\>b=[3;4]
-
-
-                3 
-                4 
-
-\>b' // transpose b
-
-
-    [3,  4]
-
-\>inv(A) //inverse A
-
-
-               -2             1 
-              1.5          -0.5 
-
-\>A.b //perkalian matriks
-
-
-               11 
-               25 
-
-\>A.inv(A)
-
-
-                1             0 
-                0             1 
-
-Poin utama dari bahasa matriks adalah bahwa semua fungsi dan operator
-mengerjakan elemen untuk elemen.
-
-
-\>A.A
-
-
-                7            10 
-               15            22 
-
-\>A^2 //perpangkatan elemen2 A
-
-
-                1             4 
-                9            16 
-
-\>A.A.A
-
-
-               37            54 
-               81           118 
-
-\>power(A,3) //perpangkatan matriks
-
-
-               37            54 
-               81           118 
-
-\>A/A //pembagian elemen-elemen matriks yang seletak
-
-
-                1             1 
-                1             1 
-
-\>A/b //pembagian elemen2 A oleh elemen2 b kolom demi kolom (karena b vektor kolom)
-
-
-         0.333333      0.666667 
-             0.75             1 
-
-\>A\\b // hasilkali invers A dan b, A^(-1)b 
-
-
-               -2 
-              2.5 
-
-\>inv(A).b
-
-
-               -2 
-              2.5 
-
-\>A\\A   //A^(-1)A
-
-
-                1             0 
-                0             1 
-
-\>inv(A).A
-
-
-                1             0 
-                0             1 
-
-\>A\*A //perkalin elemen-elemen matriks seletak
-
-
-                1             4 
-                9            16 
-
-Ini bukan hasil perkalian matriks, tetapi perkalian elemen dengan
-elemen. Pekerjaan yang sama untuk vektor.
-
-
-\>b^2 // perpangkatan elemen-elemen matriks/vektor
-
-
-                9 
-               16 
-
-Jika salah satu operan adalah vektor atau skalar, itu diperluas dengan
-cara alami.
-
-
-\>2\*A
-
-
-                2             4 
-                6             8 
-
-Misalnya, jika operan adalah vektor kolom, elemennya diterapkan ke
-semua baris A.
-
-
-\>[1,2]\*A
-
-
-                1             4 
-                3             8 
-
-Jika itu adalah vektor baris, itu diterapkan ke semua kolom A.
-
-
-\>A\*[2,3]
-
-
-                2             6 
-                6            12 
-
-Dapat dibayangkan perkalian ini seolah-olah vektor baris v telah
-diduplikasi untuk membentuk matriks dengan ukuran yang sama dengan A.
-
-
-\>dup([1,2],2) // dup: menduplikasi/menggandakan vektor [1,2] sebanyak 2 kali (baris)
-
-
-                1             2 
-                1             2 
-
-\>A\*dup([1,2],2) 
-
-
-                1             4 
-                3             8 
-
-Ini juga berlaku untuk dua vektor di mana satu adalah vektor baris dan
-yang lainnya adalah vektor kolom. Kami menghitung i * j untuk i, j
-dari 1 sampai 5. Triknya adalah mengalikan 1: 5 dengan transposenya.
-Bahasa matriks Euler secara otomatis menghasilkan tabel nilai.
-
-
-\>(1:5)\*(1:5)' // hasilkali elemen-elemen vektor baris dan vektor kolom
-
-
-                1             2             3             4             5 
-                2             4             6             8            10 
-                3             6             9            12            15 
-                4             8            12            16            20 
-                5            10            15            20            25 
-
-Sekali lagi, ingatlah bahwa ini bukan hasil perkalian matriks!
-
-
-\>(1:5).(1:5)' // hasilkali vektor baris dan vektor kolom
-
-
-    55
-
-\>sum((1:5)\*(1:5)) // sama hasilnya
-
-
-    55
-
-Bahkan operator seperti &lt;atau == bekerja dengan cara yang sama.
-
-
-\>(1:10)<6 // menguji elemen-elemen yang kurang dari 6
-
-
-    [1,  1,  1,  1,  1,  0,  0,  0,  0,  0]
-
-Misalnya, kita dapat menghitung jumlah elemen yang memenuhi kondisi
-tertentu dengan fungsi sum ().
-
-
-\>sum((1:10)<6) // banyak elemen yang kurang dari 6
-
-
-    5
-
-Euler memiliki operator perbandingan, seperti "==", yang memeriksa
-kesetaraan.
-
-
-Kami mendapatkan vektor 0 dan 1, di mana 1 berarti benar.
-
-
-\>t=(1:10)^2; t==25 //menguji elemen2 t yang sama dengan 25 (hanya ada 1)
-
-
-    [0,  0,  0,  0,  1,  0,  0,  0,  0,  0]
-
-Dari vektor seperti itu, "nonzeros" memilih elemen bukan nol.
-
-
-Dalam hal ini, kami mendapatkan indeks dari semua elemen yang lebih
-besar dari 50.
-
-
-\>nonzeros(t\>50) //indeks elemen2 t yang lebih besar daripada 50
-
-
-    [8,  9,  10]
-
-Tentu saja, kita dapat menggunakan vektor indeks ini untuk mendapatkan
-nilai t yang sesuai.
-
-
-\>t[nonzeros(t\>50)] //elemen2 t yang lebih besar daripada 50
-
-
-    [64,  81,  100]
-
-Sebagai contoh, mari kita cari semua kuadrat dari angka 1 sampai 1000,
-yaitu 5 modulo 11 dan 3 modulo 13.
-
-
-\>t=1:1000; nonzeros(mod(t^2,11)==5 && mod(t^2,13)==3)
-
-
-    [4,  48,  95,  139,  147,  191,  238,  282,  290,  334,  381,  425,
-    433,  477,  524,  568,  576,  620,  667,  711,  719,  763,  810,  854,
-    862,  906,  953,  997]
-
-EMT tidak sepenuhnya efektif untuk perhitungan integer. Ini
-menggunakan titik mengambang presisi ganda secara internal. Namun,
-seringkali ini sangat berguna.
-
-
-Kita bisa memeriksa keutamaan. Mari kita cari tahu, berapa banyak
-kuadrat ditambah 1 yang merupakan bilangan prima.
-
-
-\>t=1:1000; length(nonzeros(isprime(t^2+1)))
-
-
-    112
-
-Fungsi nonzeros () hanya berfungsi untuk vektor. Untuk matriks, ada
-mnonzeros ().
-
-
-\>seed(2); A=random(3,4)
-
-
-         0.765761      0.401188      0.406347      0.267829 
-          0.13673      0.390567      0.495975      0.952814 
-         0.548138      0.006085      0.444255      0.539246 
-
-Ini mengembalikan indeks elemen, yang bukan nol.
-
-
-\>k=mnonzeros(A<0.4) //indeks elemen2 A yang kurang dari 0,4
-
-
-                1             4 
-                2             1 
-                2             2 
-                3             2 
-
-Indeks ini dapat digunakan untuk mengatur elemen ke nilai tertentu.
-
-
-\>mset(A,k,0) //mengganti elemen2 suatu matriks pada indeks tertentu
-
-
-         0.765761      0.401188      0.406347             0 
-                0             0      0.495975      0.952814 
-         0.548138             0      0.444255      0.539246 
-
-Fungsi mset () juga dapat menyetel elemen pada indeks ke entri
-beberapa matriks lainnya.
-
-
-\>mset(A,k,-random(size(A)))
-
-
-         0.765761      0.401188      0.406347     -0.126917 
-        -0.122404     -0.691673      0.495975      0.952814 
-         0.548138     -0.483902      0.444255      0.539246 
-
-Dan dimungkinkan untuk mendapatkan elemen dalam vektor.
-
-
-\>mget(A,k)
-
-
-    [0.267829,  0.13673,  0.390567,  0.006085]
-
-Fungsi berguna lainnya adalah extrema, yang mengembalikan nilai
-minimal dan maksimal di setiap baris matriks dan posisinya.
-
-
-\>ex=extrema(A)
-
-
-         0.267829             4      0.765761             1 
-          0.13673             1      0.952814             4 
-         0.006085             2      0.548138             1 
-
-Kita dapat menggunakan ini untuk mengekstrak nilai maksimal di setiap
-baris.
-
-
-\>ex[,3]'
-
-
-    [0.765761,  0.952814,  0.548138]
-
-Ini, tentu saja, sama dengan fungsi max ().
-
-
-\>max(A)'
-
-
-    [0.765761,  0.952814,  0.548138]
-
-Tetapi dengan mget (), kita dapat mengekstrak indeks dan menggunakan
-informasi ini untuk mengekstrak elemen pada posisi yang sama dari
-matriks lain.
-
-
-\>j=(1:rows(A))'|ex[,4], mget(-A,j)
-
-
-                1             1 
-                2             4 
-                3             1 
-    [-0.765761,  -0.952814,  -0.548138]
-
-# Fungsi Matriks Lainnya (Building Matrix)
-
-Untuk membangun matriks, kita dapat menumpuk satu matriks di atas
-matriks lainnya. Jika keduanya tidak memiliki jumlah kolom yang sama,
-kolom yang lebih pendek diisi dengan 0.
-
-
-\>v=1:3; v\_v
-
-
-                1             2             3 
-                1             2             3 
-
-Demikian juga, kita dapat melampirkan matriks ke sisi lain secara
-berdampingan, jika keduanya memiliki jumlah baris yang sama.
-
-
-\>A=random(3,4); A|v'
-
-
-         0.032444     0.0534171      0.595713      0.564454             1 
-          0.83916      0.175552      0.396988       0.83514             2 
-        0.0257573      0.658585      0.629832      0.770895             3 
-
-Jika mereka tidak memiliki jumlah baris yang sama, matriks yang lebih
-pendek diisi dengan 0.
-
-
-Ada pengecualian untuk aturan ini. Bilangan real yang melekat pada
-matriks akan digunakan sebagai kolom yang diisi dengan bilangan real
-tersebut.
-
-
-\>A|1
-
-
-         0.032444     0.0534171      0.595713      0.564454             1 
-          0.83916      0.175552      0.396988       0.83514             1 
-        0.0257573      0.658585      0.629832      0.770895             1 
-
-Dimungkinkan untuk membuat matriks vektor baris dan kolom.
-
-
-\>[v;v]
-
-
-                1             2             3 
-                1             2             3 
-
-\>[v',v']
-
-
-                1             1 
-                2             2 
-                3             3 
-
-Tujuan utamanya adalah untuk menafsirkan vektor ekspresi untuk vektor
-kolom.
-
-
-\>"[x,x^2]"(v')
-
-
-                1             1 
-                2             4 
-                3             9 
-
-Untuk mendapatkan ukuran A, kita bisa menggunakan fungsi-fungsi
-berikut.
-
-
-\>C=zeros(2,4); rows(C), cols(C), size(C), length(C)
-
-
-    2
-    4
-    [2,  4]
-    4
-
-Untuk vektor, ada length().
-
-
-\>length(2:10)
-
-
-    9
-
-Ada banyak fungsi lain yang menghasilkan matriks.
-
-
-\>ones(2,2)
-
-
-                1             1 
-                1             1 
-
-Ini juga dapat digunakan dengan satu parameter. Untuk mendapatkan
-vektor dengan angka selain 1, gunakan yang berikut ini.
-
-
-\>ones(5)\*6
-
-
-    [6,  6,  6,  6,  6]
-
-Juga matriks bilangan acak dapat dihasilkan dengan acak (distribusi
-seragam) atau normal (distribusi Gauß).
-
-
-\>random(2,2)
-
-
-          0.66566      0.831835 
-            0.977      0.544258 
-
-Berikut adalah fungsi berguna lainnya, yang menyusun kembali
-elemen-elemen matriks menjadi matriks lain.
-
-
-\>redim(1:9,3,3) // menyusun elemen2 1, 2, 3, ..., 9 ke bentuk matriks 3x3
-
-
-                1             2             3 
-                4             5             6 
-                7             8             9 
-
-Dengan fungsi berikut, kita dapat menggunakan this dan fungsi dup
-untuk menulis fungsi rep (), yang mengulang vektor sebanyak n kali.
-
-
-\>function rep(v,n) := redim(dup(v,n),1,n\*cols(v))
-
-
-Mari kita uji.
-
-
-\>rep(1:3,5)
-
-
-    [1,  2,  3,  1,  2,  3,  1,  2,  3,  1,  2,  3,  1,  2,  3]
-
-Fungsi multdup () menduplikasi elemen vektor.
-
-
-\>multdup(1:3,5), multdup(1:3,[2,3,2])
-
-
-    [1,  1,  1,  1,  1,  2,  2,  2,  2,  2,  3,  3,  3,  3,  3]
-    [1,  1,  2,  2,  2,  3,  3]
-
-Fungsi flipx () dan flipy () mengembalikan urutan baris atau kolom
-matriks. Yaitu, fungsi flipx () membalik secara horizontal.
-
-
-\>flipx(1:5) //membalik elemen2 vektor baris
-
-
-    [5,  4,  3,  2,  1]
-
-Untuk rotasi, Euler memiliki rotleft () dan rotright ().
-
-
-\>rotleft(1:5) // memutar elemen2 vektor baris
-
-
-    [2,  3,  4,  5,  1]
-
-Fungsi khusus adalah drop (v, i), yang menghilangkan elemen dengan
-indeks di i dari vektor v.
-
-
-\>drop(10:20,3)
-
-
-    [10,  11,  13,  14,  15,  16,  17,  18,  19,  20]
-
-Perhatikan bahwa vektor i dalam drop (v, i) mengacu pada indeks elemen
-di v, bukan nilai elemen. Jika Anda ingin menghapus elemen, Anda harus
-menemukan elemennya terlebih dahulu. Indeks fungsi (v, x) dapat
-digunakan untuk mencari elemen x dalam vektor yang diurutkan v.
-
-
-\>v=primes(50), i=indexof(v,10:20), drop(v,i)
-
-
-    [2,  3,  5,  7,  11,  13,  17,  19,  23,  29,  31,  37,  41,  43,  47]
-    [0,  5,  0,  6,  0,  0,  0,  7,  0,  8,  0]
-    [2,  3,  5,  7,  23,  29,  31,  37,  41,  43,  47]
-
-Seperti yang Anda lihat, tidak ada salahnya untuk menyertakan indeks
-di luar rentang (seperti 0), indeks ganda, atau indeks yang tidak
-disortir.
-
-
-\>drop(1:10,shuffle([0,0,5,5,7,12,12]))
-
-
-    [1,  2,  3,  4,  6,  8,  9,  10]
-
-Ada beberapa fungsi khusus untuk mengatur diagonal atau untuk
-menghasilkan matriks diagonal.
-
-
-Kami mulai dengan matriks identitas.
-
-
-\>A=id(5) // matriks identitas 5x5
-
-
-                1             0             0             0             0 
-                0             1             0             0             0 
-                0             0             1             0             0 
-                0             0             0             1             0 
-                0             0             0             0             1 
-
-Kemudian kami mengatur diagonal bawah (-1) menjadi 1: 4.
-
-
-\>setdiag(A,-1,1:4) //mengganti diagonal di bawah diagonal utama
-
-
-                1             0             0             0             0 
-                1             1             0             0             0 
-                0             2             1             0             0 
-                0             0             3             1             0 
-                0             0             0             4             1 
-
-Perhatikan bahwa kami tidak mengubah matriks A. Kami mendapatkan
-matriks baru sebagai hasil dari setdiag ().
-
-
-Berikut adalah fungsi yang mengembalikan matriks tri-diagonal.
-
-
-\>function tridiag (n,a,b,c) := setdiag(setdiag(b\*id(n),1,c),-1,a); ...  
-\>   tridiag(5,1,2,3)
-
-
-                2             3             0             0             0 
-                1             2             3             0             0 
-                0             1             2             3             0 
-                0             0             1             2             3 
-                0             0             0             1             2 
-
-Diagonal matriks juga dapat diekstraksi dari matriks. Untuk
-mendemonstrasikan ini, kami merestrukturisasi vektor 1: 9 menjadi
-matriks 3x3.
-
-
-\>A=redim(1:9,3,3)
-
-
-                1             2             3 
-                4             5             6 
-                7             8             9 
-
-Sekarang kita bisa mengekstrak diagonal.
-
-
-\>d=getdiag(A,0)
-
-
-    [1,  5,  9]
-
-Misalnya. Kita dapat membagi matriks dengan diagonalnya. Bahasa
-matriks memperhatikan bahwa vektor kolom d diterapkan ke matriks baris
-demi baris.
-
-
-\>fraction A/d'
-
-
-            1         2         3 
-          4/5         1       6/5 
-          7/9       8/9         1 
-
-# Vektorisasi
-
-Hampir semua fungsi di Euler bekerja untuk matriks dan input vektor
-juga, jika memungkinkan.
-
-
-Misalnya, fungsi sqrt () menghitung akar kuadrat dari semua elemen
-vektor atau matriks.
-
-
-\>sqrt(1:3)
-
-
-    [1,  1.41421,  1.73205]
-
-Jadi Anda dapat dengan mudah membuat tabel nilai. Ini adalah salah
-satu cara untuk memplot fungsi (alternatifnya menggunakan ekspresi).
-
-
-\>x=1:0.01:5; y=log(x)/x^2; // terlalu panjang untuk ditampikan
-
-
-Dengan ini dan operator titik dua a: delta: b, vektor nilai fungsi
-dapat dibuat dengan mudah.
-
-
-Dalam contoh berikut, kami menghasilkan vektor nilai t [i] dengan
-jarak 0,1 dari -1 hingga 1. Kemudian kami menghasilkan vektor nilai
-fungsi
-
-
-\>t=-1:0.1:1; s=t^3-t
-
-
-    [0,  0.171,  0.288,  0.357,  0.384,  0.375,  0.336,  0.273,  0.192,
-    0.099,  0,  -0.099,  -0.192,  -0.273,  -0.336,  -0.375,  -0.384,
-    -0.357,  -0.288,  -0.171,  0]
-
-EMT memperluas operator untuk skalar, vektor, dan matriks dengan cara
-yang jelas.
-
-
-Misalnya, vektor kolom dikali vektor baris mengembang menjadi matriks,
-jika operator diterapkan. Berikut ini, v 'adalah vektor yang dialihkan
-(vektor kolom).
-
-
-\>shortest (1:5)\*(1:5)'
-
-
-         1      2      3      4      5 
-         2      4      6      8     10 
-         3      6      9     12     15 
-         4      8     12     16     20 
-         5     10     15     20     25 
-
-Perhatikan, ini sangat berbeda dari hasil perkalian matriks. Produk
-matriks dilambangkan dengan titik "." di EMT.
-
-
-\>(1:5).(1:5)'
-
-
-    55
-
-Secara default, vektor baris dicetak dalam format kompak.
-
-
-\>[1,2,3,4]
-
-
-    [1,  2,  3,  4]
-
-Untuk matriks, operator khusus. menunjukkan perkalian matriks, dan AN
-'menunjukkan transposing. Matriks 1x1 dapat digunakan seperti bilangan
-real.
-
-
-\>v:=[1,2]; v.v', %^2
-
-
-    5
-    25
-
-Untuk mentranpose matriks, kami menggunakan apostrof.
-
-
-\>v=1:4; v'
-
-
-                1 
-                2 
-                3 
-                4 
-
-Sehingga kita dapat menghitung matriks A dikali vektor b.
-
-
-\>A=[1,2,3,4;5,6,7,8]; A.v'
-
-
-               30 
-               70 
-
-Perhatikan bahwa v masih merupakan vektor baris. Jadi v'.v berbeda
-dari v.v '.
-
-
-\>v'.v
-
-
-                1             2             3             4 
-                2             4             6             8 
-                3             6             9            12 
-                4             8            12            16 
-
-v.v 'menghitung norma v kuadrat untuk vektor baris v. Hasilnya adalah
-vektor 1x1, yang bekerja seperti bilangan real.
-
-
-\>v.v'
-
-
-    30
-
-Ada juga norma fungsi (bersama dengan banyak fungsi lain dari Aljabar
-Linear).
-
-
-\>norm(v)^2
-
-
-    30
-
-Operator dan fungsi mematuhi bahasa matriks Euler.
-
-
-Berikut adalah ringkasan aturannya.
+Dalam opsi, plot dapat diatur untuk muncul
 
 
 * 
-Fungsi yang diterapkan ke vektor atau matriks diterapkan ke setiap
-* elemen.
+di jendela terpisah yang dapat diubah ukurannya,
+
+* 
+di jendela buku catatan.
+
+
+Lebih banyak gaya dapat dicapai dengan perintah plot tertentu.
+
+
+Bagaimanapun, tekan tombol tabulator untuk melihat plot, jika
+disembunyikan.
+
+
+Untuk membagi jendela menjadi beberapa plot, gunakan perintah
+figure(). Dalam contoh, kami memplot x^1 hingga x^4 menjadi 4 bagian
+jendela. figure(0) mengatur ulang jendela default.
+
+
+\>reset;
+
+\>figure(2,2); ...  
+\>   for n=1 to 4; figure(n); plot2d("x^"+n); end; ...  
+\>   figure(0):
+
+
+Di plot2d(), ada gaya alternatif yang tersedia dengan grid=x. Untuk
+gambaran umum, kami menunjukkan berbagai gaya kisi dalam satu gambar
+(lihat di bawah untuk perintah figure()). Gaya kisi=0 tidak
+disertakan. Ini menunjukkan tidak ada grid dan tidak ada bingkai.
+
+
+\>figure(3,3); ...  
+\>   for k=1:9; figure(k); plot2d("x^3-x",-2,1,grid=k); end; ...  
+\>   figure(0):
+
+
+Jika argumen ke plot2d() adalah ekspresi yang diikuti oleh empat
+angka, angka-angka ini adalah rentang x dan y untuk plot.
+
+
+Atau, a, b, c, d dapat ditentukan sebagai parameter yang ditetapkan
+sebagai a=... dll.
+
+
+Dalam contoh berikut, kita mengubah gaya kisi, menambahkan label, dan
+menggunakan label vertikal untuk sumbu y.
+
+
+\>aspect(1.5); plot2d("sin(x)",0,2pi,-1.2,1.2,grid=3,xl="x",yl="sin(x)"):
+
+\>plot2d("sin(x)+cos(2\*x)",0,4pi):
+
+
+Gambar yang dihasilkan dengan memasukkan plot ke dalam jendela teks
+disimpan di direktori yang sama dengan buku catatan, secara default di
+subdirektori bernama "gambar". Mereka juga digunakan oleh ekspor HTML.
+
+
+Anda cukup menandai gambar apa saja dan menyalinnya ke clipboard
+dengan Ctrl-C. Tentu saja, Anda juga dapat mengekspor grafik saat ini
+dengan fungsi di menu File.
+
+
+Fungsi atau ekspresi dalam plot2d dievaluasi secara adaptif. Untuk
+kecepatan lebih, matikan plot adaptif dengan &lt;adaptive dan tentukan
+jumlah subinterval dengan n=... Ini hanya diperlukan dalam kasus yang
+jarang terjadi.
+
+
+\>plot2d("sign(x)\*exp(-x^2)",-1,1,<adaptive,n=10000):
+
+\>plot2d("x^x",r=1.2,cx=1,cy=1):
+
+
+Perhatikan bahwa x^x tidak didefinisikan untuk x&lt;=0. Fungsi plot2d
+menangkap kesalahan ini, dan mulai merencanakan segera setelah fungsi
+didefinisikan. Ini berfungsi untuk semua fungsi yang mengembalikan NAN
+keluar dari jangkauan definisinya.
+
+
+\>plot2d("log(x)",-0.1,2):
+
+
+Parameter square=true (atau &gt;square) memilih y-range secara otomatis
+sehingga hasilnya adalah jendela plot persegi. Perhatikan bahwa secara
+default, Euler menggunakan ruang persegi di dalam jendela plot.
+
+
+\>plot2d("x^3-x",\>square):
+
+\>plot2d(''integrate("sin(x)\*exp(-x^2)",0,x)'',0,2): // plot integral
+
+
+Jika Anda membutuhkan lebih banyak ruang untuk label-y, panggil
+shrinkwindow() dengan parameter yang lebih kecil, atau tetapkan nilai
+positif untuk "lebih kecil" di plot2d().
+
+
+\>plot2d("gamma(x)",1,10,yl="y-values",smaller=6,<vertical):
+
+
+Ekspresi simbolik juga dapat digunakan, karena disimpan sebagai
+ekspresi string sederhana.
+
+
+\>x=linspace(0,2pi,1000); plot2d(sin(5x),cos(7x)):
+
+\>a:=5.6; expr &= exp(-a\*x^2)/a; // define expression
+
+\>plot2d(expr,-2,2): // plot from -2 to 2
+
+\>plot2d(expr,r=1,thickness=2): // plot in a square around (0,0)
+
+\>plot2d(&diff(expr,x),\>add,style="--",color=red): // add another plot
+
+\>plot2d(&diff(expr,x,2),a=-2,b=2,c=-2,d=1): // plot in rectangle
+
+\>plot2d(&diff(expr,x),a=-2,b=2,\>square): // keep plot square
+
+\>plot2d("x^2",0,1,steps=1,color=red,n=10):
+
+\>plot2d("x^2",\>add,steps=2,color=blue,n=10):
+
+
+# Fungsi dalam satu Parameter
+
+Fungsi plot yang paling penting untuk plot planar adalah plot2d().
+Fungsi ini diimplementasikan dalam bahasa Euler dalam file "plot.e",
+yang dimuat di awal program.
+
+
+Berikut adalah beberapa contoh menggunakan fungsi. Seperti biasa di
+EMT, fungsi yang berfungsi untuk fungsi atau ekspresi lain, Anda dapat
+meneruskan parameter tambahan (selain x) yang bukan variabel global ke
+fungsi dengan parameter titik koma atau dengan koleksi panggilan.
+
+
+\>function f(x,a) := x^2/a+a\*x^2-x; // define a function
+
+\>a=0.3; plot2d("f",0,1;a): // plot with a=0.3
+
+\>plot2d("f",0,1;0.4): // plot with a=0.4
+
+\>plot2d({{"f",0.2}},0,1): // plot with a=0.2
+
+\>plot2d({{"f(x,b)",b=0.1}},0,1): // plot with 0.1
+
+\>function f(x) := x^3-x; ...  
+\>   plot2d("f",r=1):
+
+
+Berikut adalah ringkasan dari fungsi yang diterima
 
 
 * 
-Seorang operator yang beroperasi pada dua matriks dengan ukuran yang
-* sama diterapkan berpasangan ke elemen matriks.
+ekspresi atau ekspresi simbolik dalam x
+
+* 
+fungsi atau fungsi simbolis dengan nama sebagai "f"
+
+* 
+fungsi simbolis hanya dengan nama f
+
+
+Fungsi plot2d() juga menerima fungsi simbolis. Untuk fungsi simbolis,
+nama saja yang berfungsi.
+
+
+\>function f(x) &= diff(x^x,x)
+
+
+    
+                                x
+                               x  (log(x) + 1)
+    
+
+\>plot2d(f,0,2):
+
+
+Tentu saja, untuk ekspresi atau ekspresi simbolik, nama variabel sudah
+cukup untuk memplotnya.
+
+
+\>expr &= sin(x)\*exp(-x)
+
+
+    
+                                  - x
+                                 E    sin(x)
+    
+
+\>plot2d(expr,0,3pi):
+
+\>function f(x) &= x^x;
+
+\>plot2d(f,r=1,cx=1,cy=1,color=blue,thickness=2);
+
+\>plot2d(&diff(f(x),x),\>add,color=red,style="-.-"):
+
+
+Untuk gaya garis ada berbagai pilihan.
 
 
 * 
-Jika kedua matriks memiliki dimensi yang berbeda, keduanya diperluas
-* dengan cara yang masuk akal, sehingga memiliki ukuran yang sama.
+gaya="...". Pilih dari "-", "--", "-.", ".", ".-.", "-.-".
 
+* 
+warna: Lihat di bawah untuk warna.
 
-Mis., Nilai skalar dikalikan vektor mengalikan nilai dengan setiap
-elemen vektor. Atau matriks dikalikan dengan vektor (dengan *, bukan.)
-Memperluas vektor ke ukuran matriks dengan menduplikasinya.
+* 
+ketebalan: Default adalah 1.
 
 
-Berikut ini adalah kasus sederhana dengan operator ^.
+Warna dapat dipilih sebagai salah satu warna default, atau sebagai
+warna RGB.
 
 
-\>[1,2,3]^2
+* 
+0.15: indeks warna default.
 
+* 
+konstanta warna: putih, hitam, merah, hijau, biru, cyan, zaitun,
+* abu-abu muda, abu-abu, abu-abu tua, oranye, hijau muda, pirus, biru
+* muda, oranye terang, kuning
 
-    [1,  4,  9]
+* 
+rgb(merah, hijau, biru): parameter adalah real dalam [0,1].
 
-Ini kasus yang lebih rumit. Vektor baris dikalikan vektor kolom
-mengembang keduanya dengan menduplikasi.
 
+\>plot2d("exp(-x^2)",r=2,color=red,thickness=3,style="--"):
 
-\>v:=[1,2,3]; v\*v'
 
+Berikut adalah tampilan warna EMT yang telah ditentukan sebelumnya.
 
-                1             2             3 
-                2             4             6 
-                3             6             9 
 
-Perhatikan bahwa produk skalar menggunakan produk matriks, bukan *!
+\>aspect(2); columnsplot(ones(1,16),lab=0:15,grid=0,color=0:15):
 
 
-\>v.v'
+Tapi Anda bisa menggunakan warna apa saja.
 
 
-    14
+\>columnsplot(ones(1,16),grid=0,color=rgb(0,0,linspace(0,1,15))):
 
-Ada banyak fungsi untuk matriks. Kami memberikan daftar singkat. Anda
-harus membaca dokumentasi untuk informasi lebih lanjut tentang
-perintah ini.
 
+# Menggambar Beberapa Kurva pada bidang koordinat yang sama
 
-   sum, prod menghitung jumlah dan produk dari baris  
-   cumsum, cumprod melakukan hal yang sama secara kumulatif  
-   menghitung nilai ekstrem dari setiap baris  
-   extrema mengembalikan vektor dengan informasi ekstrem  
-   diag (A, i) mengembalikan diagonal ke-i  
-   setdiag (A, i, v) mengatur diagonal ke-i  
-   id (n) matriks identitas  
-   det (A) determinan  
-   charpoly (A) polinomial karakteristik  
-   eigenvalues (A) eigenvalues  
+Plot lebih dari satu fungsi (multiple function) ke dalam satu jendela
+dapat dilakukan dengan berbagai cara. Salah satu metode menggunakan
+&gt;add untuk beberapa panggilan ke plot2d secara keseluruhan, tetapi
+panggilan pertama. Kami telah menggunakan fitur ini dalam contoh di
+atas.
 
-\>v\*v, sum(v\*v), cumsum(v\*v)
 
+\>aspect(); plot2d("cos(x)",r=2,grid=6); plot2d("x",style=".",\>add):
 
-    [1,  4,  9]
-    14
-    [1,  5,  14]
+\>aspect(1.5); plot2d("sin(x)",0,2pi); plot2d("cos(x)",color=blue,style="--",\>add):
 
-Operator: menghasilkan vektor baris spasi yang sama, secara opsional
-dengan ukuran langkah.
 
+Salah satu kegunaan &gt;add adalah untuk menambahkan titik pada kurva.
 
-\>1:4, 1:2:10
 
+\>plot2d("sin(x)",0,pi); plot2d(2,sin(2),\>points,\>add):
 
-    [1,  2,  3,  4]
-    [1,  3,  5,  7,  9]
 
-Untuk menggabungkan matriks dan vektor ada operator "|" dan "_".
+Kami menambahkan titik persimpangan dengan label (pada posisi "cl"
+untuk kiri tengah), dan memasukkan hasilnya ke dalam notebook. Kami
+juga menambahkan judul ke plot.
 
 
-\>[1,2,3]|[4,5], [1,2,3]\_1
+\>plot2d(["cos(x)","x"],r=1.1,cx=0.5,cy=0.5, ...  
+\>     color=[black,blue],style=["-","."], ...  
+\>     grid=1);
 
+\>x0=solve("cos(x)-x",1);  ...  
+\>     plot2d(x0,x0,\>points,\>add,title="Intersection Demo");  ...  
+\>     label("cos(x) = x",x0,x0,pos="cl",offset=20):
 
-    [1,  2,  3,  4,  5]
-                1             2             3 
-                1             1             1 
 
-Unsur-unsur matriks disebut dengan "A [i, j]".
+Dalam demo berikut, kami memplot fungsi sinc(x)=sin(x)/x dan ekspansi
+Taylor ke-8 dan ke-16. Kami menghitung ekspansi ini menggunakan Maxima
+melalui ekspresi simbolis.
 
 
-\>A:=[1,2,3;4,5,6;7,8,9]; A[2,3]
+Plot ini dilakukan dalam perintah multi-baris berikut dengan tiga
+panggilan ke plot2d(). Yang kedua dan yang ketiga memiliki set flag
+&gt;add, yang membuat plot menggunakan rentang sebelumnya.
 
 
-    6
+Kami menambahkan kotak label yang menjelaskan fungsi.
 
-Untuk vektor baris atau kolom, v [i] adalah elemen ke-i dari vektor.
-Untuk matriks, ini mengembalikan baris ke-i lengkap dari matriks
-tersebut.
 
+\>$taylor(sin(x)/x,x,0,4)
 
-\>v:=[2,4,6,8]; v[3], A[3]
+\>plot2d("sinc(x)",0,4pi,color=green,thickness=2); ...  
+\>     plot2d(&taylor(sin(x)/x,x,0,8),\>add,color=blue,style="--"); ...  
+\>     plot2d(&taylor(sin(x)/x,x,0,16),\>add,color=red,style="-.-"); ...  
+\>     labelbox(["sinc","T8","T16"],styles=["-","--","-.-"], ...  
+\>       colors=[black,blue,red]):
 
 
-    6
-    [7,  8,  9]
+Dalam contoh berikut, kami menghasilkan Bernstein-Polinomial.
 
-Indeks juga dapat berupa vektor baris indeks. : menunjukkan semua
-indeks.
 
+\>plot2d("(1-x)^10",0,1); // plot first function
 
-\>v[1:2], A[:,2]
+\>for i=1 to 10; plot2d("bin(10,i)\*x^i\*(1-x)^(10-i)",\>add); end;
 
+\>insimg;
 
-    [2,  4]
-                2 
-                5 
-                8 
 
-Bentuk singkat dari: adalah menghilangkan indeks sepenuhnya.
+Metode kedua menggunakan pasangan matriks nilai-x dan matriks nilai-y
+yang berukuran sama.
 
 
-\>A[,2:3]
+Kami menghasilkan matriks nilai dengan satu Polinomial Bernstein di
+setiap baris. Untuk ini, kita cukup menggunakan vektor kolom i. Lihat
+pengantar tentang bahasa matriks untuk mempelajari lebih detail.
 
 
-                2             3 
-                5             6 
-                8             9 
+\>x=linspace(0,1,500);
 
-Untuk tujuan vektorisasi, elemen-elemen matriks dapat diakses
-seolah-olah mereka adalah vektor.
+\>n=10; k=(0:n)'; // n is row vector, k is column vector
 
+\>y=bin(n,k)\*x^k\*(1-x)^(n-k); // y is a matrix then
 
-\>A{4}
+\>plot2d(x,y):
 
 
-    4
+Perhatikan bahwa parameter warna dapat berupa vektor. Kemudian setiap
+warna digunakan untuk setiap baris matriks.
 
-Matriks juga bisa diratakan, menggunakan fungsi redim (). Ini
-diimplementasikan dalam fungsi flatten ().
 
+\>x=linspace(0,1,200); y=x^(1:10)'; plot2d(x,y,color=1:10):
 
-\>redim(A,1,prod(size(A))), flatten(A)
 
+Metode lain adalah menggunakan vektor ekspresi (string). Anda kemudian
+dapat menggunakan larik warna, larik gaya, dan larik ketebalan dengan
+panjang yang sama.
 
-    [1,  2,  3,  4,  5,  6,  7,  8,  9]
-    [1,  2,  3,  4,  5,  6,  7,  8,  9]
 
-Untuk menggunakan matriks untuk tabel, mari kita reset ke format
-default, dan menghitung tabel nilai sinus dan cosinus. Perhatikan
-bahwa sudut dalam radian secara default.
+\>plot2d(["sin(x)","cos(x)"],0,2pi,color=4:5): 
 
+\>plot2d(["sin(x)","cos(x)"],0,2pi): // plot vector of expressions
 
-\>defformat; w=0°:45°:360°; w=w'; deg(w)
 
+Kita bisa mendapatkan vektor seperti itu dari Maxima menggunakan
+makelist() dan mxm2str().
 
-                0 
-               45 
-               90 
-              135 
-              180 
-              225 
-              270 
-              315 
-              360 
 
-Sekarang kami menambahkan kolom ke matriks.
-
-
-\>M = deg(w)|w|cos(w)|sin(w)
-
-
-                0             0             1             0 
-               45      0.785398      0.707107      0.707107 
-               90        1.5708             0             1 
-              135       2.35619     -0.707107      0.707107 
-              180       3.14159            -1             0 
-              225       3.92699     -0.707107     -0.707107 
-              270       4.71239             0            -1 
-              315       5.49779      0.707107     -0.707107 
-              360       6.28319             1             0 
-
-Dengan menggunakan bahasa matriks, kita dapat menghasilkan beberapa
-tabel dari beberapa fungsi sekaligus.
-
-
-Dalam contoh berikut, kami menghitung t [j] ^ i untuk i dari 1 ke n.
-Kami mendapatkan matriks, di mana setiap baris adalah tabel t ^ i
-untuk satu i. Yaitu, matriks memiliki elemen
-
-
-Fungsi yang tidak bekerja untuk input vektor harus di-vectorisasi. Hal
-ini dapat dicapai dengan kata kunci "peta" dalam definisi fungsi.
-Kemudian fungsi tersebut akan dievaluasi untuk setiap elemen dari
-parameter vektor.
-
-
-Integrasi numerik integ () hanya berfungsi untuk batas interval
-skalar. Jadi kita perlu melakukan vektorisasi.
-
-
-\>function map f(x) := integrate("x^x",1,x)
-
-
-Kata kunci "map" membuat fungsi menjadi vektor. Fungsi tersebut
-sekarang akan bekerja
-
-
-untuk vektor angka.
-
-
-\>f([1:5])
-
-
-    [0,  2.05045,  13.7251,  113.336,  1241.03]
-
-# Sub-Matriks dan Elemen-Matriks
-
-Untuk mengakses elemen matriks, gunakan notasi braket.
-
-
-\>A=[1,2,3;4,5,6;7,8,9], A[2,2]
-
-
-                1             2             3 
-                4             5             6 
-                7             8             9 
-    5
-
-Kita dapat mengakses baris matriks yang lengkap.
-
-
-\>A[2]
-
-
-    [4,  5,  6]
-
-Dalam kasus vektor baris atau kolom, ini mengembalikan elemen vektor.
-
-
-\>v=1:3; v[2]
-
-
-    2
-
-Untuk memastikan, Anda mendapatkan baris pertama untuk matriks 1xn dan
-mxn, tentukan semua kolom menggunakan indeks kedua yang kosong.
-
-
-\>A[2,]
-
-
-    [4,  5,  6]
-
-Jika indeks adalah vektor indeks, Euler akan mengembalikan baris yang
-sesuai dari matriks.
-
-
-Di sini kita ingin baris pertama dan kedua dari A.
-
-
-\>A[[1,2]]
-
-
-                1             2             3 
-                4             5             6 
-
-Kami bahkan dapat menyusun ulang A menggunakan vektor indeks.
-Tepatnya, kami tidak mengubah A di sini, tetapi menghitung versi A.
-
-
-\>A[[3,2,1]]
-
-
-                7             8             9 
-                4             5             6 
-                1             2             3 
-
-Trik indeks juga bekerja dengan kolom.
-
-
-Contoh ini memilih semua baris A dan kolom kedua dan ketiga.
-
-
-\>A[1:3,2:3]
-
-
-                2             3 
-                5             6 
-                8             9 
-
-Untuk singkatan ":" menunjukkan semua indeks baris atau kolom.
-
-
-\>A[:,3]
-
-
-                3 
-                6 
-                9 
-
-Cara lainnya, biarkan indeks pertama kosong.
-
-
-\>A[,2:3]
-
-
-                2             3 
-                5             6 
-                8             9 
-
-Kita juga bisa mendapatkan baris terakhir A.
-
-
-\>A[-1]
-
-
-    [7,  8,  9]
-
-Sekarang mari kita ubah elemen A dengan menetapkan submatrix dari A ke
-beberapa nilai. Ini sebenarnya mengubah matriks A yang disimpan.
-
-
-\>A[1,1]=4
-
-
-                4             2             3 
-                4             5             6 
-                7             8             9 
-
-Kami juga dapat menetapkan nilai ke baris A.
-
-
-\>A[1]=[-1,-1,-1]
-
-
-               -1            -1            -1 
-                4             5             6 
-                7             8             9 
-
-Kami bahkan dapat menetapkan ke sub-matriks jika memiliki ukuran yang
-sesuai.
-
-
-\>A[1:2,1:2]=[5,6;7,8]
-
-
-                5             6            -1 
-                7             8             6 
-                7             8             9 
-
-Selain itu, beberapa pintasan diperbolehkan.
-
-
-\>A[1:2,1:2]=0
-
-
-                0             0            -1 
-                0             0             6 
-                7             8             9 
-
-Peringatan: Indeks di luar batas menampilkan matriks kosong, atau
-pesan kesalahan, bergantung pada pengaturan sistem. Standarnya adalah
-pesan kesalahan. Ingat, bagaimanapun, bahwa indeks negatif dapat
-digunakan untuk mengakses elemen matriks yang dihitung dari akhir.
-
-
-\>A[4]
-
-
-    Row index 4 out of bounds!
-    Error in:
-    A[4] ...
-        ^
-
-# Sorting and Shuffling
-
-Fungsi sort () mengurutkan vektor baris.
-
-
-\>sort([5,6,4,8,1,9])
-
-
-    [1,  4,  5,  6,  8,  9]
-
-Seringkali perlu untuk mengetahui indeks dari vektor yang diurutkan
-dalam vektor asli. Ini dapat digunakan untuk menyusun ulang vektor
-lain dengan cara yang sama.
-
-
-Mari kita mengacak vektor.
-
-
-\>v=shuffle(1:10)
-
-
-    [4,  5,  10,  6,  8,  9,  1,  7,  2,  3]
-
-Indeks tersebut berisi urutan v.
-
-
-\>{vs,ind}=sort(v); v[ind]
-
-
-    [1,  2,  3,  4,  5,  6,  7,  8,  9,  10]
-
-Ini bekerja untuk vektor string juga.
-
-
-\>s=["a","d","e","a","aa","e"]
-
-
-    a
-    d
-    e
-    a
-    aa
-    e
-
-\>{ss,ind}=sort(s); ss
-
-
-    a
-    a
-    aa
-    d
-    e
-    e
-
-Seperti yang Anda lihat, posisi entri ganda agak acak.
-
-
-\>ind
-
-
-    [4,  1,  5,  2,  6,  3]
-
-Fungsi unik mengembalikan daftar elemen unik vektor yang diurutkan.
-
-
-\>intrandom(1,10,10), unique(%)
-
-
-    [4,  4,  9,  2,  6,  5,  10,  6,  5,  1]
-    [1,  2,  4,  5,  6,  9,  10]
-
-Ini bekerja untuk vektor string juga.
-
-
-\>unique(s)
-
-
-    a
-    aa
-    d
-    e
-
-# Aljabar linier
-
-EMT memiliki banyak fungsi untuk menyelesaikan masalah sistem linier,
-sistem jarang, atau regresi.
-
-
-Untuk sistem linier Ax = b, Anda dapat menggunakan algoritma Gauss,
-matriks invers atau fit linier. Operator A \ b menggunakan versi
-algoritma Gauss.
-
-
-\>A=[1,2;3,4]; b=[5;6]; A\\b
-
-
-               -4 
-              4.5 
-
-Untuk contoh lain, kami menghasilkan matriks 200x200 dan jumlah
-barisnya. Kemudian kita menyelesaikan Ax = b menggunakan matriks
-invers. Kami mengukur kesalahan sebagai deviasi maksimal semua elemen
-dari 1, yang tentu saja merupakan solusi yang tepat.
-
-
-\>A=normal(200,200); b=sum(A); longest totalmax(abs(inv(A).b-1))
-
-
-      8.790745908981989e-13 
-
-Jika sistem tidak memiliki solusi, kesesuaian linier meminimalkan
-norma kesalahan Ax-b.
-
-
-\>A=[1,2,3;4,5,6;7,8,9]
-
-
-                1             2             3 
-                4             5             6 
-                7             8             9 
-
-Determinan dari matriks ini adalah 0.
-
-
-\>det(A)
-
-
-    0
-
-# Matriks Simbolik
-
-Maxima memiliki matriks simbolis. Tentu saja, Maxima dapat digunakan
-untuk soal-soal aljabar linier sederhana. Kita dapat mendefinisikan
-matriks untuk Euler dan Maxima dengan &amp;: =, dan kemudian
-menggunakannya dalam ekspresi simbolik. Bentuk [...] biasa untuk
-mendefinisikan matriks dapat digunakan di Euler untuk mendefinisikan
-matriks simbolik.
-
-
-\>A &= [a,1,1;1,a,1;1,1,a]; $A
-
-\>$&det(A), $&factor(%)
-
-\>$&invert(A) with a=0
-
-\>A &= [1,a;b,2]; $A
-
-
-Seperti semua variabel simbolik, matriks ini dapat digunakan dalam
-ekspresi simbolik lainnya.
-
-
-\>$&det(A-x\*ident(2)), $&solve(%,x)
-
-
-Nilai eigen juga dapat dihitung secara otomatis. Hasilnya adalah
-vektor dengan dua vektor nilai eigen dan kelipatannya.
-
-
-\>$&eigenvalues([a,1;1,a])
-
-
-Untuk mengekstrak vektor eigen tertentu, perlu pengindeksan yang
-cermat.
-
-
-\>$&eigenvectors([a,1;1,a]), &%[2][1][1]
+\>v &= makelist(binomial(10,i)\*x^i\*(1-x)^(10-i),i,0,10) // make list
 
 
     
-                                   [1, - 1]
+                   10            9              8  2             7  3
+           [(1 - x)  , 10 (1 - x)  x, 45 (1 - x)  x , 120 (1 - x)  x , 
+               6  4             5  5             4  6             3  7
+    210 (1 - x)  x , 252 (1 - x)  x , 210 (1 - x)  x , 120 (1 - x)  x , 
+              2  8              9   10
+    45 (1 - x)  x , 10 (1 - x) x , x  ]
     
 
-Matriks simbolik dapat dievaluasi dalam Euler secara numerik seperti
-ekspresi simbolik lainnya.
+\>mxm2str(v) // get a vector of strings from the symbolic vector
 
 
-\>A(a=4,b=5)
+    (1-x)^10
+    10*(1-x)^9*x
+    45*(1-x)^8*x^2
+    120*(1-x)^7*x^3
+    210*(1-x)^6*x^4
+    252*(1-x)^5*x^5
+    210*(1-x)^4*x^6
+    120*(1-x)^3*x^7
+    45*(1-x)^2*x^8
+    10*(1-x)*x^9
+    x^10
 
+\>plot2d(mxm2str(v),0,1): // plot functions
 
-                1             4 
-                5             2 
 
-Dalam ekspresi simbolik, gunakan dengan.
+Alternatif lain adalah dengan menggunakan bahasa matriks Euler.
 
 
-\>$&A with [a=4,b=5]
+Jika ekspresi menghasilkan matriks fungsi, dengan satu fungsi di
+setiap baris, semua fungsi ini akan diplot ke dalam satu plot.
 
 
-Akses ke baris matriks simbolik berfungsi seperti halnya dengan
-matriks numerik.
+Untuk ini, gunakan vektor parameter dalam bentuk vektor kolom. Jika
+array warna ditambahkan, itu akan digunakan untuk setiap baris plot.
 
 
-\>$&A[1]
+\>n=(1:10)'; plot2d("x^n",0,1,color=1:10):
 
 
-Ekspresi simbolis dapat berisi tugas. Dan itu mengubah matriks A.
+Ekspresi dan fungsi satu baris dapat melihat variabel global.
 
 
-\>&A[1,1]:=t+1; $&A
+Jika Anda tidak dapat menggunakan variabel global, Anda perlu
+menggunakan fungsi dengan parameter tambahan, dan meneruskan parameter
+ini sebagai parameter titik koma.
 
 
-Ada fungsi simbolik dalam Maxima untuk membuat vektor dan matriks.
-Untuk ini, lihat dokumentasi Maxima atau tutorial tentang Maxima di
-EMT.
+Berhati-hatilah, untuk meletakkan semua parameter yang ditetapkan di
+akhir perintah plot2d. Dalam contoh kita meneruskan a=5 ke fungsi f,
+yang kita plot dari -10 hingga 10.
 
 
-\>v &= makelist(1/(i+j),i,1,3); $v
+\>function f(x,a) := 1/a\*exp(-x^2/a); ...  
+\>   plot2d("f",-10,10;5,thickness=2,title="a=5"):
 
 
-\>B &:= [1,2;3,4]; $B, $&invert(B)
+Atau, gunakan koleksi dengan nama fungsi dan semua parameter tambahan.
+Daftar khusus ini disebut koleksi panggilan, dan itu adalah cara yang
+lebih disukai untuk meneruskan argumen ke fungsi yang dengan
+sendirinya diteruskan sebagai argumen ke fungsi lain.
 
 
-Hasilnya dapat dievaluasi secara numerik di Euler. Untuk informasi
-lebih lanjut tentang Maxima, lihat pengantar Maxima.
+Dalam contoh berikut, kami menggunakan loop untuk memplot beberapa
+fungsi (lihat tutorial tentang pemrograman untuk loop).
 
 
-\>$&invert(B)()
+\>plot2d({{"f",1}},-10,10); ...  
+\>   for a=2:10; plot2d({{"f",a}},\>add); end:
 
 
-               -2             1 
-              1.5          -0.5 
+Kami dapat mencapai hasil yang sama dengan cara berikut menggunakan
+bahasa matriks EMT. Setiap baris matriks f(x,a) adalah fungsi. Selain
+itu, kita dapat mengatur warna untuk setiap baris matriks. Klik dua
+kali pada fungsi getspectral() untuk penjelasannya.
 
-Euler juga memiliki fungsi xinv () yang kuat, yang membuat upaya lebih
-besar dan mendapatkan hasil yang lebih tepat.
 
+\>x=-10:0.01:10; a=(1:10)'; plot2d(x,f(x,a),color=getspectral(a/10)):
 
-Perhatikan, bahwa dengan &amp;: = matriks B telah didefinisikan sebagai
-simbolik dalam ekspresi simbolik dan numerik dalam ekspresi numerik.
-Jadi kita bisa menggunakannya di sini.
 
+## Label Teks
 
-\>longest B.xinv(B)
+Dekorasi sederhana bisa
 
 
-                          1                       0 
-                          0                       1 
+* 
+judul dengan judul="..."
 
-Misalnya. nilai eigen dari A dapat dihitung secara numerik.
+* 
+x- dan y-label dengan xl="...", yl="..."
 
+* 
+label teks lain dengan label("...",x,y)
 
-\>A=[1,2,3;4,5,6;7,8,9]; real(eigenvalues(A))
 
+Perintah label akan memplot ke dalam plot saat ini pada koordinat plot
+(x,y). Itu bisa mengambil argumen posisi.
 
-    [16.1168,  -1.11684,  0]
 
-Atau secara simbolis. Lihat tutorial tentang Maxima untuk detailnya.
+\>plot2d("x^3-x",-1,2,title="y=x^3-x",yl="y",xl="x"):
 
+\>expr := "log(x)/x"; ...  
+\>     plot2d(expr,0.5,5,title="y="+expr,xl="x",yl="y"); ...  
+\>     label("(1,0)",1,0); label("Max",E,expr(E),pos="lc"):
 
-\>$&eigenvalues(@A)
 
+Ada juga fungsi labelbox(), yang dapat menampilkan fungsi dan teks.
+Dibutuhkan vektor string dan warna, satu item untuk setiap fungsi.
 
-# Nilai Numerik dalam Ekspresi simbolik
 
-Ekspresi simbolik hanyalah string yang mengandung ekspresi. Jika kita
-ingin mendefinisikan nilai untuk ekspresi simbolik dan ekspresi
-numerik, kita harus menggunakan "&amp;: =".
+\>function f(x) &= x^2\*exp(-x^2);  ...  
+\>   plot2d(&f(x),a=-3,b=3,c=-1,d=1);  ...  
+\>   plot2d(&diff(f(x),x),\>add,color=blue,style="--"); ...  
+\>   labelbox(["function","derivative"],styles=["-","--"], ...  
+\>      colors=[black,blue],w=0.4):
 
 
-\>A &:= [1,pi;4,5]
+Kotak ditambatkan di kanan atas secara default, tetapi &gt; kiri
+menambatkannya di kiri atas. Anda dapat memindahkannya ke tempat yang
+Anda suka. Posisi jangkar adalah sudut kanan atas kotak, dan angkanya
+adalah pecahan dari ukuran jendela grafik. Lebarnya otomatis.
 
 
-                1       3.14159 
-                4             5 
+Untuk plot titik, kotak label juga berfungsi. Tambahkan parameter
+&gt;points, atau vektor flag, satu untuk setiap label.
 
-Masih terdapat perbedaan antara bentuk numerik dan simbolik. Saat
-mentransfer matriks ke bentuk simbolis, pendekatan pecahan untuk real
-akan digunakan.
 
+Dalam contoh berikut, hanya ada satu fungsi. Jadi kita bisa
+menggunakan string sebagai pengganti vektor string. Kami mengatur
+warna teks menjadi hitam untuk contoh ini.
 
-\>$&A
 
+\>n=10; plot2d(0:n,bin(n,0:n),\>addpoints); ...  
+\>   labelbox("Binomials",styles="[]",\>points,x=0.1,y=0.1, ...  
+\>   tcolor=black,\>left):
 
-Untuk menghindarinya, ada fungsi "mxmset (variabel)".
 
+Gaya plot ini juga tersedia di statplot(). Seperti di plot2d() warna
+dapat diatur untuk setiap baris plot. Ada lebih banyak plot khusus
+untuk keperluan statistik (lihat tutorial tentang statistik).
 
-\>mxmset(A); $&A
 
+\>statplot(1:10,random(2,10),color=[red,blue]):
 
-Maxima juga dapat menghitung dengan angka floating point, dan bahkan
-dengan angka mengambang besar dengan 32 digit. Namun, evaluasinya jauh
-lebih lambat.
 
+Fitur serupa adalah fungsi textbox().
 
-\>$&bfloat(sqrt(2)), $&float(sqrt(2))
 
+Lebar secara default adalah lebar maksimal dari baris teks. Tapi itu
+bisa diatur oleh pengguna juga.
 
-Ketepatan angka floating point besar dapat diubah.
 
+\>function f(x) &= exp(-x)\*sin(2\*pi\*x); ...  
+\>   plot2d("f(x)",0,2pi); ...  
+\>   textbox(latex("\\text{Example of a damped oscillation}\\ f(x)=e^{-x}sin(2\\pi x)"),w=0.85):
 
-\>&fpprec:=100; &bfloat(pi)
 
+Label teks, judul, kotak label, dan teks lainnya dapat berisi string
+Unicode (lihat sintaks EMT untuk mengetahui lebih lanjut tentang
+string Unicode).
 
-    
-            3.14159265358979323846264338327950288419716939937510582097494\
-    4592307816406286208998628034825342117068b0
-    
 
-Variabel numerik dapat digunakan dalam ekspresi simbolik apa pun yang
-menggunakan "@var".
+\>plot2d("x^3-x",title=u"x &rarr; x&sup3; - x"):
 
 
-Perhatikan bahwa ini hanya diperlukan, jika variabel telah ditentukan
-dengan ": =" atau "=" sebagai variabel numerik.
+Label pada sumbu x dan y bisa vertikal, begitu juga sumbunya.
 
 
-\>B:=[1,pi;3,4]; $&det(@B)
+\>plot2d("sinc(x)",0,2pi,xl="x",yl=u"x &rarr; sinc(x)",\>vertical):
 
 
-# Demo - Suku Bunga
+# LaTeX
 
-Di bawah ini, kami menggunakan Euler Math Toolbox (EMT) untuk
-menghitung suku bunga. Kami melakukannya secara numerik dan simbolis
-untuk menunjukkan kepada Anda bagaimana Euler dapat digunakan untuk
-memecahkan masalah kehidupan nyata.
+Anda juga dapat memplot rumus LaTeX jika Anda telah menginstal sistem
+LaTeX. Saya merekomendasikan MiKTeX. Jalur ke biner "latex" dan
+"dvipng" harus berada di jalur sistem, atau Anda harus mengatur LaTeX
+di menu opsi.
 
 
-Asumsikan Anda memiliki modal awal 5000 (katakanlah dalam dolar).
+Perhatikan, bahwa penguraian LaTeX lambat. Jika Anda ingin menggunakan
+LaTeX dalam plot animasi, Anda harus memanggil latex() sebelum loop
+sekali dan menggunakan hasilnya (gambar dalam matriks RGB).
 
 
-\>K=5000
+Dalam plot berikut, kami menggunakan LaTeX untuk label x dan y, label,
+kotak label, dan judul plot.
 
 
-    5000
+\>plot2d("exp(-x)\*sin(x)/x",a=0,b=2pi,c=0,d=1,grid=6,color=blue, ...  
+\>     title=latex("\\text{Function $\\Phi$}"), ...  
+\>     xl=latex("\\phi"),yl=latex("\\Phi(\\phi)")); ...  
+\>   textbox( ...  
+\>     latex("\\Phi(\\phi) = e^{-\\phi} \\frac{\\sin(\\phi)}{\\phi}"),x=0.8,y=0.5); ...  
+\>   label(latex("\\Phi",color=blue),1,0.4):
 
-Sekarang kami mengasumsikan tingkat bunga 3% per tahun. Mari kita
-tambahkan satu tingkat sederhana dan hitung hasilnya.
 
+Seringkali, kami menginginkan spasi dan label teks non-konformal pada
+sumbu x. Kita dapat menggunakan x axis() dan y axis() seperti yang
+akan kita tunjukkan nanti.
 
-\>K\*1.03
 
+Cara termudah adalah dengan membuat plot kosong dengan bingkai
+menggunakan grid=4, lalu menambahkan grid dengan ygrid() dan xgrid().
+Dalam contoh berikut, kami menggunakan tiga string LaTeX untuk label
+pada sumbu x dengan xtick().
 
-    5150
 
-Euler akan memahami sintaks berikut juga.
+\>plot2d("sinc(x)",0,2pi,grid=4,<ticks); ...  
+\>   ygrid(-2:0.5:2,grid=6); ...  
+\>   xgrid([0:2]\*pi,<ticks,grid=6);  ...  
+\>   xtick([0,pi,2pi],["0","\\pi","2\\pi"],\>latex):
 
 
-\>K+K\*3%
+Tentu saja, fungsi juga dapat digunakan.
 
 
-    5150
+\>function map f(x) ...
 
-Tapi lebih mudah menggunakan faktornya
 
+    if x>0 then return x^4
+    else return x^2
+    endif
+    endfunction
+</pre>
+Parameter "map" membantu menggunakan fungsi untuk vektor. Untuk
 
-\>q=1+3%, K\*q
 
+plot, itu tidak perlu. Tetapi untuk mendemonstrasikan vektorisasi itu
 
-    1.03
-    5150
 
-Selama 10 tahun, kita cukup mengalikan faktor-faktor dan mendapatkan
-nilai akhir dengan suku bunga majemuk.
+berguna, kami menambahkan beberapa poin kunci ke plot di x=-1, x=0 dan
+x=1.
 
 
-\>K\*q^10
+Pada plot berikut, kami juga memasukkan beberapa kode LaTeX. Kami
+menggunakannya untuk
 
 
-    6719.58189672
+dua label dan kotak teks. Tentu saja, Anda hanya akan dapat
+menggunakan
 
-Untuk tujuan kami, kami dapat mengatur format menjadi 2 digit setelah
-titik desimal.
 
+LaTeX jika Anda telah menginstal LaTeX dengan benar.
 
-\>format(12,2); K\*q^10
 
+\>plot2d("f",-1,1,xl="x",yl="f(x)",grid=6);  ...  
+\>   plot2d([-1,0,1],f([-1,0,1]),\>points,\>add); ...  
+\>   label(latex("x^3"),0.72,f(0.72)); ...  
+\>   label(latex("x^2"),-0.52,f(-0.52),pos="ll"); ...  
+\>   textbox( ...  
+\>     latex("f(x)=\\begin{cases} x^3 & x\>0 \\\\ x^2 & x \\le 0\\end{cases}"), ...  
+\>     x=0.7,y=0.2):
 
-        6719.58 
 
-Mari kita cetak yang dibulatkan menjadi 2 digit itu dalam kalimat
-lengkap.
+## Interaksi pengguna
 
+Saat memplot fungsi atau ekspresi, parameter &gt;user memungkinkan
+pengguna untuk memperbesar dan menggeser plot dengan tombol kursor
+atau mouse. Pengguna dapat
 
-\>"Starting from " + K + "$ you get " + round(K\*q^10,2) + "$."
 
+* 
+perbesar dengan + atau -
 
-    Starting from 5000$ you get 6719.58$.
+* 
+pindahkan plot dengan tombol kursor
 
-Bagaimana jika kita ingin mengetahui hasil antara dari tahun 1 sampai
-tahun ke 9? Untuk ini, bahasa matriks Euler sangat membantu. Anda
-tidak harus menulis satu lingkaran, tetapi cukup masukkan
+* 
+pilih jendela plot dengan mouse
 
+* 
+atur ulang tampilan dengan spasi
 
-\>K\*q^(0:10)
+* 
+keluar dengan kembali
 
 
-    Real 1 x 11 matrix
-    
-        5000.00     5150.00     5304.50     5463.64     ...
+Tombol spasi akan mengatur ulang plot ke jendela plot asli.
 
-Bagaimana keajaiban ini bekerja? Pertama, ekspresi 0:10 mengembalikan
-vektor bilangan bulat.
 
+Saat memplot data, flag &gt;user hanya akan menunggu penekanan tombol.
 
-\>short 0:10
 
+\>plot2d({{"x^3-a\*x",a=1}},\>user,title="Press any key!"):
 
-    [0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10]
+\>plot2d("exp(x)\*sin(x)",user=true, ...  
+\>     title="+/- or cursor keys (return to exit)"):
 
-Kemudian semua operator dan fungsi di Euler dapat diterapkan ke elemen
-vektor untuk elemen. Begitu
 
+Berikut ini menunjukkan cara interaksi pengguna tingkat lanjut (lihat
+tutorial tentang pemrograman untuk detailnya).
 
-\>short q^(0:10)
 
+Fungsi bawaan mousedrag() menunggu event mouse atau keyboard. Ini
+melaporkan mouse ke bawah, mouse dipindahkan atau mouse ke atas, dan
+penekanan tombol. Fungsi dragpoints() memanfaatkan ini, dan
+memungkinkan pengguna menyeret titik mana pun dalam plot.
 
-    [1,  1.03,  1.0609,  1.0927,  1.1255,  1.1593,  1.1941,  1.2299,
-    1.2668,  1.3048,  1.3439]
 
-adalah vektor faktor q ^ 0 hingga q ^ 10. Ini dikalikan dengan K, dan
-kita mendapatkan nilai vektor.
+Kita membutuhkan fungsi plot terlebih dahulu. Sebagai contoh, kita
+interpolasi dalam 5 titik dengan polinomial. Fungsi harus diplot ke
+area plot tetap.
 
 
-\>VK=K\*q^(0:10);
+\>function plotf(xp,yp,select) ...
 
 
-Tentu saja, cara realistis untuk menghitung suku bunga ini adalah
-dengan membulatkan ke sen terdekat setiap tahun. Mari kita tambahkan
-fungsi untuk ini.
+      d=interp(xp,yp);
+      plot2d("interpval(xp,d,x)";d,xp,r=2);
+      plot2d(xp,yp,>points,>add);
+      if select>0 then
+        plot2d(xp[select],yp[select],color=red,>points,>add);
+      endif;
+      title("Drag one point, or press space or return!");
+    endfunction
+</pre>
+Perhatikan parameter titik koma di plot2d (d dan xp), yang diteruskan
+ke evaluasi fungsi interp(). Tanpa ini, kita harus menulis fungsi
+plotinterp() terlebih dahulu, mengakses nilai secara global.
 
 
-\>function oneyear (K) := round(K\*q,2)
+Sekarang kita menghasilkan beberapa nilai acak, dan membiarkan
+pengguna menyeret poin.
 
 
-Mari kita bandingkan kedua hasil tersebut, dengan dan tanpa
-pembulatan.
+\>t=-1:0.5:1; dragpoints("plotf",t,random(size(t))-0.5):
 
 
-\>longest oneyear(1234.57), longest 1234.57\*q
+Ada juga fungsi, yang memplot fungsi lain tergantung pada vektor
+parameter, dan memungkinkan pengguna menyesuaikan parameter ini.
 
 
-                    1271.61 
-                  1271.6071 
+Pertama kita membutuhkan fungsi plot.
 
-Sekarang tidak ada rumus sederhana untuk tahun ke-n, dan kita harus
-mengulang selama bertahun-tahun. Euler memberikan banyak solusi untuk
-ini.
 
+\>function plotf([a,b]) := plot2d("exp(a\*x)\*cos(2pi\*b\*x)",0,2pi;a,b);
 
-Cara termudah adalah fungsi iterasi, yang mengulang fungsi tertentu
-beberapa kali.
 
+Kemudian kita membutuhkan nama untuk parameter, nilai awal dan matriks
+rentang nx2, opsional baris judul.
 
-\>VKr=iterate("oneyear",5000,10)
 
+Ada slider interaktif, yang dapat mengatur nilai oleh pengguna. Fungsi
+dragvalues() menyediakan ini.
 
-    Real 1 x 11 matrix
-    
-        5000.00     5150.00     5304.50     5463.64     ...
 
-Kami dapat mencetaknya dengan cara yang ramah, menggunakan format kami
-dengan tempat desimal tetap.
+\>dragvalues("plotf",["a","b"],[-1,2],[[-2,2];[1,10]], ...  
+\>     heading="Drag these values:",hcolor=black):
 
 
-\>VKr'
+Dimungkinkan untuk membatasi nilai yang diseret ke bilangan bulat.
+Sebagai contoh, kita menulis fungsi plot, yang memplot polinomial
+Taylor derajat n ke fungsi kosinus.
 
 
-        5000.00 
-        5150.00 
-        5304.50 
-        5463.64 
-        5627.55 
-        5796.38 
-        5970.27 
-        6149.38 
-        6333.86 
-        6523.88 
-        6719.60 
+\>function plotf(n) ...
 
-Untuk mendapatkan elemen tertentu dari vektor, kami menggunakan indeks
-dalam tanda kurung siku.
 
+    plot2d("cos(x)",0,2pi,>square,grid=6);
+    plot2d(&"taylor(cos(x),x,0,@n)",color=blue,>add);
+    textbox("Taylor polynomial of degree "+n,0.1,0.02,style="t",>left);
+    endfunction
+</pre>
+Sekarang kami mengizinkan derajat n bervariasi dari 0 hingga 20 dalam
+20 pemberhentian. Hasil dragvalues() digunakan untuk memplot sketsa
+ini dengan n, dan untuk memasukkan plot ke dalam buku catatan.
 
-\>VKr[2], VKr[1:3]
 
+\>nd=dragvalues("plotf","degree",2,[0,20],20,y=0.8, ...  
+\>      heading="Drag the value:"); ...  
+\>   plotf(nd):
 
-        5150.00 
-        5000.00     5150.00     5304.50 
 
-Anehnya, kita juga bisa menggunakan indeks vektor. Ingat bahwa 1: 3
-menghasilkan vektor [1,2,3].
+Berikut ini adalah demonstrasi sederhana dari fungsi tersebut.
+Pengguna dapat menggambar di atas jendela plot, meninggalkan jejak
+poin.
 
 
-Mari kita bandingkan elemen terakhir dari nilai yang dibulatkan dengan
-nilai penuh.
+\>function dragtest ...
 
 
-\>VKr[-1], VK[-1]
+      plot2d(none,r=1,title="Drag with the mouse, or press any key!");
+      start=0;
+      repeat
+        {flag,m,time}=mousedrag();
+        if flag==0 then return; endif;
+        if flag==2 then
+          hold on; mark(m[1],m[2]); hold off;
+        endif;
+      end
+    endfunction
+</pre>
+\>dragtest // lihat hasilnya dan cobalah lakukan!
 
 
-        6719.60 
-        6719.58 
+## Gaya Plot 2D
 
-Perbedaannya sangat kecil.
+Secara default, EMT menghitung tick sumbu otomatis dan menambahkan
+label ke setiap tick. Ini dapat diubah dengan parameter grid. Gaya
+default sumbu dan label dapat dimodifikasi. Selain itu, label dan
+judul dapat ditambahkan secara manual. Untuk mengatur ulang ke gaya
+default, gunakan reset().
 
 
-# Memecahkan Persamaan
+\>aspect();
 
-Sekarang kita ambil fungsi yang lebih maju, yang menambahkan jumlah
-uang tertentu setiap tahun.
+\>figure(3,4); ...  
+\>    figure(1); plot2d("x^3-x",grid=0); ... // no grid, frame or axis
 
+\> figure(2); plot2d("x^3-x",grid=1); ... // x-y-axis
 
-\>function onepay (K) := K\*q+R
+\> figure(3); plot2d("x^3-x",grid=2); ... // default ticks
 
+\> figure(4); plot2d("x^3-x",grid=3); ... // x-y- axis with labels inside
 
-Kami tidak harus menentukan q atau R untuk definisi fungsi. Hanya jika
-kita menjalankan perintah, kita harus menentukan nilai-nilai ini. Kami
-memilih R = 200.
+\> figure(5); plot2d("x^3-x",grid=4); ... // no ticks, only labels
 
+\> figure(6); plot2d("x^3-x",grid=5); ... // default, but no margin
 
-\>R=200; iterate("onepay",5000,10)
+\> figure(7); plot2d("x^3-x",grid=6); ... // axes only
 
+\> figure(8); plot2d("x^3-x",grid=7); ... // axes only, ticks at axis
 
-    Real 1 x 11 matrix
-    
-        5000.00     5350.00     5710.50     6081.82     ...
+\> figure(9); plot2d("x^3-x",grid=8); ... // axes only, finer ticks at axis
 
-Bagaimana jika kita menghapus jumlah yang sama setiap tahun?
+\> figure(10); plot2d("x^3-x",grid=9); ... // default, small ticks inside
 
+\> figure(11); plot2d("x^3-x",grid=10); ...// no ticks, axes only
 
-\>R=-200; iterate("onepay",5000,10)
+\> figure(0):
 
 
-    Real 1 x 11 matrix
-    
-        5000.00     4950.00     4898.50     4845.45     ...
+Parameter &lt;frame mematikan frame, dan framecolor=blue mengatur frame
+ke warna biru.
 
-Kami melihat bahwa uang berkurang. Jelas, jika kita hanya mendapatkan
-150 bunga di tahun pertama, tetapi menghapus 200, kita kehilangan uang
-setiap tahun.
 
+Jika Anda ingin centang sendiri, Anda dapat menggunakan style=0, dan
+menambahkan semuanya nanti.
 
-Bagaimana kita bisa menentukan berapa tahun uang itu akan bertahan?
-Kami harus menulis loop untuk ini. Cara termudah adalah melakukan
-iterasi cukup lama.
 
+\>aspect(1.5); 
 
-\>VKR=iterate("onepay",5000,50)
+\>plot2d("x^3-x",grid=0); // plot
 
+\>frame; xgrid([-1,0,1]); ygrid(0): // add frame and grid
 
-    Real 1 x 51 matrix
-    
-        5000.00     4950.00     4898.50     4845.45     ...
 
-Dengan menggunakan bahasa matriks, kita dapat menentukan nilai negatif
-pertama dengan cara berikut.
+Untuk judul plot dan label sumbu, lihat contoh berikut.
 
 
-\>min(nonzeros(VKR<0))
+\>plot2d("exp(x)",-1,1);
 
+\>textcolor(black); // set the text color to black
 
-          48.00 
+\>title(latex("y=e^x")); // title above the plot
 
-Alasan untuk ini adalah bahwa nonzeros (VKR &lt;0) mengembalikan vektor
-indeks i, di mana VKR [i] &lt;0, dan min menghitung indeks minimal.
+\>xlabel(latex("x")); // "x" for x-axis
 
+\>ylabel(latex("y"),\>vertical); // vertical "y" for y-axis
 
-Karena vektor selalu dimulai dengan indeks 1, jawabannya adalah 47
-tahun.
+\>label(latex("(0,1)"),0,1,color=blue): // label a point
 
 
-Fungsi iterate () memiliki satu trik lagi. Ini bisa mengambil kondisi
-akhir sebagai argumen. Maka itu akan mengembalikan nilai dan jumlah
-iterasi.
+Sumbu dapat digambar secara terpisah dengan xaxis() dan yaxis().
 
 
-\>{x,n}=iterate("onepay",5000,till="x<0"); x, n,
+\>plot2d("x^3-x",<grid,<frame);
 
+\>xaxis(0,xx=-2:1,style="-\>"); yaxis(0,yy=-5:5,style="-\>"):
 
-         -19.83 
-          47.00 
 
-Mari kita coba menjawab pertanyaan yang lebih ambigu. Asumsikan kita
-tahu bahwa nilainya 0 setelah 50 tahun. Berapa tingkat bunganya?
+Teks pada plot dapat diatur dengan label(). Dalam contoh berikut, "lc"
+berarti tengah bawah. Ini mengatur posisi label relatif terhadap
+koordinat plot.
 
 
-Ini adalah pertanyaan yang hanya bisa dijawab secara numerik. Di bawah
-ini, kami akan mendapatkan rumus yang diperlukan. Maka Anda akan
-melihat bahwa tidak ada rumus mudah untuk suku bunga. Tetapi untuk
-saat ini, kami bertujuan untuk solusi numerik.
-
-
-Langkah pertama adalah menentukan fungsi yang melakukan iterasi
-sebanyak n kali. Kami menambahkan semua parameter ke fungsi ini.
-
-
-\>function f(K,R,P,n) := iterate("x\*(1+P/100)+R",K,n;P,R)[-1]
-
-
-Iterasinya sama seperti di atas
-
-
-Tapi kami lebih lama menggunakan nilai global R dalam ekspresi kami.
-Fungsi seperti iterate () memiliki trik khusus di Euler. Anda dapat
-meneruskan nilai variabel dalam ekspresi sebagai parameter titik koma.
-Dalam hal ini P dan R.
-
-
-Apalagi kami hanya tertarik pada nilai terakhir. Jadi kami mengambil
-indeks [-1].
-
-
-Mari kita coba tes.
-
-
-\>f(5000,-200,3,47)
-
-
-         -19.83 
-
-Sekarang kita bisa menyelesaikan masalah kita.
-
-
-\>solve("f(5000,-200,x,50)",3)
-
-
-           3.15 
-
-Rutin menyelesaikan memecahkan ekspresi = 0 untuk variabel x.
-Jawabannya adalah 3,15% per tahun. Kami mengambil nilai awal 3% untuk
-algoritme. Fungsi Solving () selalu membutuhkan nilai awal.
-
-
-Kita dapat menggunakan fungsi yang sama untuk menjawab pertanyaan
-berikut: Berapa banyak yang dapat kita keluarkan per tahun sehingga
-modal awal habis setelah 20 tahun dengan asumsi tingkat bunga 3% per
-tahun.
-
-
-\>solve("f(5000,x,3,20)",-200)
-
-
-        -336.08 
-
-Perhatikan bahwa Anda tidak dapat menyelesaikan jumlah tahun, karena
-fungsi kami mengasumsikan n sebagai nilai integer.
-
-
-## Solusi Simbolis untuk Masalah Suku Bunga
-
-Kita dapat menggunakan bagian simbolik Euler untuk mempelajari
-masalahnya. Pertama kita mendefinisikan fungsi onepay () secara
-simbolis.
-
-
-\>function op(K) &= K\*q+R; $&op(K)
-
-
-Sekarang kita dapat mengulang ini.
-
-
-\>$&op(op(op(op(K)))), $&expand(%)
-
-
-Kami melihat sebuah pola. Setelah n periode yang kita miliki
-
-
-Rumusnya adalah rumus jumlah geometris, yang dikenal dengan Maxima.
-
-
-\>&sum(q^k,k,0,n-1); $& % = ev(%,simpsum)
-
-
-Ini agak rumit. Jumlahnya dievaluasi dengan bendera "simpsum" untuk
-menguranginya menjadi hasil bagi.
-
-
-Mari kita buat fungsi untuk ini.
-
-
-\>function fs(K,R,P,n) &= (1+P/100)^n\*K + ((1+P/100)^n-1)/(P/100)\*R; $&fs(K,R,P,n)
-
-
-Fungsinya sama dengan fungsi f kita sebelumnya. Tapi itu lebih
-efektif.
-
-
-\>longest f(5000,-200,3,47), longest fs(5000,-200,3,47)
-
-
-         -19.82504734650985 
-         -19.82504734652684 
-
-Sekarang kita dapat menggunakannya untuk menanyakan waktu n. Kapan
-modal kita habis? Tebakan awal kami adalah 30 tahun.
-
-
-\>solve("fs(5000,-330,3,x)",30)
-
-
-          20.51 
-
-Jawaban ini mengatakan bahwa itu akan menjadi negatif setelah 21
-tahun.
-
-
-Kita juga dapat menggunakan sisi simbolis Euler untuk menghitung rumus
-pembayaran.
-
-
-Asumsikan kita mendapat pinjaman sebesar K, dan membayar n pembayaran
-R (dimulai setelah tahun pertama) meninggalkan sisa utang Kn (pada
-saat pembayaran terakhir). Rumusnya jelas
-
-
-\>equ &= fs(K,R,P,n)=Kn; $&equ
-
-
-Biasanya rumus ini diberikan dalam bentuk
-
-
-\>equ &= (equ with P=100\*i); $&equ
-
-
-Kita bisa mencari nilai R secara simbolis.
-
-
-\>$&solve(equ,R)
-
-
-Seperti yang Anda lihat dari rumusnya, fungsi ini mengembalikan
-kesalahan titik mengambang untuk i = 0. Euler tetap merencanakannya.
-
-
-Tentu saja, kami memiliki batasan berikut.
-
-
-\>$&limit(R(5000,0,x,10),x,0)
-
-
-Jelas, tanpa bunga kita harus membayar kembali 10 bunga dari 500.
-
-
-Persamaan ini juga bisa diselesaikan untuk n. Ini terlihat lebih
-bagus, jika kita menerapkan beberapa penyederhanaan padanya.
-
-
-\>fn &= solve(equ,n) | ratsimp; $&fn
-
-
-# Aljabar Linear Elementer
-
-## Matriks
-
-Membuat matriks dari persamaan linear &amp; Menuliskannya di kode EMT
-
-
-\>spla &= 4\*v-3\*w-5\*x-3\*y+1\*z= 7; splb &= 2\*v-1\*w+3\*x+6\*y+2\*z= -4; splc &= v+w+x+y+z= 1; ...  
-\>   spld &= -3\*v+9\*w-8\*x+3\*y-z= 10; sple &= v+5\*w-3\*x+6\*y-3\*z=9; $&spla, $&splb, $&splc, $&spld, $&sple
-
-
-Mencari nilai-nilai variabel dari persamaan tersebut 
-
-
-\>sspl &= solve([spla,splb,splc,spld,sple],[v,w,x,y,z]); $&sspl
-
-
-Membuat Augmented Matriks dari persamaan diatas
-
-
-\>A := [4,-3,-5,-3,1;2,-1,3,6,2;1,1,1,1,1;-3,9,-8,3,-1;1,5,-3,6,-3]
-
-
-           4.00       -3.00       -5.00       -3.00        1.00 
-           2.00       -1.00        3.00        6.00        2.00 
-           1.00        1.00        1.00        1.00        1.00 
-          -3.00        9.00       -8.00        3.00       -1.00 
-           1.00        5.00       -3.00        6.00       -3.00 
-
-\>B := [7;-4;1;10;9]
-
-
-           7.00 
-          -4.00 
-           1.00 
-          10.00 
-           9.00 
-
-Mencari nilai-nilai lain yang bisa di dapatkan dari persamaan tersebut
-
-
-\>det(A) // mencari nilai determinan
-
-
-        3717.00 
-
-\>&echelon (A) // mencari nilai eselon baris
+\>function f(x) &= x^3-x
 
 
     
-                               [    80143857 ]
-                               [ 1  -------- ]
-                               [    25510582 ]
-                               [             ]
-                               [ 0     1     ]
+                                     3
+                                    x  - x
     
 
-\>&rank (A) // mencari rank dari suatu matriks
+\>plot2d(f,-1,1,\>square);
 
+\>x0=fmin(f,0,1); // compute point of minimum
 
-    
-                                      2
-    
+\>label("Rel. Min.",x0,f(x0),pos="lc"): // add a label there
 
-\>kernel (A)
 
+Ada juga kotak teks.
 
-           0.00 
-           0.00 
-           0.00 
-           0.00 
-           0.00 
 
-\>A.kernel (A)
+\>plot2d(&f(x),-1,1,-2,2); // function
 
+\>plot2d(&diff(f(x),x),\>add,style="--",color=red); // derivative
 
-           0.00 
-           0.00 
-           0.00 
-           0.00 
-           0.00 
+\>labelbox(["f","f'"],["-","--"],[black,red]): // label box
 
-\>&invert (A)// mencari invers dari matriks tersebut
+\>plot2d(["exp(x)","1+x"],color=[black,blue],style=["-","-.-"]):
 
+\>gridstyle("-\>",color=gray,textcolor=gray,framecolor=gray);  ...  
+\>    plot2d("x^3-x",grid=1);   ...  
+\>    settitle("y=x^3-x",color=black); ...  
+\>    label("x",2,0,pos="bc",color=gray);  ...  
+\>    label("y",0,6,pos="cl",color=gray); ...  
+\>    reset():
 
-    
-                [ - 0.6608188066430674   0.4152047016607668  ]
-                [                                            ]
-                [  0.5286550453144538   - 0.1321637613286135 ]
-    
 
-\>A\*B // mengalikan kedua matriks yang ada
+Untuk kontrol lebih, sumbu x dan sumbu y dapat dilakukan secara
+manual.
 
 
-          28.00      -21.00      -35.00      -21.00        7.00 
-          -8.00        4.00      -12.00      -24.00       -8.00 
-           1.00        1.00        1.00        1.00        1.00 
-         -30.00       90.00      -80.00       30.00      -10.00 
-           9.00       45.00      -27.00       54.00      -27.00 
+Perintah fullwindow() memperluas jendela plot karena kita tidak lagi
+membutuhkan tempat untuk label di luar jendela plot. Gunakan
+shrinkwindow() atau reset() untuk mengatur ulang ke default.
 
-\>A.A // cross product terhadap matriks itu sendiri
 
+\>fullwindow; ...  
+\>    gridstyle(color=darkgray,textcolor=darkgray); ...  
+\>    plot2d(["2^x","1","2^(-x)"],a=-2,b=2,c=0,d=4,<grid,color=4:6,<frame); ...  
+\>    xaxis(0,-2:1,style="-\>"); xaxis(0,2,"x",<axis); ...  
+\>    yaxis(0,4,"y",style="-\>"); ...  
+\>    yaxis(-2,1:4,\>left); ...  
+\>    yaxis(2,2^(-2:2),style=".",<left); ...  
+\>    labelbox(["2^x","1","2^-x"],colors=4:6,x=0.8,y=0.2); ...  
+\>    reset:
 
-          15.00      -36.00      -13.00      -38.00       -7.00 
-          -7.00       62.00      -64.00       21.00       -9.00 
-           5.00       11.00      -12.00       13.00        0.00 
-         -12.00       14.00       13.00       58.00        7.00 
-         -10.00       28.00      -32.00       24.00       11.00 
 
-\>transpose (A)// mengtranspose matriks tersebut
+Berikut adalah contoh lain, di mana string Unicode digunakan dan sumbu
+di luar area plot.
 
 
-           4.00        2.00        1.00       -3.00        1.00 
-          -3.00       -1.00        1.00        9.00        5.00 
-          -5.00        3.00        1.00       -8.00       -3.00 
-          -3.00        6.00        1.00        3.00        6.00 
-           1.00        2.00        1.00       -1.00       -3.00 
+\>aspect(1.5); 
 
-Membuat Matriks Identitas
+\>plot2d(["sin(x)","cos(x)"],0,2pi,color=[red,green],<grid,<frame); ...  
+\>    xaxis(-1.1,(0:2)\*pi,xt=["0",u"&pi;",u"2&pi;"],style="-",\>ticks,\>zero);  ...  
+\>    xgrid((0:0.5:2)\*pi,<ticks); ...  
+\>    yaxis(-0.1\*pi,-1:0.2:1,style="-",\>zero,\>grid); ...  
+\>    labelbox(["sin","cos"],colors=[red,green],x=0.5,y=0.2,\>left); ...  
+\>    xlabel(u"&phi;"); ylabel(u"f(&phi;)"):
 
 
-\>C=id(4)
+# Merencanakan Data 2D
 
+Jika x dan y adalah vektor data, data ini akan digunakan sebagai
+koordinat x dan y dari suatu kurva. Dalam hal ini, a, b, c, dan d,
+atau radius r dapat ditentukan, atau jendela plot akan menyesuaikan
+secara otomatis dengan data. Atau, &gt;persegi dapat diatur untuk menjaga
+rasio aspek persegi.
 
-           1.00        0.00        0.00        0.00 
-           0.00        1.00        0.00        0.00 
-           0.00        0.00        1.00        0.00 
-           0.00        0.00        0.00        1.00 
 
-## Vektor
+Memplot ekspresi hanyalah singkatan untuk plot data. Untuk plot data,
+Anda memerlukan satu atau beberapa baris nilai x, dan satu atau
+beberapa baris nilai y. Dari rentang dan nilai-x, fungsi plot2d akan
+menghitung data yang akan diplot, secara default dengan evaluasi
+fungsi yang adaptif. Untuk plot titik gunakan "&gt;titik", untuk garis
+campuran dan titik gunakan "&gt;tambahan".
 
-Diberikan sebuah vektor dibawah ini, lalu dicari berbagai nilainya
 
+Tapi Anda bisa memasukkan data secara langsung.
 
-\>v:=[1;1;1] 
 
+* 
+Gunakan vektor baris untuk x dan y untuk satu fungsi.
 
-           1.00 
-           1.00 
-           1.00 
+* 
+Matriks untuk x dan y diplot baris demi baris.
 
-\>w:=[1;2;-1]
 
+Berikut adalah contoh dengan satu baris untuk x dan y.
 
-           1.00 
-           2.00 
-          -1.00 
 
-\>v:=[1;1;1]; w:=[1;2;-1]; v1:=w-(w'.v)/(v'.v)\*v; fracprint(v1); // mencari ortogonalitas vektor tersebut
+\>x=-10:0.1:10; y=exp(-x^2)\*x; plot2d(x,y):
 
 
-          1/3 
-          4/3 
-         -5/3 
+Data juga dapat diplot sebagai titik. Gunakan poin=true untuk ini.
+Plotnya bekerja seperti poligon, tetapi hanya menggambar
+sudut-sudutnya.
 
-\>v2:=crossproduct(v,w), // mencari nilai crossproduct
 
+* 
+style="...": Pilih dari "[]", "&lt;&gt;", "o", ".", "..", "+", "*", "[]#",
+* "&lt; &gt;#", "o#", "..#", "#", "|".
 
-          -3.00 
-           2.00 
-           1.00 
 
-\>M:=[v/norm(v),v1/norm(v1),v2/norm(v2)] // mencari normalitas dari vektor tersebut, seharusnya membentuk ortogonalitas
+Untuk memplot set poin gunakan &gt;points. Jika warna adalah vektor
+warna, setiap titik
 
 
-           0.58        0.15       -0.80 
-           0.58        0.62        0.53 
-           0.58       -0.77        0.27 
+mendapat warna yang berbeda. Untuk matriks koordinat dan vektor kolom,
+warna berlaku untuk baris matriks.
 
-\>sort([2,-1,1])// mengurutkan nilai vektor
 
+Parameter &gt;addpoints menambahkan titik ke segmen garis untuk plot
+data.
 
-          -1.00        1.00        2.00 
 
-# Mencoba Latihan Soal
+\>xdata=[1,1.5,2.5,3,4]; ydata=[3,3.1,2.8,2.9,2.7]; // data
 
-Faktorkan
+\>plot2d(xdata,ydata,a=0.5,b=4.5,c=2.5,d=3.5,style="."); // lines
 
+\>plot2d(xdata,ydata,\>points,\>add,style="o"): // add points
 
-\>&factor (z^2 - 81)// mengfaktorkan persamaan kuadrat
+\>p=polyfit(xdata,ydata,1); // get regression line
 
+\>plot2d("polyval(p,x)",\>add,color=red): // add plot of line
 
-    
-                               (z - 9) (z + 9)
-    
 
-\>&factor (25\*ab^4-25\*az^4)
+# Menggambar Daerah Yang Dibatasi Kurva
 
+Plot data benar-benar poligon. Kita juga dapat memplot kurva atau
+kurva terisi.
 
-    
-                                                 2     2
-                     - 25 (az - ab) (az + ab) (az  + ab )
-    
 
-\>&factor (t^2-27/100+3/5\*t)
+* 
+terisi=benar mengisi plot.
 
+* 
+style="...": Pilih dari "#", "/", "\", "\/".
 
-    
-                            (10 t - 3) (10 t + 9)
-                            ---------------------
-                                     100
-    
+* 
+fillcolor: Lihat di atas untuk warna yang tersedia.
 
-\>&load(fourier\_elim)
 
+Warna isian ditentukan oleh argumen "fillcolor", dan pada &lt;outline
+opsional mencegah menggambar batas untuk semua gaya kecuali yang
+default.
 
-    
-            C:/Program Files/Euler x64/maxima/share/maxima/5.35.1/share/f\
-    ourier_elim/fourier_elim.lisp
-    
 
-Selesaikan Pertidaksamaan
+\>t=linspace(0,2pi,1000); // parameter for curve
 
+\>x=sin(t)\*exp(t/pi); y=cos(t)\*exp(t/pi); // x(t) and y(t)
 
-\>$&fourier\_elim([abs(2\*x+1)/3\> 5],[x])
+\>figure(1,2); aspect(16/9)
 
+\>figure(1); plot2d(x,y,r=10); // plot curve
 
-Selesaikan Persamaan tersebut menjadi suatu matriks yang diketahui
-nilai-nilainya.
+\>figure(2); plot2d(x,y,r=10,\>filled,style="/",fillcolor=red); // fill curve
 
+\>figure(0):
 
-\>A := [4,4,0,-5,-3,1;3,2-1,3,0,6;6,0,1,1,1,1;0,-3,9,-8,3,1;2,1,5,-3,6,-3;1,4,3,-2,1]// Membuat Augmented Matriks dari persamaan diatas
 
+Dalam contoh berikut kami memplot elips terisi dan dua segi enam
+terisi menggunakan kurva tertutup dengan 6 titik dengan gaya isian
+berbeda.
 
-    Real 6 x 6 matrix
-    
-           4.00        4.00        0.00       -5.00     ...
-           3.00        1.00        3.00        0.00     ...
-           6.00        0.00        1.00        1.00     ...
-           0.00       -3.00        9.00       -8.00     ...
-           2.00        1.00        5.00       -3.00     ...
-           1.00        4.00        3.00       -2.00     ...
 
-\>B := [7;-4;1;10;9;4]// Augmented Matriks dari hasil persamaan tersebut
+\>x=linspace(0,2pi,1000); plot2d(sin(x),cos(x)\*0.5,r=1,\>filled,style="/"):
 
+\>t=linspace(0,2pi,5); ...  
+\>   plot2d(cos(t),sin(t),\>filled,style="/",fillcolor=red,r=1.2):
 
-           7.00 
-          -4.00 
-           1.00 
-          10.00 
-           9.00 
-           4.00 
+\>t=linspace(0,2pi,6); plot2d(cos(t),sin(t),\>filled,style="#"):
 
-\>spla &= 4\*u+4\*v+0-5\*x-3\*y+1\*z= 7; splb &= 3\*u+2\*v-1\*w+3\*x+6\*y= -4; splc &= 6\*u+w+x+y+z= 1; ...  
-\>   spld &= -3\*v+9\*w-8\*x+3\*y-z= 10; sple &= 2\*u+v+5\*w-3\*x+6\*y-3\*z=9; splf &= u+4\*v+3\*w-2\*x+y+5\*z=4; $&spla, $&splb, $&splc, $&spld, $&sple, $&splf
 
+Contoh lainnya adalah segi empat, yang kita buat dengan 7 titik pada
+lingkaran satuan.
 
-Cari nilai-nilainya
 
+\>t=linspace(0,2pi,7);  ...  
+\>    plot2d(cos(t),sin(t),r=1,\>filled,style="/",fillcolor=red):
 
-\>sspl &= solve([spla,splb,splc,spld,sple,splf],[u,v,w,x,y,z]); $&sspl
 
+Berikut ini adalah himpunan nilai maksimal dari empat kondisi linier
+yang kurang dari atau sama dengan 3. Ini adalah A[k].v&lt;=3 untuk semua
+baris A. Untuk mendapatkan sudut yang bagus, kita menggunakan n yang
+relatif besar.
 
-## Exercise
 
-Elviana Eka Putri
+\>A=[2,1;1,2;-1,0;0,-1];
 
+\>function f(x,y) := max([x,y].A');
 
-23030630094
+\>plot2d("f",r=4,level=[0;3],color=green,n=111):
 
 
-Matematika E 2023
+Poin utama dari bahasa matriks adalah memungkinkan untuk menghasilkan
+tabel fungsi dengan mudah.
 
 
----
+\>t=linspace(0,2pi,1000); x=cos(3\*t); y=sin(4\*t);
 
 
+Kami sekarang memiliki nilai vektor x dan y . plot2d() dapat memplot
+nilai-nilai ini
 
-Pilih minimal 5 soal dari setiap latihan atau tipe soal (misalnya
-diantara soal-soal yang sudah saya blok). Jangan lupa tuliskan soalnya
-di teks komentar (dengan format LaTeX) dan beri penjelasan hasil
-output-nya. Ubah file notebook pekerjaan Anda menjadi file PDF
-menggunakan salah satu metode di atas.
 
+sebagai kurva yang menghubungkan titik-titik. Plotnya bisa diisi. Pada
+kasus ini
 
----
 
+ini menghasilkan hasil yang bagus karena aturan lilitan, yang
+digunakan untuk
 
 
-R.2 Exercise Set
+isi.
 
 
----
+\>plot2d(x,y,<grid,<frame,\>filled):
 
 
+Sebuah vektor interval diplot terhadap nilai x sebagai daerah terisi
 
-Buatlah perhitungan berikut
 
+antara nilai interval bawah dan atas.
 
-\>$&((((m^(x-b))\*(n^(x+b)))^x)\*((m^b)\*(n^-b))^x)
 
+Hal ini dapat berguna untuk memplot kesalahan perhitungan. Tapi itu
+bisa
 
-\>$&((((x^r)/(y^t))^2)\*((x^2\*r)/(y^4\*t))^-2)^-3
 
+juga digunakan untuk memplot kesalahan statistik.
 
-\>$&((2^6)\*(2^-3)/(2^10)/(2^-8))
 
+\>t=0:0.1:1; ...  
+\>    plot2d(t,interval(t-random(size(t)),t+random(size(t))),style="|");  ...  
+\>    plot2d(t,t,add=true):
 
-\>$&((4\*(8-6)^2-4\*3+2\*8))/(3^1)+(19^0)
 
+Jika x adalah vektor yang diurutkan, dan y adalah vektor interval,
+maka plot2d akan memplot rentang interval yang terisi dalam bidang.
+Gaya isian sama dengan gaya poligon.
 
-\>$&(((4\*(8-6)^2)+4)\*(3-2\*8))/((2^2)\*((2^3)+5))
 
+\>t=-1:0.01:1; x=~t-0.01,t+0.01~; y=x^3-x;
 
----
+\>plot2d(t,y):
 
 
+Dimungkinkan untuk mengisi wilayah nilai untuk fungsi tertentu. Untuk
 
-R.5 Exercise
 
+ini, level harus berupa matriks 2xn. Baris pertama adalah batas bawah
 
----
 
+dan baris kedua berisi batas atas.
 
 
-Selesaikan perhitungan berikut:
+\>expr := "2\*x^2+x\*y+3\*y^4+y"; // define an expression f(x,y)
 
+\>plot2d(expr,level=[0;1],style="-",color=blue): // 0 <= f(x,y) <= 1
 
-no.37
 
+Kami juga dapat mengisi rentang nilai seperti
 
-\>$solve((x^2)+(5\*x)=0)
 
+\>plot2d("(x^2+y^2)^2-x^2+y^2",r=1.2,level=[-1;0],style="/"):
 
-no.43
+\>plot2d("cos(x)","sin(x)^3",xmin=0,xmax=2pi,\>filled,style="/"):
 
 
-\>$solve((x^2)-(4\*x)-32=0)
+# Grafik Fungsi Parametrik
 
+Nilai-x tidak perlu diurutkan. (x,y) hanya menggambarkan kurva. Jika x
+diurutkan, kurva tersebut merupakan grafik fungsi.
 
-no.10
 
+Dalam contoh berikut, kami memplot spiral
 
-\>$&factor(((x^2)+(2\*x)-3)/((x^2)-9))
 
+Kita perlu menggunakan banyak titik untuk tampilan yang halus atau
+fungsi adaptif() untuk mengevaluasi ekspresi (lihat fungsi adaptif()
+untuk lebih jelasnya).
 
-no.16
 
+\>t=linspace(0,1,1000); ...  
+\>   plot2d(t\*cos(2\*pi\*t),t\*sin(2\*pi\*t),r=1):
 
-\>$&factor((6-x)/((x^2)-36))
 
+Atau, dimungkinkan untuk menggunakan dua ekspresi untuk kurva. Berikut
+ini plot kurva yang sama seperti di atas.
 
-no.13
 
+\>plot2d("x\*cos(2\*pi\*x)","x\*sin(2\*pi\*x)",xmin=0,xmax=1,r=1):
 
-\>$&factor(((6\*(y^2))+(12\*y)-48)/((3\*(y^2))-(9\*y)+6))
+\>t=linspace(0,1,1000); r=exp(-t); x=r\*cos(2pi\*t); y=r\*sin(2pi\*t);
 
+\>plot2d(x,y,r=1):
 
----
 
+ini contoh selanjutnya, membuat plot (titi) kurva
 
 
-3.4 Exercise Set
+dengan
 
 
----
+\>t=linspace(0,2pi,1000); r=1+sin(3\*t)/2; x=r\*cos(t); y=r\*sin(t); ...  
+\>   plot2d(x,y,\>filled,fillcolor=red,style="/",r=1.5):
 
 
+# Menggambar Grafik Bilangan Kompleks
 
-no. 29
+Array bilangan kompleks juga dapat diplot. Kemudian titik-titik grid
+akan terhubung. Jika sejumlah garis kisi ditentukan (atau vektor garis
+kisi 1x2) dalam argumen cgrid, hanya garis kisi tersebut yang
+terlihat.
 
 
-\>$&solve(sqrt(3\*x-4)=1)
+Matriks bilangan kompleks akan secara otomatis diplot sebagai kisi di
+bidang kompleks.
 
 
-no. 1
+Dalam contoh berikut, kami memplot gambar lingkaran satuan di bawah
+fungsi eksponensial. Parameter cgrid menyembunyikan beberapa kurva
+grid.
 
 
-\>$&solve((1/4)+(1/5)=(1/t))
+\>aspect(); r=linspace(0,1,50); a=linspace(0,2pi,80)'; z=r\*exp(I\*a);...  
+\>   plot2d(z,a=-1.25,b=1.25,c=-1.25,d=1.25,cgrid=10):
 
+\>aspect(1.25); r=linspace(0,1,50); a=linspace(0,2pi,200)'; z=r\*exp(I\*a);
 
-no.9
+\>plot2d(exp(z),cgrid=[40,10]):
 
+\>r=linspace(0,1,10); a=linspace(0,2pi,40)'; z=r\*exp(I\*a);
 
-\>$&solve(x+(6/x)=5)
+\>plot2d(exp(z),\>points,\>add):
 
 
-no.12
+Sebuah vektor bilangan kompleks secara otomatis diplot sebagai kurva
+pada bidang kompleks dengan bagian real dan bagian imajiner.
 
 
-\>$&solve((3/(m+2))+(2/m)=((4\*m-4)/(m^2-4)))
+Dalam contoh, kami memplot lingkaran satuan dengan
 
 
----
+\>t=linspace(0,2pi,1000); ...  
+\>   plot2d(exp(I\*t)+exp(4\*I\*t),r=2):
 
 
+# Plot Statistik
 
-R.3 Exercise
+Ada banyak fungsi yang dikhususkan pada plot statistik. Salah satu
+plot yang sering digunakan adalah plot kolom.
 
 
----
+Jumlah kumulatif dari nilai terdistribusi 0-1-normal menghasilkan
+jalan acak.
 
 
+\>plot2d(cumsum(randnormal(1,1000))):
 
-no. 29
 
+Menggunakan dua baris menunjukkan jalan dalam dua dimensi.
 
-\>$&expand((y-5)^2)
 
+\>X=cumsum(randnormal(2,1000)); plot2d(X[1],X[2]):
 
-no. 15
+\>columnsplot(cumsum(random(10)),style="/",color=blue):
 
 
-\>$&((6\*x\*y)^3)\*(9\*(x^4)\*(y^2))
+Itu juga dapat menampilkan string sebagai label.
 
 
-no. 52
+\>months=["Jan","Feb","Mar","Apr","May","Jun", ...  
+\>     "Jul","Aug","Sep","Oct","Nov","Dec"];
 
+\>values=[10,12,12,18,22,28,30,26,22,18,12,8];
 
-\>$&expand(((2\*x-1)^2-1^1)^2)
+\>columnsplot(values,lab=months,color=red,style="-");
 
+\>title("Temperature"):
 
-no. 7
+\>k=0:10;
 
+\>plot2d(k,bin(10,k),\>bar):
 
-\>$&(2\*x+3\*y+z-7)+(4\*x-2\*y-z+8)+(-3\*x+y-2\*z-4)
+\>plot2d(k,bin(10,k)); plot2d(k,bin(10,k),\>points,\>add):
 
+\>plot2d(normal(1000),normal(1000),\>points,grid=6,style=".."):
 
-no. 37
+\>plot2d(normal(1,1000),\>distribution,style="O"):
 
+\>plot2d("qnormal",0,5;2.5,0.5,\>filled):
 
-\>$&expand((n+6)\*(n-6))
 
+Untuk memplot distribusi statistik eksperimental, Anda dapat
+menggunakan distribution=n dengan plot2d.
 
----
 
+\>w=randexponential(1,1000); // exponential distribution
 
+\>plot2d(w,\>distribution): // or distribution=n with n intervals
 
-R.6 Exercise
 
+Atau Anda dapat menghitung distribusi dari data dan memplot hasilnya
+dengan &gt;bar di plot3d, atau dengan plot kolom.
 
----
 
+\>w=normal(1000); // 0-1-normal distribution
 
+\>{x,y}=histo(w,10,v=[-6,-4,-2,-1,0,1,2,4,6]); // interval bounds v
 
-Sederhanakan ekspresi berikut:
+\>plot2d(x,y,\>bar):
 
 
-no. 1
+Fungsi statplot() menyetel gaya dengan string sederhana.
 
 
-\>$&solve((1/4)+(1/5)=(1/t))
+\>statplot(1:10,cumsum(random(10)),"b"):
 
+\>n=10; i=0:n; ...  
+\>   plot2d(i,bin(n,i)/2^n,a=0,b=10,c=0,d=0.3); ...  
+\>   plot2d(i,bin(n,i)/2^n,points=true,style="ow",add=true,color=blue):
 
-no.12
 
+Selain itu, data dapat diplot sebagai batang. Dalam hal ini, x harus
+diurutkan dan satu elemen lebih panjang dari y. Bilah akan memanjang
+dari x[i] ke x[i+1] dengan nilai y[i]. Jika x memiliki ukuran yang
+sama dengan y, maka akan diperpanjang satu elemen dengan spasi
+terakhir.
 
-\>$&solve((3/(m+2))+(2/m)=((4\*m-4)/(m^2-4)))
 
+Gaya isian dapat digunakan seperti di atas.
 
-no.16
 
+\>n=10; k=bin(n,0:n); ...  
+\>   plot2d(-0.5:n+0.5,k,bar=true,fillcolor=lightgray):
 
-\>$&factor((6-x)/((x^2)-36))
 
+Data untuk plot batang (bar=1) dan histogram (histogram=1) dapat
+dinyatakan secara eksplisit dalam xv dan yv, atau dapat dihitung dari
+distribusi empiris dalam xv dengan &gt;distribusi (atau distribusi=n).
+Histogram nilai xv akan dihitung secara otomatis dengan &gt;histogram.
+Jika &gt;genap ditentukan, nilai xv akan dihitung dalam interval bilangan
+bulat.
 
-no.9
 
+\>plot2d(normal(10000),distribution=50):
 
-\>$&factor(((x^2)-4)/((x^2)-(4\*x)+4))
+\>k=0:10; m=bin(10,k); x=(0:11)-0.5; plot2d(x,m,\>bar):
 
+\>columnsplot(m,k):
 
-no. 29
+\>plot2d(random(600)\*6,histogram=6):
 
 
-\>$&solve(sqrt(3\*x-4)=1)
+Untuk distribusi, ada parameter distribusi=n, yang menghitung nilai
+secara otomatis dan mencetak distribusi relatif dengan n sub-interval.
 
 
----
+\>plot2d(normal(1,1000),distribution=10,style="\\/"):
 
 
+Dengan parameter even=true, ini akan menggunakan interval integer.
 
-R.4 Exercise
 
+\>plot2d(intrandom(1,1000,10),distribution=10,even=true):
 
----
 
+Perhatikan bahwa ada banyak plot statistik, yang mungkin berguna.
+Silahkan lihat tutorial tentang statistik.
 
 
-no.139
+\>columnsplot(getmultiplicities(1:6,intrandom(1,6000,6))):
 
+\>plot2d(normal(1,1000),\>distribution); ...  
+\>     plot2d("qnormal(x)",color=red,thickness=2,\>add):
 
-\>$&factor(((y-1)^4)-((y-1)^2))
 
+Ada juga banyak plot khusus untuk statistik. Boxplot menunjukkan
+kuartil dari distribusi ini dan banyak outlier. Menurut definisi,
+outlier dalam boxplot adalah data yang melebihi 1,5 kali kisaran 50%
+tengah plot.
 
-no. 23
 
+\>M=normal(5,1000); boxplot(quartiles(M)):
 
-Factor the trinomial
 
+# Fungsi implisit
 
-\>$&factor(t^2+8\*t+15)
+Plot implisit menunjukkan garis level yang menyelesaikan f(x,y)=level,
+di mana "level" dapat berupa nilai tunggal atau vektor nilai. Jika
+level="auto", akan ada garis level nc, yang akan menyebar antara
+fungsi minimum dan maksimum secara merata. Warna yang lebih gelap atau
+lebih terang dapat ditambahkan dengan &gt;hue untuk menunjukkan nilai
+fungsi. Untuk fungsi implisit, xv harus berupa fungsi atau ekspresi
+dari parameter x dan y, atau, sebagai alternatif, xv dapat berupa
+matriks nilai.
 
 
-no. 133
+Euler dapat menandai garis level
 
 
-\>$&factor((x^{2\*n})+(5\*x^n)-24)
+dari fungsi apapun.
 
 
-no.139
+Untuk menggambar himpunan f(x,y)=c untuk satu atau lebih konstanta c,
+Anda dapat menggunakan plot2d() dengan plot implisitnya di dalam
+bidang. Parameter untuk c adalah level=c, di mana c dapat berupa
+vektor garis level. Selain itu, skema warna dapat digambar di latar
+belakang untuk menunjukkan nilai fungsi untuk setiap titik dalam plot.
+Parameter "n" menentukan kehalusan plot.
 
 
-Factor. Assume that variables in exponents represent natural number
+\>aspect(1.5); 
 
+\>plot2d("x^2+y^2-x\*y-x",r=1.5,level=0,contourcolor=red):
 
-\>$&factor((y-1)^4-(y-1)^2)
+\>expr := "2\*x^2+x\*y+3\*y^4+y"; // define an expression f(x,y)
 
+\>plot2d(expr,level=0): // Solutions of f(x,y)=0
 
-no. 136
+\>plot2d(expr,level=0:0.5:20,\>hue,contourcolor=white,n=200): // nice
 
+\>plot2d(expr,level=0:0.5:20,\>hue,\>spectral,n=200,grid=4): // nicer
 
-\>$&factor((b\*d\*y^2)+(a\*d\*y)+(b\*c\*y)+(a\*c))
+
+Ini berfungsi untuk plot data juga. Tetapi Anda harus menentukan
+rentangnya untuk label sumbu.
+
+
+\>x=-2:0.05:1; y=x'; z=expr(x,y);
+
+\>plot2d(z,level=0,a=-1,b=2,c=-2,d=1,\>hue):
+
+\>plot2d("x^3-y^2",\>contour,\>hue,\>spectral):
+
+\>plot2d("x^3-y^2",level=0,contourwidth=3,\>add,contourcolor=red):
+
+\>z=z+normal(size(z))\*0.2;
+
+\>plot2d(z,level=0.5,a=-1,b=2,c=-2,d=1):
+
+\>plot2d(expr,level=[0:0.2:5;0.05:0.2:5.05],color=lightgray):
+
+\>plot2d("x^2+y^3+x\*y",level=1,r=4,n=100):
+
+\>plot2d("x^2+2\*y^2-x\*y",level=0:0.1:10,n=100,contourcolor=white,\>hue):
+
+
+Juga dimungkinkan untuk mengisi set
+
+
+dengan rentang tingkat.
+
+
+Dimungkinkan untuk mengisi wilayah nilai untuk fungsi tertentu. Untuk
+ini, level harus berupa matriks 2xn. Baris pertama adalah batas bawah
+dan baris kedua berisi batas atas.
+
+
+\>plot2d(expr,level=[0;1],style="-",color=blue): // 0 <= f(x,y) <= 1
+
+
+Plot implisit juga dapat menunjukkan rentang level. Kemudian level
+harus berupa matriks 2xn dari interval level, di mana baris pertama
+berisi awal dan baris kedua adalah akhir dari setiap interval. Atau,
+vektor baris sederhana dapat digunakan untuk level, dan parameter dl
+memperluas nilai level ke interval.
+
+
+\>plot2d("x^4+y^4",r=1.5,level=[0;1],color=blue,style="/"):
+
+\>plot2d("x^2+y^3+x\*y",level=[0,2,4;1,3,5],style="/",r=2,n=100):
+
+\>plot2d("x^2+y^3+x\*y",level=-10:20,r=2,style="-",dl=0.1,n=100):
+
+\>plot2d("sin(x)\*cos(y)",r=pi,\>hue,\>levels,n=100):
+
+
+Dimungkinkan juga untuk menandai suatu wilayah
+
+
+Ini dilakukan dengan menambahkan level dengan dua baris.
+
+
+\>plot2d("(x^2+y^2-1)^3-x^2\*y^3",r=1.3, ...  
+\>     style="#",color=red,<outline, ...  
+\>     level=[-2;0],n=100):
+
+
+Dimungkinkan untuk menentukan level tertentu. Misalnya, kita dapat
+memplot solusi persamaan seperti:
+
+
+\>plot2d("x^3-x\*y+x^2\*y^2",r=6,level=1,n=100):
+
+\>function starplot1 (v, style="/", color=green, lab=none) ...  
+\>  
+<pre class="udf">      if !holding() then clg; endif;
+      w=window(); window(0,0,1024,1024);
+      h=holding(1);
+      r=max(abs(v))*1.2;
+      setplot(-r,r,-r,r);
+      n=cols(v); t=linspace(0,2pi,n);
+      v=v|v[1]; c=v*cos(t); s=v*sin(t);
+      cl=barcolor(color); st=barstyle(style);
+      loop 1 to n
+        polygon([0,c[#],c[#+1]],[0,s[#],s[#+1]],1);
+        if lab!=none then
+          rlab=v[#]+r*0.1;
+          {col,row}=toscreen(cos(t[#])*rlab,sin(t[#])*rlab);
+          ctext(""+lab[#],col,row-textheight()/2);
+        endif;
+      end;
+      barcolor(cl); barstyle(st);
+      holding(h);
+      window(w);
+    endfunction
+</pre>
+Tidak ada kotak atau sumbu kutu di sini. Selain itu, kami menggunakan
+jendela penuh untuk plot.
+
+
+Kami memanggil reset sebelum kami menguji plot ini untuk mengembalikan
+default grafis. Ini tidak perlu, jika Anda yakin plot Anda berhasil.
+
+
+\>reset; starplot1(normal(1,10)+5,color=red,lab=1:10):
+
+
+Terkadang, Anda mungkin ingin merencanakan sesuatu yang tidak dapat
+dilakukan plot2d, tetapi hampir.
+
+
+Dalam fungsi berikut, kami melakukan plot impuls logaritmik. plot2d
+dapat melakukan plot logaritmik, tetapi tidak untuk batang impuls.
+
+
+\>function logimpulseplot1 (x,y) ...
+
+
+      {x0,y0}=makeimpulse(x,log(y)/log(10));
+      plot2d(x0,y0,>bar,grid=0);
+      h=holding(1);
+      frame();
+      xgrid(ticks(x));
+      p=plot();
+      for i=-10 to 10;
+        if i<=p[4] and i>=p[3] then
+           ygrid(i,yt="10^"+i);
+        endif;
+      end;
+      holding(h);
+    endfunction
+</pre>
+Mari kita uji dengan nilai yang terdistribusi secara eksponensial.
+
+
+\>aspect(1.5); x=1:10; y=-log(random(size(x)))\*200; ...  
+\>   logimpulseplot1(x,y):
+
+
+Mari kita menganimasikan kurva 2D menggunakan plot langsung. Perintah
+plot(x,y) hanya memplot kurva ke jendela plot. setplot(a,b,c,d)
+mengatur jendela ini.
+
+
+Fungsi wait(0) memaksa plot untuk muncul di jendela grafik. Jika
+tidak, menggambar ulang terjadi dalam interval waktu yang jarang.
+
+
+\>function animliss (n,m) ...
+
+
+    t=linspace(0,2pi,500);
+    f=0;
+    c=framecolor(0);
+    l=linewidth(2);
+    setplot(-1,1,-1,1);
+    repeat
+      clg;
+      plot(sin(n*t),cos(m*t+f));
+      wait(0);
+      if testkey() then break; endif;
+      f=f+0.02;
+    end;
+    framecolor(c);
+    linewidth(l);
+    endfunction
+</pre>
+Press any key to stop this animation.
+
+
+\>animliss(2,3); // lihat hasilnya, jika sudah puas, tekan ENTER
+
+
+# Plot Logaritmik
+
+EMT menggunakan parameter "logplot" untuk skala logaritmik.
+
+
+Plot logaritma dapat diplot baik menggunakan skala logaritma dalam y
+dengan logplot=1, atau menggunakan skala logaritma dalam x dan y
+dengan logplot=2, atau dalam x dengan logplot=3.
+
+
+ - logplot=1: y-logaritma  
+ - logplot=2: x-y-logaritma  
+ - logplot=3: x-logaritma  
+
+\>plot2d("exp(x^3-x)\*x^2",1,5,logplot=1):
+
+\>plot2d("exp(x+sin(x))",0,100,logplot=1):
+
+\>plot2d("exp(x+sin(x))",10,100,logplot=2):
+
+\>plot2d("gamma(x)",1,10,logplot=1):
+
+\>plot2d("log(x\*(2+sin(x/100)))",10,1000,logplot=3):
+
+
+Ini juga berfungsi dengan plot data.
+
+
+\>x=10^(1:20); y=x^2-x;
+
+\>plot2d(x,y,logplot=2):
+
+
+# Contoh Soal 1
+
+Gambarkan grafik fungsi berikut: 
+
+
+\>reset; ...  
+\>   aspect(3,1); ...  
+\>   figure(1,3); figure(1); plot2d("x^4+x+3", grid=2); ...  
+\>   figure(2); plot2d("3x^3+2x^2+2", grid=5); ...  
+\>   figure(3); plot2d("x^2+15x", grid=4); ...  
+\>   figure(0):
+
+
+# Contoh Soal 2
+
+Buatlah grafik dan sertakan labelnya dari
+
+
+
+
+Dengan batas 0,2 pi
+
+
+\>reset; ...  
+\>   plot2d("cos(2x)",0,2pi,title="y=cos(2x)",yl="y",xl="x"):
+
+
+# Contoh Soal 3
+
+Buatlah plot 2D dengan mengisi rentang nilai seperti
+
+
+\>reset; ...  
+\>   plot2d("(x^4+y^4)^4-x^2+y^2",r=1.1,level=[-1;0],color=red,style="/"):
+
+
+# Rujukan Lengkap Fungsi plot2d()
+
+  function plot2d (xv, yv, btest, a, b, c, d, xmin, xmax, r, n,  ..  
+  logplot, grid, frame, framecolor, square, color, thickness, style, ..  
+  auto, add, user, delta, points, addpoints, pointstyle, bar, histogram,  ..  
+  distribution, even, steps, own, adaptive, hue, level, contour,  ..  
+  nc, filled, fillcolor, outline, title, xl, yl, maps, contourcolor, ..  
+  contourwidth, ticks, margin, clipping, cx, cy, insimg, spectral,  ..  
+  cgrid, vertical, smaller, dl, niveau, levels)  
+
+Multipurpose plot function for plots in the plane (2D plots). This function can do
+plots of functions of one variables, data plots, curves in the plane, bar plots, grids
+of complex numbers, and implicit plots of functions of two variables.
+
+
+Parameters
+
+
+
+
+x,y       : equations, functions or data vectors
+
+
+a,b,c,d   : Plot area (default a=-2,b=2)
+
+
+r         : if r is set, then a=cx-r, b=cx+r, c=cy-r, d=cy+r
+
+
+            r can be a vector [rx,ry] or a vector [rx1,rx2,ry1,ry2].
+
+
+xmin,xmax : range of the parameter for curves
+
+
+auto      : Determine y-range automatically (default)
+
+
+square    : if true, try to keep square x-y-ranges
+
+
+n         : number of intervals (default is adaptive)
+
+
+grid      : 0 = no grid and labels,
+
+
+            1 = axis only,
+
+
+            2 = normal grid (see below for the number of grid lines)
+
+
+            3 = inside axis
+
+
+            4 = no grid
+
+
+            5 = full grid including margin
+
+
+            6 = ticks at the frame
+
+
+            7 = axis only
+
+
+            8 = axis only, sub-ticks
+
+
+frame     : 0 = no frame
+
+
+framecolor: color of the frame and the grid
+
+
+margin    : number between 0 and 0.4 for the margin around the plot
+
+
+color     : Color of curves. If this is a vector of colors,
+
+
+            it will be used for each row of a matrix of plots. In the case of
+
+
+            point plots, it should be a column vector. If a row vector or a
+
+
+            full matrix of colors is used for point plots, it will be used for
+
+
+            each data point.
+
+
+thickness : line thickness for curves
+
+
+            This value can be smaller than 1 for very thin lines.
+
+
+style     : Plot style for lines, markers, and fills.
+
+
+            For points use
+
+
+            "[]", "&lt;&gt;", ".", "..", "...",
+
+
+            "*", "+", "|", "-", "o"
+
+
+            "[]#", "&lt;&gt;#", "o#" (filled shapes)
+
+
+            "[]w", "&lt;&gt;w", "ow" (non-transparent)
+
+
+            For lines use
+
+
+            "-", "--", "-.", ".", ".-.", "-.-", "-&gt;"
+
+
+            For filled polygons or bar plots use
+
+
+            "#", "#O", "O", "/", "\", "\/",
+
+
+            "+", "|", "-", "t"
+
+
+points    : plot single points instead of line segments
+
+
+addpoints : if true, plots line segments and points
+
+
+add       : add the plot to the existing plot
+
+
+user      : enable user interaction for functions
+
+
+delta     : step size for user interaction
+
+
+bar       : bar plot (x are the interval bounds, y the interval values)
+
+
+histogram : plots the frequencies of x in n subintervals
+
+
+distribution=n : plots the distribution of x with n subintervals
+
+
+even      : use inter values for automatic histograms.
+
+
+steps     : plots the function as a step function (steps=1,2)
+
+
+adaptive  : use adaptive plots (n is the minimal number of steps)
+
+
+level     : plot level lines of an implicit function of two variables
+
+
+outline   : draws boundary of level ranges.
+
+
+
+
+If the level value is a 2xn matrix, ranges of levels will be drawn
+
+
+in the color using the given fill style. If outline is true, it
+
+
+will be drawn in the contour color. Using this feature, regions of
+
+
+f(x,y) between limits can be marked.
+
+
+
+
+hue       : add hue color to the level plot to indicate the function
+
+
+            value
+
+
+contour   : Use level plot with automatic levels
+
+
+nc        : number of automatic level lines
+
+
+title     : plot title (default "")
+
+
+xl, yl    : labels for the x- and y-axis
+
+
+smaller   : if &gt;0, there will be more space to the left for labels.
+
+
+vertical  :
+
+
+  Turns vertical labels on or off. This changes the global variable
+
+
+  verticallabels locally for one plot. The value 1 sets only vertical
+
+
+  text, the value 2 uses vertical numerical labels on the y axis.
+
+
+filled    : fill the plot of a curve
+
+
+fillcolor : fill color for bar and filled curves
+
+
+outline   : boundary for filled polygons
+
+
+logplot   : set logarithmic plots
+
+
+            1 = logplot in y,
+
+
+            2 = logplot in xy,
+
+
+            3 = logplot in x
+
+
+own       :
+
+
+  A string, which points to an own plot routine. With &gt;user, you get
+
+
+  the same user interaction as in plot2d. The range will be set
+
+
+  before each call to your function.
+
+
+maps      : map expressions (0 is faster), functions are always mapped.
+
+
+contourcolor : color of contour lines
+
+
+contourwidth : width of contour lines
+
+
+clipping  : toggles the clipping (default is true)
+
+
+title     :
+
+
+  This can be used to describe the plot. The title will appear above
+
+
+  the plot. Moreover, a label for the x and y axis can be added with
+
+
+  xl="string" or yl="string". Other labels can be added with the
+
+
+  functions label() or labelbox(). The title can be a unicode
+
+
+  string or an image of a Latex formula.
+
+
+cgrid     :
+
+
+  Determines the number of grid lines for plots of complex grids.
+
+
+  Should be a divisor of the the matrix size minus 1 (number of
+
+
+  subintervals). cgrid can be a vector [cx,cy].
+
+
+Overview
+
+
+The function can plot
+
+
+* 
+expressions, call collections or functions of one variable,
+
+* 
+parametric curves,
+
+* 
+x data against y data,
+
+* 
+implicit functions,
+
+* 
+bar plots,
+
+* 
+complex grids,
+
+* 
+polygons.
+
+
+If a function or expression for xv is given, plot2d() will compute
+
+
+values in the given range using the function or expression. The
+
+
+expression must be an expression in the variable x. The range must
+
+
+be defined in the parameters a and b unless the default range
+
+
+[-2,2] should be used. The y-range will be computed automatically,
+
+
+unless c and d are specified, or a radius r, which yields the range
+
+
+[-r,r] for x and y. For plots of functions, plot2d will use an
+
+
+adaptive evaluation of the function by default. To speed up the
+
+
+plot for complicated functions, switch this off with &lt;adaptive, and
+
+
+optionally decrease the number of intervals n. Moreover, plot2d()
+
+
+will by default use mapping. I.e., it will compute the plot element
+
+
+for element. If your expression or your functions can handle a
+
+
+vector x, you can switch that off with &lt;maps for faster evaluation.
+
+
+Note that adaptive plots are always computed element for element. 
+
+
+If functions or expressions for both xv and for yv are specified,
+
+
+plot2d() will compute a curve with the xv values as x-coordinates
+
+
+and the yv values as y-coordinates. In this case, a range should be
+
+
+defined for the parameter using xmin, xmax. Expressions contained
+
+
+in strings must always be expressions in the parameter variable x.
 
